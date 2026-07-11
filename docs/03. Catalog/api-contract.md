@@ -145,7 +145,7 @@ Soft delete (`isActive=false`). **Response `204`**.
 ### Brands
 
 - `GET /catalog/brands` _(public)_ → `{ "data": Brand[] }`
-- `POST /catalog/brands` _(staff/admin)_ → body `{ "name", "logoUrl"?, "description"? }` → `201 { "brand": Brand }` (slug auto). `409` slug duplikat.
+- `POST /catalog/brands` _(staff/admin)_ → body `{ "name", "logoUrl"?, "description"? }` → `201 { "brand": Brand }` (slug auto, nama duplikat dapat suffix `-2`/`-3`/dst — bukan `409`, konsisten dengan `products`/`categories`).
 - `PATCH /catalog/brands/:id` _(staff/admin)_ → `200 { "brand": Brand }`
 - `DELETE /catalog/brands/:id` _(staff/admin)_ → `204` (tolak `409` jika masih dipakai produk)
 

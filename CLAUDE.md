@@ -18,14 +18,14 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 > Update tabel ini setiap ada perubahan checkbox di todo.md. Regenerate angka:
 > `cd docs && for d in [0-9]*/; do echo "${d%/}: $(grep -c '^- \[x\]' "$d/todo.md")/$(grep -c '^- \[' "$d/todo.md") item, fase $(grep -c '^## Fase' "$d/todo.md")"; done`
 
-**Modul selesai: 2/11** · Item: 111/343
+**Modul selesai: 3/11** · Item: 151/345
 
 | #   | Modul                    | Fase | Item  | Status         |
 | --- | ------------------------ | ---- | ----- | -------------- |
 | 00  | Regions (master wilayah) | 5/6  | 22/24 | 🔄 fungsional selesai — 2 item nunggu modul 02/08 (integrasi) |
 | 01  | Authentication           | 8/8  | 53/53 | ✅ selesai — diverifikasi end-to-end (register/login/refresh/logout/me, role guard, status suspended, Swagger, logging, e2e+unit test) |
 | 02  | Customers                | 6/6  | 36/36 | ✅ selesai — profil+alamat+wholesale diverifikasi e2e (20 test), fix FK `reviewed_by` SET NULL, fix `pnpm test:e2e` chaining |
-| 03  | Catalog                  | 0/7  | 0/38 | ⬜ belum mulai |
+| 03  | Catalog                  | 7/7  | 40/40 | ✅ selesai — produk polimorfik (bean/machine/grinder) + master data (brand/origin/category) diverifikasi e2e (34 test), kode BEN-/MCH-/GRD-, SKU varian auto-generate, fix dok slug brand (409→auto-suffix) |
 | 04  | Inventory                | 0/7  | 0/26 | ⬜ belum mulai |
 | 05  | Pricing                  | 0/7  | 0/25 | ⬜ belum mulai |
 | 06  | Orders                   | 0/7  | 0/30 | ⬜ belum mulai |

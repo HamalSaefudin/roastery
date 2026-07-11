@@ -20,22 +20,7 @@ import {
   CreateWholesaleApplicationDto,
   DecideWholesaleApplicationDto,
 } from './dto/wholesale-application.dto';
-
-const DEFAULT_PAGE_SIZE = 20;
-const MAX_PAGE_SIZE = 100;
-
-function parsePage(value?: string): number {
-  const n = Number(value);
-  return Number.isInteger(n) && n > 0 ? n : 1;
-}
-
-function parseLimit(value?: string): number {
-  const n = Number(value);
-  if (!Number.isInteger(n) || n <= 0) {
-    return DEFAULT_PAGE_SIZE;
-  }
-  return Math.min(n, MAX_PAGE_SIZE);
-}
+import { parseLimit, parsePage } from '../../common/pagination.util';
 
 function mapProfile(profile: {
   id: string;
