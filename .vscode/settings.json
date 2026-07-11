@@ -1,0 +1,5 @@
+{
+  "typescript.tsdk": "roastery-service/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "js/ts.tsdk.path": "roastery-service/node_modules/typescript/lib"
+}
