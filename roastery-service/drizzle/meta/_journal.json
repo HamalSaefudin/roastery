@@ -15,6 +15,20 @@
       "when": 1783756263682,
       "tag": "0001_spotty_squadron_supreme",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1783777286059,
+      "tag": "0002_powerful_marten_broadcloak",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1783780364300,
+      "tag": "0003_uneven_sugar_man",
+      "breakpoints": true
     }
   ]
 }

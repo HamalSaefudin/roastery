@@ -74,7 +74,7 @@ Referensi detail ada di [plan.md](./plan.md).
 - [x] Pasang Pino (`nestjs-pino`) sebagai root infra (`src/logger/logger.module.ts`, di-import di `AppModule` sebelum modul lain; `main.ts` pakai `bufferLogs: true` + `app.useLogger()`) — berlaku untuk SEMUA modul selanjutnya, tidak perlu setup ulang
 - [x] Redact cookie/authorization/password di log — diverifikasi: `set-cookie` & `cookie` header sama sekali tidak muncul di log request
 - [x] Auto HTTP request-log (method/url/status/responseTime) diverifikasi jalan tanpa kode tambahan di controller
-- [x] Setup infra e2e test: `test/utils/test-app.ts` (helper `createTestApp()`), `scripts/setup-test-db.sh` (provision + migrate + seed `roastery_test`), script `pnpm test:e2e` (dengan `pretest:e2e` otomatis)
+- [x] Setup infra e2e test: `test/utils/test-app.ts` (helper `createTestApp()`), `scripts/setup-test-db.sh` (provision + migrate + seed `roastery_test`), script `pnpm test:e2e` (dengan `test:e2e:setup` otomatis)
 - [x] Tulis `test/auth.e2e-spec.ts` — 10 test: register (sukses/409/400), login (sukses-200/401 pesan generik ×2), `/me` tanpa cookie, alur lengkap login→me→refresh(rotasi)→me→logout→refresh gagal, status suspended (`/me` 403 + login 403)
 - [x] Tulis `test/regions.e2e-spec.ts` (retrofit modul 00) — 4 test: list provinsi, 400 param kosong, cascade 4 level + kode pos, search
 - [x] Unit test guard murni: `roles.guard.spec.ts` (5 test), `jwt-auth.guard.spec.ts` (4 test) — mock `Reflector`/`JwtService`, tanpa DB

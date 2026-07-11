@@ -12,3 +12,5 @@
  */
 export * from '../modules/regions/regions.schema';
 export * from '../modules/auth/auth.schema';
+export * from './sequences.schema';
+export * from '../modules/customers/customers.schema';

@@ -9,3 +9,9 @@ export const PG_POOL = Symbol('PG_POOL');
 
 /** Tipe koneksi Drizzle beserta seluruh schema (untuk query type-safe + relasi). */
 export type DrizzleDB = NodePgDatabase<typeof schema>;
+
+/** Tipe transaksi aktif (parameter callback `db.transaction(async (tx) => ...)`). */
+export type DrizzleTx = Parameters<Parameters<DrizzleDB['transaction']>[0]>[0];
+
+/** Dipakai fungsi yang boleh jalan lepas ATAU di dalam transaksi yang sudah ada (mis. sequence util). */
+export type DrizzleDbOrTx = DrizzleDB | DrizzleTx;

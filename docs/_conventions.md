@@ -15,6 +15,7 @@ Setiap modul punya folder docs sendiri (`00.` – `10.`) berisi `plan.md`, `todo
 5. Setelah tiap fase: `pnpm build` harus hijau. Kalau ada perubahan schema: `pnpm db:generate` lalu `pnpm db:migrate`.
 6. **Jangan edit file SQL hasil migrate di folder `drizzle/` secara manual.**
 7. Skrip standalone (seed, dll) taruh di `scripts/` root **dan wajib** ada di `exclude` milik `tsconfig.build.json` — kalau tidak, `tsc` ikut compile file itu dan `dist/main.js` bergeser jadi `dist/src/main.js` (app gagal start). Jalankan skrip standalone pakai `tsx` (bukan lewat `nest build`), lihat pola di `scripts/seed-regions.ts`.
+8. **`pnpm` TIDAK otomatis menjalankan script `pre<nama>`/`post<nama>` seperti npm** (`pretest:e2e` tidak akan jalan sendiri sebelum `test:e2e`, beda dari kebiasaan npm). Kalau butuh setup wajib sebelum sebuah script, **rantai eksplisit** pakai `&&` di script yang sama (`"test:e2e": "pnpm test:e2e:setup && jest ..."`), jangan andalkan penamaan `pre*`/`post*`. Ini ketauan lewat testing beneran (`pnpm test:e2e` sempat gagal karena tabel belum ter-migrate ke DB test), bukan dari baca dokumentasi pnpm — selalu verifikasi command chain benar-benar jalan, jangan asumsi.
 
 ## 2. Naming
 
@@ -127,6 +128,7 @@ Aturan tipe:
 - Waktu: `timestamp('...', { withTimezone: true })`; tanggal saja: `date('...')`.
 - **Uang: `integer` rupiah bulat** (tidak ada desimal, tidak pakai float/numeric). Currency default `IDR`.
 - Soft delete pakai kolom `is_active boolean default true` — **jangan** hard delete data yang direferensikan.
+- **FK ke `users` yang sifatnya "siapa yang melakukan X" (reviewer/approver/assignee/teknisi, mis. `reviewed_by`, `assigned_to`) pakai `{ onDelete: 'set null' }`**, BUKAN `cascade` dan BUKAN default (`no action`). Alasan: kalau staf/reviewer itu dihapus dari sistem nanti, record histori (order, aplikasi, tiket) harus tetap ada — jangan ikut kehapus (`cascade` salah) dan jangan sampai user itu tidak bisa dihapus sama sekali (`no action`/default bikin FK constraint block delete). Beda dengan FK "pemilik data" (mis. `customer_profiles.user_id`, `orders.customer_id`) yang memang harus `cascade` karena datanya milik entitas itu.
 
 ## 6. Akses DB di service
 
@@ -411,7 +413,7 @@ Kenapa Pino (bukan `Logger` bawaan Nest polos): output **structured JSON** (gamp
 
 - Satu file per modul: `test/<modul>.e2e-spec.ts` (mis. `test/orders.e2e-spec.ts`).
 - Pakai helper bersama `test/utils/test-app.ts` (`createTestApp()`) — sudah mereplikasi setup `main.ts` (prefix `/api`, cookie-parser, ValidationPipe) tanpa Swagger.
-- Jalan ke **database test sungguhan** (`roastery_test`, bukan mock) via `pnpm test:e2e` (otomatis provision + migrate + seed regions lewat `pretest:e2e` → `scripts/setup-test-db.sh`).
+- Jalan ke **database test sungguhan** (`roastery_test`, bukan mock) via `pnpm test:e2e` (otomatis provision + migrate + seed regions lewat `test:e2e:setup` → `scripts/setup-test-db.sh`).
 - **Cakupan minimum tiap modul**: golden path tiap endpoint utama + setiap error case yang tertulis eksplisit di `api-contract.md` (400/401/403/404/409/422) + transisi status kalau modulnya punya (lihat §12).
 - **Isolasi data**: pakai email/kode unik per run (mis. `` `test-${Date.now()}@example.com` ``) — JANGAN truncate tabel (bisa nabrak data modul lain kalau beberapa spec file jalan bareng). Bersihkan row yang dibuat sendiri di `afterAll`.
 - Ambil cookie dari `Set-Cookie` response lalu pasang lagi via `.set('Cookie', [...])` di request berikutnya (supertest tidak punya cookie jar otomatis) — lihat contoh di `test/auth.e2e-spec.ts`.

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Pastikan database roastery_test ada & schema-nya up-to-date sebelum e2e test jalan.
-# Dipanggil otomatis via package.json "pretest:e2e".
+# Dipanggil otomatis via package.json "test:e2e:setup".
 set -euo pipefail
 
 DB_NAME="roastery_test"

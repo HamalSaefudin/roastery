@@ -18,13 +18,13 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 > Update tabel ini setiap ada perubahan checkbox di todo.md. Regenerate angka:
 > `cd docs && for d in [0-9]*/; do echo "${d%/}: $(grep -c '^- \[x\]' "$d/todo.md")/$(grep -c '^- \[' "$d/todo.md") item, fase $(grep -c '^## Fase' "$d/todo.md")"; done`
 
-**Modul selesai: 1/11** · Item: 75/337
+**Modul selesai: 2/11** · Item: 111/343
 
 | #   | Modul                    | Fase | Item  | Status         |
 | --- | ------------------------ | ---- | ----- | -------------- |
 | 00  | Regions (master wilayah) | 5/6  | 22/24 | 🔄 fungsional selesai — 2 item nunggu modul 02/08 (integrasi) |
 | 01  | Authentication           | 8/8  | 53/53 | ✅ selesai — diverifikasi end-to-end (register/login/refresh/logout/me, role guard, status suspended, Swagger, logging, e2e+unit test) |
-| 02  | Customers                | 0/6  | 0/30 | ⬜ belum mulai |
+| 02  | Customers                | 6/6  | 36/36 | ✅ selesai — profil+alamat+wholesale diverifikasi e2e (20 test), fix FK `reviewed_by` SET NULL, fix `pnpm test:e2e` chaining |
 | 03  | Catalog                  | 0/7  | 0/38 | ⬜ belum mulai |
 | 04  | Inventory                | 0/7  | 0/26 | ⬜ belum mulai |
 | 05  | Pricing                  | 0/7  | 0/25 | ⬜ belum mulai |
@@ -45,7 +45,7 @@ Status: ⬜ belum mulai · 🔄 dikerjakan (sebut fase-nya) · ✅ selesai
 - [x] Master wilayah Indonesia ter-seed penuh (38 provinsi, 514 kab/kota, 7.285 kecamatan, 83.762 desa + kode pos) — sumber `cahyadsn/wilayah` + `wilayah_kodepos`, skrip `pnpm db:seed:regions`
 - [x] Auth siap dipakai modul lain: `JwtAuthGuard` + `RolesGuard` **global** (semua endpoint butuh login kecuali `@Public()`), `@CurrentUser()`, `@Roles('staff','admin')`. **Penting untuk modul berikutnya**: endpoint publik WAJIB `@Public()` eksplisit, kalau lupa → 401.
 - [x] Logging structured (Pino) terpasang global — modul lain tinggal pakai `new Logger(ClassName.name)` biasa, otomatis terstruktur + redacted (lihat [konvensi §17](docs/_conventions.md))
-- [x] Infra e2e test siap pakai: `pnpm test:e2e` (DB terpisah `roastery_test`, auto-provision/migrate/seed via `pretest:e2e`). Tiap modul **wajib** bikin `test/<modul>.e2e-spec.ts` (lihat [konvensi §18](docs/_conventions.md))
+- [x] Infra e2e test siap pakai: `pnpm test:e2e` (DB terpisah `roastery_test`, auto-provision/migrate/seed via `test:e2e:setup`). Tiap modul **wajib** bikin `test/<modul>.e2e-spec.ts` (lihat [konvensi §18](docs/_conventions.md))
 
 ### Keputusan pending
 
@@ -71,7 +71,7 @@ pnpm test:e2e            # e2e test — auto provision+migrate+seed DB roastery_
 
 Postgres lokal jalan via **Docker Compose** (`roastery-service/docker-compose.yml`), kredensial sama dengan `.env` (`postgres:postgres@localhost:5432/roastery`). Jalankan `pnpm db:up` sebelum `start:dev` atau `db:migrate`.
 
-Database test (`roastery_test`) terpisah dari dev (`roastery`) — `pnpm test:e2e` otomatis siapkan sendiri lewat `pretest:e2e` (script `scripts/setup-test-db.sh`). Tiap modul wajib punya `test/<modul>.e2e-spec.ts`.
+Database test (`roastery_test`) terpisah dari dev (`roastery`) — `pnpm test:e2e` otomatis siapkan sendiri lewat `test:e2e:setup` (script `scripts/setup-test-db.sh`). Tiap modul wajib punya `test/<modul>.e2e-spec.ts`.
 
 ## Peta repo
 

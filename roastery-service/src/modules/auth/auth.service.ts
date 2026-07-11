@@ -10,7 +10,10 @@ import { createHash, randomBytes } from 'node:crypto';
 import { and, eq, gt, isNull } from 'drizzle-orm';
 import bcrypt from 'bcrypt';
 import { DRIZZLE } from '../../database/drizzle.constants';
-import type { DrizzleDB } from '../../database/drizzle.constants';
+import type {
+  DrizzleDB,
+  DrizzleDbOrTx,
+} from '../../database/drizzle.constants';
 import { refreshTokens, users } from './auth.schema';
 import { REFRESH_TOKEN_TTL_MS } from './auth.constants';
 import type { RegisterDto } from './dto/register.dto';
@@ -145,9 +148,7 @@ export class AuthService {
 
   private async issueTokens(
     user: User,
-    tx:
-      DrizzleDB | Parameters<Parameters<DrizzleDB['transaction']>[0]>[0] = this
-      .db,
+    tx: DrizzleDbOrTx = this.db,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const accessToken = this.jwtService.sign({
       sub: user.id,

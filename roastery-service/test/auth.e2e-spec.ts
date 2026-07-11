@@ -5,12 +5,7 @@ import { DRIZZLE } from '../src/database/drizzle.constants';
 import type { DrizzleDB } from '../src/database/drizzle.constants';
 import { users } from '../src/modules/auth/auth.schema';
 import { createTestApp } from './utils/test-app';
-
-/** Ambil cookie dari response Set-Cookie, siap dipakai lagi di request berikutnya. */
-function extractCookies(res: request.Response): string[] {
-  const raw = res.headers['set-cookie'];
-  return Array.isArray(raw) ? raw : raw ? [raw] : [];
-}
+import { extractCookies } from './utils/cookies';
 
 describe('Auth (e2e)', () => {
   let app: INestApplication;
