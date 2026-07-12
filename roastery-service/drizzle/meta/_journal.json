@@ -71,6 +71,13 @@
       "when": 1783843179022,
       "tag": "0009_tired_wallflower",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1783849059575,
+      "tag": "0010_mute_sabretooth",
+      "breakpoints": true
     }
   ]
 }

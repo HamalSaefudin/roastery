@@ -18,7 +18,7 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 > Update tabel ini setiap ada perubahan checkbox di todo.md. Regenerate angka:
 > `cd docs && for d in [0-9]*/; do echo "${d%/}: $(grep -c '^- \[x\]' "$d/todo.md")/$(grep -c '^- \[' "$d/todo.md") item, fase $(grep -c '^## Fase' "$d/todo.md")"; done`
 
-**Modul selesai: 8/11** · Item: 339/359
+**Modul selesai: 9/11** · Item: 358/361 (2 modul — 00, 07 — fungsional selesai, sisa item nunggu infra/integrasi di luar scope backend saat ini)
 
 | #   | Modul                    | Fase | Item  | Status         |
 | --- | ------------------------ | ---- | ----- | -------------- |
@@ -32,7 +32,7 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 | 07  | Payments                 | 7/7  | 33/34 | 🔄 fungsional selesai — 1 item (job `overdue` invoice) nunggu infra scheduled job; checkout/webhook/refund/invoice diverifikasi e2e (18 test), provider mock di belakang interface `PaymentProvider` (Midtrans target real, belum ada kredensial) |
 | 08  | Delivery                 | 7/7  | 43/43 | ✅ selesai — zona+dispatch+driver app+COD settlement diverifikasi e2e (26 test), fix bug atomicity lintas-service (transaksi tak lengkap) + fix duplikat plat kendaraan (500→409) |
 | 09  | Service Desk             | 7/7  | 26/26 | ✅ selesai — registrasi garansi (nomor seri, masa berlaku dari warrantyMonths) + tiket reparasi (klaim garansi/berbayar) diverifikasi e2e (17 test), fix FK violation mentah (500→404) saat assign teknisi tidak valid |
-| 10  | Content                  | 0/6  | 0/19 | ⬜ belum mulai |
+| 10  | Content                  | 6/6  | 19/19 | ✅ selesai — CMS artikel (brew guide/blog/origin story/page) diverifikasi e2e (13 test), slug auto dari title, publish/unpublish jaga `published_at` tetap (tidak reset saat republish) |
 
 Status: ⬜ belum mulai · 🔄 dikerjakan (sebut fase-nya) · ✅ selesai
 

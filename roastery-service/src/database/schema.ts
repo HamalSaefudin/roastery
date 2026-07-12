@@ -31,3 +31,4 @@ export * from '../modules/delivery/drivers/drivers.schema';
 export * from '../modules/delivery/dispatch/dispatch.schema';
 export * from '../modules/service-desk/warranty/warranty.schema';
 export * from '../modules/service-desk/repairs/repairs.schema';
+export * from '../modules/content/content.schema';

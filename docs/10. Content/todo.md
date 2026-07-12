@@ -6,37 +6,37 @@ Aturan: **per fase, urut**. Detail di [plan.md](./plan.md), kontrak di [api-cont
 
 ## Fase 0 — Setup
 
-- [ ] Sepakati format body (markdown) & strategi gambar (URL/upload)
+- [x] Sepakati format body (markdown) & strategi gambar (URL/upload) — `body` = markdown mentah (string, API tidak render HTML), `coverImageUrl` = URL string (upload file di luar scope backend ini)
 
 ## Fase 1 — Schema & migration
 
-- [ ] `content_articles` + enum `content_type`, `content_status`
-- [ ] Re-export di `src/database/schema.ts`
-- [ ] `pnpm db:generate` → `pnpm db:migrate`
+- [x] `content_articles` + enum `content_type`, `content_status`
+- [x] Re-export di `src/database/schema.ts`
+- [x] `pnpm db:generate` → `pnpm db:migrate`
 
 ## Fase 2 — Scaffold file (Nest CLI)
 
-- [ ] `nest g service modules/content --no-spec`
-- [ ] `nest g controller modules/content --no-spec`
-- [ ] DTO create/update article
+- [x] `nest g service modules/content --no-spec`
+- [x] `nest g controller modules/content --no-spec`
+- [x] DTO create/update article
 
 ## Fase 3 — Read publik
 
-- [ ] `GET /content` (hanya `published`, filter `type`, pagination)
-- [ ] `GET /content/:slug`
+- [x] `GET /content` (hanya `published`, filter `type`, pagination)
+- [x] `GET /content/:slug`
 
 ## Fase 4 — Admin CRUD (staff/admin)
 
-- [ ] `POST /content` (slug auto dari title, draft/publish)
-- [ ] `PATCH /content/:id` (termasuk publish → set `published_at`)
-- [ ] `DELETE /content/:id`
+- [x] `POST /content` (slug auto dari title, draft/publish)
+- [x] `PATCH /content/:id` (termasuk publish → set `published_at`)
+- [x] `DELETE /content/:id`
 
 ## Fase 5 — Verifikasi
 
-- [ ] Buat draft → publish → tampil publik via slug
-- [ ] Draft tidak muncul di endpoint publik
-- [ ] Endpoint modul ini muncul di Swagger (`/api/docs`) dengan tag yang benar
-- [ ] Tulis `test/content.e2e-spec.ts` — cakupan golden path + tiap error case di api-contract.md (lihat konvensi §18)
-- [ ] `pnpm test:e2e` hijau
-- [ ] `pnpm build` hijau & boot OK
-- [ ] Tandai selesai → **semua modul MVP + lanjutan terdokumentasi**
+- [x] Buat draft → publish → tampil publik via slug
+- [x] Draft tidak muncul di endpoint publik
+- [x] Endpoint modul ini muncul di Swagger (`/api/docs`) dengan tag yang benar
+- [x] Tulis `test/content.e2e-spec.ts` — cakupan golden path + tiap error case di api-contract.md (lihat konvensi §18)
+- [x] `pnpm test:e2e` hijau
+- [x] `pnpm build` hijau & boot OK
+- [x] Tandai selesai → **semua modul MVP + lanjutan terdokumentasi**
