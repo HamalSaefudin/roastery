@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Varian 3 — Dark Roast (Dark & Light)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /* ============ DARK (default — identitas varian ini) ============ */
+  :root, [data-theme="dark"] {
+    --bg: #141110;
+    --panel: #1e1a18;
+    --panel-2: #282320;
+    --garis: #383029;
+    --teks: #ede7e0;
+    --teks-redup: #a89d90;
+    --emas: #e8b04b;            /* aksen utama */
+    --emas-hover: #c28f2c;
+    --on-emas: #241c0e;         /* teks di atas tombol emas */
+    --sukses: #7bc47f;
+    --sukses-bg: rgba(123, 196, 127, .15);
+    --on-sukses: #12240f;
+    --peringatan: #e8b04b;
+    --peringatan-bg: rgba(232, 176, 75, .15);
+    --bahaya: #e2695c;
+    --bahaya-bg: rgba(226, 105, 92, .15);
+    --on-bahaya: #2a100c;
+    --info: #6faedb;
+    --info-bg: rgba(111, 174, 219, .15);
+    --radius: 10px;
+  }
+  /* ============ LIGHT ============ */
+  [data-theme="light"] {
+    --bg: #faf6ee;
+    --panel: #ffffff;
+    --panel-2: #f1ead9;
+    --garis: #e3d9c6;
+    --teks: #2a2118;
+    --teks-redup: #8a7c6a;
+    --emas: #a97b1c;            /* emas dituakan biar kontras di bg terang */
+    --emas-hover: #8a6414;
+    --on-emas: #fffbf2;
+    --sukses: #3e7c44;
+    --sukses-bg: #e2efe3;
+    --on-sukses: #ffffff;
+    --peringatan: #96700f;
+    --peringatan-bg: #f5ead0;
+    --bahaya: #b8503d;
+    --bahaya-bg: #f6e2de;
+    --on-bahaya: #ffffff;
+    --info: #3d6f96;
+    --info-bg: #e0ebf3;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--teks); padding: 40px; line-height: 1.6; font-size: 14px; transition: background .25s, color .25s; }
+  h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
+  .wrap { max-width: 960px; margin: 0 auto; display: grid; gap: 40px; }
+  .hero h1 { font-size: 38px; color: var(--emas); }
+  .hero p { color: var(--teks-redup); max-width: 640px; }
+  section > h2 { font-size: 21px; margin-bottom: 16px; }
+  section > h2::before { content: "◆ "; color: var(--emas); font-size: 13px; vertical-align: 2px; }
+
+  .theme-toggle { position: fixed; top: 18px; right: 18px; z-index: 10; font: inherit; font-weight: 600; font-size: 13px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--garis); background: var(--panel); color: var(--teks); cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.15); }
+  .theme-toggle:hover { border-color: var(--emas); color: var(--emas); }
+
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+  .swatch { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--garis); background: var(--panel); }
+  .swatch .c { height: 64px; }
+  .swatch .l { padding: 8px 10px; font-size: 12px; color: var(--teks-redup); }
+  .swatch .l b { display: block; color: var(--teks); }
+
+  .type-sample { display: grid; gap: 10px; background: var(--panel); border: 1px solid var(--garis); border-radius: var(--radius); padding: 24px; }
+  .type-sample .h1 { font-family: 'Space Grotesk', sans-serif; font-size: 30px; font-weight: 700; }
+  .type-sample .h2 { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 600; }
+  .type-sample .h3 { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600; color: var(--emas); }
+  .type-sample .small { font-size: 12px; color: var(--teks-redup); }
+  .type-sample .mono { font-family: 'JetBrains Mono', monospace; font-size: 13px; background: var(--bg); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--garis); width: fit-content; color: var(--emas); }
+
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .btn { font: inherit; font-weight: 600; font-size: 14px; padding: 9px 16px; border-radius: var(--radius); border: 1px solid transparent; cursor: pointer; transition: all .12s; }
+  .btn.primer { background: var(--emas); color: var(--on-emas); }
+  .btn.primer:hover { background: var(--emas-hover); }
+  .btn.sekunder { background: var(--panel-2); color: var(--teks); border-color: var(--garis); }
+  .btn.garis-b { background: transparent; border-color: var(--emas); color: var(--emas); }
+  .btn.hantu { background: transparent; color: var(--teks-redup); }
+  .btn.hantu:hover { color: var(--teks); }
+  .btn.bahaya { background: var(--bahaya); color: var(--on-bahaya); }
+  .btn:disabled { opacity: .35; cursor: not-allowed; }
+  .btn.kecil { font-size: 13px; padding: 6px 12px; }
+  .btn.besar { font-size: 15px; padding: 12px 22px; }
+
+  .badge { font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; }
+  .b-created { background: var(--panel-2); color: var(--teks-redup); border: 1px solid var(--garis); }
+  .b-paid { background: var(--sukses-bg); color: var(--sukses); }
+  .b-processing { background: var(--peringatan-bg); color: var(--peringatan); }
+  .b-delivery { background: var(--info-bg); color: var(--info); }
+  .b-delivered { background: var(--sukses); color: var(--on-sukses); }
+  .b-cancelled { background: var(--bahaya-bg); color: var(--bahaya); }
+
+  .form-demo { background: var(--panel); border: 1px solid var(--garis); border-radius: var(--radius); padding: 24px; display: grid; gap: 14px; max-width: 420px; }
+  label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 4px; color: var(--teks-redup); }
+  input, select { width: 100%; font: inherit; font-size: 14px; padding: 9px 12px; border: 1px solid var(--garis); border-radius: 7px; background: var(--bg); color: var(--teks); }
+  input:focus, select:focus { outline: 2px solid var(--emas); border-color: var(--emas); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--garis); border-radius: var(--radius); overflow: hidden; font-size: 14px; }
+  th { text-align: left; padding: 10px 14px; color: var(--emas); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; border-bottom: 1px solid var(--garis); font-family: 'Space Grotesk', sans-serif; }
+  td { padding: 11px 14px; border-bottom: 1px solid var(--garis); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--panel-2); }
+  .num { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--garis); border-radius: var(--radius); padding: 18px; }
+  .card .n { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; color: var(--emas); }
+  .card .t { font-size: 13px; color: var(--teks-redup); }
+
+  .layout { display: flex; border: 1px solid var(--garis); border-radius: var(--radius); overflow: hidden; height: 260px; background: var(--panel); }
+  .sidebar { width: 200px; background: var(--bg); border-right: 1px solid var(--garis); padding: 16px; font-size: 13px; }
+  .sidebar .logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 16px; color: var(--emas); }
+  .sidebar a { display: block; color: var(--teks-redup); text-decoration: none; padding: 7px 10px; border-radius: 6px; font-weight: 500; }
+  .sidebar a.aktif { background: var(--panel-2); color: var(--emas); }
+  .main { flex: 1; }
+  .topbar { border-bottom: 1px solid var(--garis); padding: 12px 18px; font-size: 13px; color: var(--teks-redup); display: flex; justify-content: space-between; }
+  .content { padding: 18px; }
+
+  .dual-note { font-size: 13px; color: var(--teks-redup); background: var(--panel); border: 1px dashed var(--garis); border-radius: var(--radius); padding: 12px 16px; }
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">☀️</span> <span id="theme-label">Coba Light Mode</span></button>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Varian 3 — Dark Roast</h1>
+    <p>Hitam kecokelatan seperti biji dark roast + aksen emas crema. <b>Space Grotesk</b> untuk judul, <b>Inter</b> body, <b>JetBrains Mono</b> untuk kode & angka. Default <b>dark</b> (identitas varian ini), tapi tersedia light mode — pakai tombol pojok kanan atas.</p>
+  </div>
+
+  <div class="dual-note">💡 Dua tema, satu sistem: semua komponen di bawah pakai CSS variables yang sama — yang berubah cuma nilai palet. Di light mode, emas dituakan (#A97B1C) supaya tetap kontras di background terang.</div>
+
+  <section>
+    <h2>Palet Warna (tema aktif)</h2>
+    <div class="swatches">
+      <div class="swatch"><div class="c" style="background:var(--bg)"></div><div class="l"><b>Background</b>--bg</div></div>
+      <div class="swatch"><div class="c" style="background:var(--panel)"></div><div class="l"><b>Panel</b>--panel</div></div>
+      <div class="swatch"><div class="c" style="background:var(--garis)"></div><div class="l"><b>Garis</b>--garis</div></div>
+      <div class="swatch"><div class="c" style="background:var(--emas)"></div><div class="l"><b>Emas Crema</b>--emas · primer</div></div>
+      <div class="swatch"><div class="c" style="background:var(--teks)"></div><div class="l"><b>Teks</b>--teks</div></div>
+      <div class="swatch"><div class="c" style="background:var(--sukses)"></div><div class="l"><b>Sukses</b>--sukses</div></div>
+      <div class="swatch"><div class="c" style="background:var(--bahaya)"></div><div class="l"><b>Bahaya</b>--bahaya</div></div>
+      <div class="swatch"><div class="c" style="background:var(--info)"></div><div class="l"><b>Info</b>--info</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Tipografi</h2>
+    <div class="type-sample">
+      <div class="h1">Dashboard Roastery — Space Grotesk 700</div>
+      <div class="h2">Pesanan Masuk Hari Ini — Space Grotesk 600</div>
+      <div class="h3">Detail Pengiriman — Space Grotesk 600</div>
+      <div class="body">Body text Inter 400. Contoh: Pesanan ORD-20260712-0042 menunggu konfirmasi pembayaran dari pelanggan wholesale Kafe Senja.</div>
+      <div class="small">Teks kecil / meta: Terakhir diperbarui 12 Juli 2026 14:32 WIB</div>
+      <div class="mono">ORD-20260712-0042 · Rp 2.450.000</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Tombol</h2>
+    <div class="row" style="margin-bottom:12px">
+      <button class="btn primer">Simpan Produk</button>
+      <button class="btn sekunder">Lihat Detail</button>
+      <button class="btn garis-b">Ekspor CSV</button>
+      <button class="btn hantu">Batal</button>
+      <button class="btn bahaya">Hapus</button>
+      <button class="btn primer" disabled>Disabled</button>
+    </div>
+    <div class="row">
+      <button class="btn primer kecil">Kecil</button>
+      <button class="btn primer">Sedang</button>
+      <button class="btn primer besar">Besar</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Badge Status Pesanan</h2>
+    <div class="row">
+      <span class="badge b-created">created</span>
+      <span class="badge b-paid">paid</span>
+      <span class="badge b-processing">processing</span>
+      <span class="badge b-delivery">out_for_delivery</span>
+      <span class="badge b-delivered">delivered</span>
+      <span class="badge b-cancelled">cancelled</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Form</h2>
+    <div class="form-demo">
+      <div><label>Nama Produk</label><input value="Gayo Wine Process 250g" /></div>
+      <div><label>Kategori</label><select><option>Biji Kopi</option><option>Mesin Espresso</option><option>Grinder</option></select></div>
+      <div class="row"><button class="btn primer">Simpan</button><button class="btn hantu">Batal</button></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Tabel</h2>
+    <table>
+      <thead><tr><th>No. Pesanan</th><th>Pelanggan</th><th>Total</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="num">ORD-20260712-0041</td><td>Budi Santoso</td><td class="num">Rp 185.000</td><td><span class="badge b-paid">paid</span></td></tr>
+        <tr><td class="num">ORD-20260712-0042</td><td>Kafe Senja (wholesale)</td><td class="num">Rp 2.450.000</td><td><span class="badge b-processing">processing</span></td></tr>
+        <tr><td class="num">ORD-20260712-0043</td><td>Rina Wijaya</td><td class="num">Rp 96.000</td><td><span class="badge b-delivery">out_for_delivery</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Kartu Statistik</h2>
+    <div class="cards">
+      <div class="card"><div class="n">42</div><div class="t">Pesanan hari ini</div></div>
+      <div class="card"><div class="n">Rp 8,4 jt</div><div class="t">Pendapatan hari ini</div></div>
+      <div class="card"><div class="n">7</div><div class="t">Menunggu dispatch</div></div>
+      <div class="card"><div class="n" style="color:var(--bahaya)">3</div><div class="t">Stok menipis</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Preview Layout</h2>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="logo">◆ ROASTERY</div>
+        <a class="aktif" href="#">Dashboard</a>
+        <a href="#">Pesanan</a>
+        <a href="#">Katalog</a>
+        <a href="#">Pengiriman</a>
+        <a href="#">Pelanggan</a>
+      </div>
+      <div class="main">
+        <div class="topbar"><span>Dashboard</span><span>admin@roastery.id</span></div>
+        <div class="content">
+          <div class="cards">
+            <div class="card"><div class="n">42</div><div class="t">Pesanan</div></div>
+            <div class="card"><div class="n">7</div><div class="t">Dispatch</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    html.dataset.theme = next;
+    document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+    document.getElementById('theme-label').textContent = next === 'dark' ? 'Coba Light Mode' : 'Coba Dark Mode';
+  }
+</script>
+</body>
+</html>

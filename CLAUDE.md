@@ -25,6 +25,7 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 | Step | Nama | Status |
 | ---- | ---- | ------ |
 | 00 | Setup — workspace, scaffold & fondasi | ✅ selesai — pnpm workspace (backend tetap hijau 224 e2e), scaffold via `npx @tanstack/cli create` (Start+shadcn+Query+Table+Form), port dev 3001, types API ter-generate dari Swagger (`pnpm generate:api`) |
+| — | Design system | ✅ dipilih user: **Dark Roast** (dark default + light mode; Space Grotesk/Inter/JetBrains Mono, aksen emas crema) — token & referensi di [docs/cms/design system/](docs/cms/design%20system/README.md) |
 | 01+ | Auth, layout, halaman modul | ⬜ belum mulai — didefinisikan di step berikutnya |
 
 | #   | Modul                    | Fase | Item  | Status         |
