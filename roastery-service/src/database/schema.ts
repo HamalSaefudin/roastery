@@ -29,3 +29,5 @@ export * from '../modules/delivery/vehicles/vehicles.schema';
 export * from '../modules/delivery/zones/zones.schema';
 export * from '../modules/delivery/drivers/drivers.schema';
 export * from '../modules/delivery/dispatch/dispatch.schema';
+export * from '../modules/service-desk/warranty/warranty.schema';
+export * from '../modules/service-desk/repairs/repairs.schema';
