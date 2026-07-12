@@ -36,6 +36,13 @@
       "when": 1783781671151,
       "tag": "0004_bitter_bloodstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1783783887709,
+      "tag": "0005_round_beast",
+      "breakpoints": true
     }
   ]
 }
