@@ -34,7 +34,7 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest<Request>();
-    const token: string | undefined = request.cookies?.[ACCESS_TOKEN_COOKIE];
+    const token = request.cookies?.[ACCESS_TOKEN_COOKIE] as string | undefined;
     if (!token) {
       throw new UnauthorizedException('Belum login');
     }

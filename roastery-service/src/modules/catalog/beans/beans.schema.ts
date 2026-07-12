@@ -1,11 +1,31 @@
-import { boolean, date, integer, pgEnum, pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  date,
+  integer,
+  pgEnum,
+  pgTable,
+  text,
+  uuid,
+} from 'drizzle-orm/pg-core';
 import { products } from '../catalog.schema';
 import { origins } from '../origins/origins.schema';
 
-export const beanProcessEnum = pgEnum('bean_process', ['washed', 'natural', 'honey', 'other']);
-export const roastLevelEnum = pgEnum('roast_level', ['light', 'medium', 'dark']);
+export const beanProcessEnum = pgEnum('bean_process', [
+  'washed',
+  'natural',
+  'honey',
+  'other',
+]);
+export const roastLevelEnum = pgEnum('roast_level', [
+  'light',
+  'medium',
+  'dark',
+]);
 // Keputusan bisnis (gambaran-bisnis.md): model roasting campuran per produk.
-export const beanFulfillmentEnum = pgEnum('bean_fulfillment', ['ready_stock', 'roast_to_order']);
+export const beanFulfillmentEnum = pgEnum('bean_fulfillment', [
+  'ready_stock',
+  'roast_to_order',
+]);
 export const grindTypeEnum = pgEnum('grind_type', [
   'whole',
   'espresso',
@@ -22,7 +42,9 @@ export const beanDetails = pgTable('bean_details', {
   originId: uuid('origin_id').references(() => origins.id),
   process: beanProcessEnum('process').notNull(),
   roastLevel: roastLevelEnum('roast_level').notNull(),
-  fulfillmentType: beanFulfillmentEnum('fulfillment_type').notNull().default('ready_stock'),
+  fulfillmentType: beanFulfillmentEnum('fulfillment_type')
+    .notNull()
+    .default('ready_stock'),
   altitude: text('altitude'),
   variety: text('variety'),
   tastingNotes: text('tasting_notes'),

@@ -52,7 +52,9 @@ export function mapProductListItem(row: ProductListRow) {
     name: row.name,
     slug: row.slug,
     brand: row.brandId ? { id: row.brandId, name: row.brandName } : null,
-    category: row.categoryId ? { id: row.categoryId, name: row.categoryName } : null,
+    category: row.categoryId
+      ? { id: row.categoryId, name: row.categoryName }
+      : null,
     imageUrl: row.imageUrl,
     isActive: row.isActive,
   };

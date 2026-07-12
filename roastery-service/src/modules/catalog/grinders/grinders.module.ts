@@ -4,6 +4,6 @@ import { GrindersController } from './grinders.controller';
 
 @Module({
   providers: [GrindersService],
-  controllers: [GrindersController]
+  controllers: [GrindersController],
 })
 export class GrindersModule {}

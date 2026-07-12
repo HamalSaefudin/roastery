@@ -23,34 +23,48 @@ describe('RolesGuard', () => {
 
   it('lolos kalau endpoint tidak punya @Roles (tidak ada batasan role)', () => {
     jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(undefined);
-    expect(guard.canActivate(mockContext({ id: '1', email: 'a@a.com', role: 'retail' }))).toBe(
-      true,
-    );
+    expect(
+      guard.canActivate(
+        mockContext({ id: '1', email: 'a@a.com', role: 'retail' }),
+      ),
+    ).toBe(true);
   });
 
   it('lolos kalau @Roles array kosong', () => {
     jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue([]);
-    expect(guard.canActivate(mockContext({ id: '1', email: 'a@a.com', role: 'retail' }))).toBe(
-      true,
-    );
+    expect(
+      guard.canActivate(
+        mockContext({ id: '1', email: 'a@a.com', role: 'retail' }),
+      ),
+    ).toBe(true);
   });
 
   it('lempar 403 kalau role user tidak termasuk yang diizinkan', () => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['staff', 'admin']);
+    jest
+      .spyOn(reflector, 'getAllAndOverride')
+      .mockReturnValue(['staff', 'admin']);
     expect(() =>
-      guard.canActivate(mockContext({ id: '1', email: 'a@a.com', role: 'retail' })),
+      guard.canActivate(
+        mockContext({ id: '1', email: 'a@a.com', role: 'retail' }),
+      ),
     ).toThrow(ForbiddenException);
   });
 
   it('lempar 403 kalau request.user tidak ada (belum login)', () => {
     jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['staff']);
-    expect(() => guard.canActivate(mockContext(undefined))).toThrow(ForbiddenException);
+    expect(() => guard.canActivate(mockContext(undefined))).toThrow(
+      ForbiddenException,
+    );
   });
 
   it('lolos kalau role user termasuk yang diizinkan', () => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['staff', 'admin']);
-    expect(guard.canActivate(mockContext({ id: '1', email: 'a@a.com', role: 'staff' }))).toBe(
-      true,
-    );
+    jest
+      .spyOn(reflector, 'getAllAndOverride')
+      .mockReturnValue(['staff', 'admin']);
+    expect(
+      guard.canActivate(
+        mockContext({ id: '1', email: 'a@a.com', role: 'staff' }),
+      ),
+    ).toBe(true);
   });
 });

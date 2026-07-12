@@ -19,7 +19,10 @@ export class MachinesService {
   constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
 
   async listPublic(params: ListMachinesParams) {
-    const conditions: SQL[] = [eq(products.type, 'machine'), eq(products.isActive, true)];
+    const conditions: SQL[] = [
+      eq(products.type, 'machine'),
+      eq(products.isActive, true),
+    ];
     if (params.brandId) {
       conditions.push(eq(products.brandId, params.brandId));
     }

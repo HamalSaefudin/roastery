@@ -1,4 +1,9 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { DRIZZLE } from '../../../database/drizzle.constants';
 import type { DrizzleDB } from '../../../database/drizzle.constants';
@@ -12,7 +17,10 @@ export class CategoriesService {
   constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
 
   findAllActive() {
-    return this.db.select().from(categories).where(eq(categories.isActive, true));
+    return this.db
+      .select()
+      .from(categories)
+      .where(eq(categories.isActive, true));
   }
 
   async create(dto: CreateCategoryDto) {
@@ -30,7 +38,9 @@ export class CategoriesService {
   }
 
   async update(id: string, dto: UpdateCategoryDto) {
-    const existing = await this.db.query.categories.findFirst({ where: eq(categories.id, id) });
+    const existing = await this.db.query.categories.findFirst({
+      where: eq(categories.id, id),
+    });
     if (!existing) {
       throw new NotFoundException('Kategori tidak ditemukan');
     }
@@ -43,7 +53,9 @@ export class CategoriesService {
   }
 
   async remove(id: string): Promise<void> {
-    const existing = await this.db.query.categories.findFirst({ where: eq(categories.id, id) });
+    const existing = await this.db.query.categories.findFirst({
+      where: eq(categories.id, id),
+    });
     if (!existing) {
       throw new NotFoundException('Kategori tidak ditemukan');
     }
@@ -59,6 +71,9 @@ export class CategoriesService {
     if (hasChild) {
       throw new ConflictException('Masih punya sub-kategori');
     }
-    await this.db.update(categories).set({ isActive: false }).where(eq(categories.id, id));
+    await this.db
+      .update(categories)
+      .set({ isActive: false })
+      .where(eq(categories.id, id));
   }
 }

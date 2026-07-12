@@ -8,7 +8,9 @@ function mockContext(cookies: Record<string, string> = {}): {
   ctx: ExecutionContext;
   request: { cookies: Record<string, string>; user?: unknown };
 } {
-  const request: { cookies: Record<string, string>; user?: unknown } = { cookies };
+  const request: { cookies: Record<string, string>; user?: unknown } = {
+    cookies,
+  };
   const ctx = {
     getHandler: () => ({}),
     getClass: () => ({}),
@@ -32,6 +34,7 @@ describe('JwtAuthGuard', () => {
     jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(true);
     const { ctx } = mockContext();
     expect(guard.canActivate(ctx)).toBe(true);
+    // eslint-disable-next-line @typescript-eslint/unbound-method -- jwtService.verify di sini adalah jest.fn(), bukan real class method
     expect(jwtService.verify).not.toHaveBeenCalled();
   });
 
@@ -59,6 +62,10 @@ describe('JwtAuthGuard', () => {
     });
     const { ctx, request } = mockContext({ access_token: 'token-valid' });
     expect(guard.canActivate(ctx)).toBe(true);
-    expect(request.user).toEqual({ id: 'user-1', email: 'a@a.com', role: 'retail' });
+    expect(request.user).toEqual({
+      id: 'user-1',
+      email: 'a@a.com',
+      role: 'retail',
+    });
   });
 });

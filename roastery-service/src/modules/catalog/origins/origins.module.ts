@@ -4,6 +4,6 @@ import { OriginsController } from './origins.controller';
 
 @Module({
   providers: [OriginsService],
-  controllers: [OriginsController]
+  controllers: [OriginsController],
 })
 export class OriginsModule {}

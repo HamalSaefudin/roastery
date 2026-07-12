@@ -38,8 +38,14 @@ describe('Catalog (e2e)', () => {
     app = await createTestApp();
     db = app.get<DrizzleDB>(DRIZZLE);
 
-    await request(server()).post('/api/auth/register').send({ email: staffEmail, password }).expect(201);
-    await db.update(users).set({ role: 'staff' }).where(eq(users.email, staffEmail));
+    await request(server())
+      .post('/api/auth/register')
+      .send({ email: staffEmail, password })
+      .expect(201);
+    await db
+      .update(users)
+      .set({ role: 'staff' })
+      .where(eq(users.email, staffEmail));
     const staffLogin = await request(server())
       .post('/api/auth/login')
       .send({ email: staffEmail, password })
@@ -54,17 +60,27 @@ describe('Catalog (e2e)', () => {
   });
 
   afterAll(async () => {
-    await db.delete(products).where(inArray(products.id, [beanId, machineId, grinderId].filter(Boolean)));
-    await db.delete(brands).where(inArray(brands.id, [brandId, brandId2].filter(Boolean)));
+    await db
+      .delete(products)
+      .where(
+        inArray(products.id, [beanId, machineId, grinderId].filter(Boolean)),
+      );
+    await db
+      .delete(brands)
+      .where(inArray(brands.id, [brandId, brandId2].filter(Boolean)));
     if (originId) await db.delete(origins).where(eq(origins.id, originId));
-    if (categoryId) await db.delete(categories).where(eq(categories.id, categoryId));
+    if (categoryId)
+      await db.delete(categories).where(eq(categories.id, categoryId));
     await db.delete(users).where(inArray(users.email, [staffEmail, custEmail]));
     await app.close();
   });
 
   describe('Master data — brands', () => {
     it('POST tanpa login -> 401', () => {
-      return request(server()).post('/api/catalog/brands').send({ name: 'Rocket' }).expect(401);
+      return request(server())
+        .post('/api/catalog/brands')
+        .send({ name: 'Rocket' })
+        .expect(401);
     });
 
     it('POST sebagai retail -> 403', () => {
@@ -97,8 +113,12 @@ describe('Catalog (e2e)', () => {
     });
 
     it('GET publik -> memuat brand yang dibuat', async () => {
-      const res = await request(server()).get('/api/catalog/brands').expect(200);
-      expect(res.body.data.some((b: { id: string }) => b.id === brandId)).toBe(true);
+      const res = await request(server())
+        .get('/api/catalog/brands')
+        .expect(200);
+      expect(res.body.data.some((b: { id: string }) => b.id === brandId)).toBe(
+        true,
+      );
     });
 
     it('PATCH -> 200', async () => {
@@ -123,7 +143,11 @@ describe('Catalog (e2e)', () => {
       const res = await request(server())
         .post('/api/catalog/origins')
         .set('Cookie', staffCookies)
-        .send({ name: `Ethiopia Yirgacheffe ${runId}`, country: 'Ethiopia', region: 'Yirgacheffe' })
+        .send({
+          name: `Ethiopia Yirgacheffe ${runId}`,
+          country: 'Ethiopia',
+          region: 'Yirgacheffe',
+        })
         .expect(201);
       originId = res.body.origin.id;
     });
@@ -139,8 +163,12 @@ describe('Catalog (e2e)', () => {
     });
 
     it('GET categories publik -> memuat category yang dibuat', async () => {
-      const res = await request(server()).get('/api/catalog/categories').expect(200);
-      expect(res.body.data.some((c: { id: string }) => c.id === categoryId)).toBe(true);
+      const res = await request(server())
+        .get('/api/catalog/categories')
+        .expect(200);
+      expect(
+        res.body.data.some((c: { id: string }) => c.id === categoryId),
+      ).toBe(true);
     });
   });
 
@@ -185,7 +213,11 @@ describe('Catalog (e2e)', () => {
       return request(server())
         .post('/api/catalog/products')
         .set('Cookie', staffCookies)
-        .send({ type: 'machine', name: `Machine Invalid ${runId}`, detail: { warrantyMonths: 12 } })
+        .send({
+          type: 'machine',
+          name: `Machine Invalid ${runId}`,
+          detail: { warrantyMonths: 12 },
+        })
         .expect(400);
     });
 
@@ -197,7 +229,11 @@ describe('Catalog (e2e)', () => {
           type: 'machine',
           name: `Rocket Appartamento ${runId}`,
           brandId,
-          detail: { warrantyMonths: 12, voltage: '220V', specs: { boiler: 'dual' } },
+          detail: {
+            warrantyMonths: 12,
+            voltage: '220V',
+            specs: { boiler: 'dual' },
+          },
         })
         .expect(201);
       machineId = res.body.product.id;
@@ -238,7 +274,11 @@ describe('Catalog (e2e)', () => {
     it('POST produk tanpa login -> 401', () => {
       return request(server())
         .post('/api/catalog/products')
-        .send({ type: 'bean', name: 'X', detail: { process: 'washed', roastLevel: 'light' } })
+        .send({
+          type: 'bean',
+          name: 'X',
+          detail: { process: 'washed', roastLevel: 'light' },
+        })
         .expect(401);
     });
 
@@ -246,47 +286,81 @@ describe('Catalog (e2e)', () => {
       return request(server())
         .post('/api/catalog/products')
         .set('Cookie', custCookies)
-        .send({ type: 'bean', name: 'X', detail: { process: 'washed', roastLevel: 'light' } })
+        .send({
+          type: 'bean',
+          name: 'X',
+          detail: { process: 'washed', roastLevel: 'light' },
+        })
         .expect(403);
     });
   });
 
   describe('Produk — read publik', () => {
     it('GET /catalog/products -> memuat ketiga tipe', async () => {
-      const res = await request(server()).get('/api/catalog/products').expect(200);
+      const res = await request(server())
+        .get('/api/catalog/products')
+        .expect(200);
       const ids = res.body.data.map((p: { id: string }) => p.id);
-      expect(ids).toEqual(expect.arrayContaining([beanId, machineId, grinderId]));
+      expect(ids).toEqual(
+        expect.arrayContaining([beanId, machineId, grinderId]),
+      );
     });
 
     it('GET /catalog/products?type=machine -> hanya machine', async () => {
-      const res = await request(server()).get('/api/catalog/products').query({ type: 'machine' }).expect(200);
-      expect(res.body.data.every((p: { type: string }) => p.type === 'machine')).toBe(true);
-      expect(res.body.data.some((p: { id: string }) => p.id === machineId)).toBe(true);
+      const res = await request(server())
+        .get('/api/catalog/products')
+        .query({ type: 'machine' })
+        .expect(200);
+      expect(
+        res.body.data.every((p: { type: string }) => p.type === 'machine'),
+      ).toBe(true);
+      expect(
+        res.body.data.some((p: { id: string }) => p.id === machineId),
+      ).toBe(true);
     });
 
     it('GET /catalog/products/:slug -> detail bean lengkap', async () => {
-      const res = await request(server()).get(`/api/catalog/products/${beanSlug}`).expect(200);
+      const res = await request(server())
+        .get(`/api/catalog/products/${beanSlug}`)
+        .expect(200);
       expect(res.body.product.id).toBe(beanId);
       expect(res.body.product.detail.process).toBe('washed');
     });
 
     it('GET /catalog/products/:slug tidak ada -> 404', () => {
-      return request(server()).get('/api/catalog/products/slug-tidak-ada').expect(404);
+      return request(server())
+        .get('/api/catalog/products/slug-tidak-ada')
+        .expect(404);
     });
 
     it('GET /catalog/beans?originId= -> filter sesuai origin', async () => {
-      const res = await request(server()).get('/api/catalog/beans').query({ originId }).expect(200);
-      expect(res.body.data.some((p: { id: string }) => p.id === beanId)).toBe(true);
+      const res = await request(server())
+        .get('/api/catalog/beans')
+        .query({ originId })
+        .expect(200);
+      expect(res.body.data.some((p: { id: string }) => p.id === beanId)).toBe(
+        true,
+      );
     });
 
     it('GET /catalog/machines?brandId= -> filter sesuai brand', async () => {
-      const res = await request(server()).get('/api/catalog/machines').query({ brandId }).expect(200);
-      expect(res.body.data.some((p: { id: string }) => p.id === machineId)).toBe(true);
+      const res = await request(server())
+        .get('/api/catalog/machines')
+        .query({ brandId })
+        .expect(200);
+      expect(
+        res.body.data.some((p: { id: string }) => p.id === machineId),
+      ).toBe(true);
     });
 
     it('GET /catalog/grinders?brandId= -> filter sesuai brand', async () => {
-      const res = await request(server()).get('/api/catalog/grinders').query({ brandId }).expect(200);
-      expect(res.body.data.some((p: { id: string }) => p.id === grinderId)).toBe(true);
+      const res = await request(server())
+        .get('/api/catalog/grinders')
+        .query({ brandId })
+        .expect(200);
+      expect(
+        res.body.data.some((p: { id: string }) => p.id === grinderId),
+      ).toBe(true);
     });
   });
 
@@ -295,7 +369,10 @@ describe('Catalog (e2e)', () => {
       const res = await request(server())
         .patch(`/api/catalog/products/${beanId}`)
         .set('Cookie', staffCookies)
-        .send({ description: 'Update deskripsi', detail: { tastingNotes: 'floral, jasmine' } })
+        .send({
+          description: 'Update deskripsi',
+          detail: { tastingNotes: 'floral, jasmine' },
+        })
         .expect(200);
       expect(res.body.product.description).toBe('Update deskripsi');
       expect(res.body.product.detail.tastingNotes).toBe('floral, jasmine');
@@ -314,16 +391,26 @@ describe('Catalog (e2e)', () => {
         .set('Cookie', staffCookies)
         .expect(204);
 
-      await request(server()).get(`/api/catalog/products/${beanSlug}`).expect(200);
+      await request(server())
+        .get(`/api/catalog/products/${beanSlug}`)
+        .expect(200);
     });
 
     it('produk nonaktif tidak muncul lagi di publik', async () => {
-      const grinder = await db.query.products.findFirst({ where: eq(products.id, grinderId) });
-      const res = await request(server()).get(`/api/catalog/products/${grinder!.slug}`).expect(404);
+      const grinder = await db.query.products.findFirst({
+        where: eq(products.id, grinderId),
+      });
+      const res = await request(server())
+        .get(`/api/catalog/products/${grinder!.slug}`)
+        .expect(404);
       expect(res.body.message).toBe('Produk tidak ditemukan');
 
-      const listRes = await request(server()).get('/api/catalog/products').expect(200);
-      expect(listRes.body.data.some((p: { id: string }) => p.id === grinderId)).toBe(false);
+      const listRes = await request(server())
+        .get('/api/catalog/products')
+        .expect(200);
+      expect(
+        listRes.body.data.some((p: { id: string }) => p.id === grinderId),
+      ).toBe(false);
     });
   });
 
@@ -362,9 +449,13 @@ describe('Catalog (e2e)', () => {
     });
 
     it('GET detail bean setelah variant -> variants terisi', async () => {
-      const res = await request(server()).get(`/api/catalog/products/${beanSlug}`).expect(200);
+      const res = await request(server())
+        .get(`/api/catalog/products/${beanSlug}`)
+        .expect(200);
       expect(res.body.product.detail.variants).toHaveLength(1);
-      expect(res.body.product.detail.variants[0].sku).toMatch(/^BEN-\d{6}-250-V60$/);
+      expect(res.body.product.detail.variants[0].sku).toMatch(
+        /^BEN-\d{6}-250-V60$/,
+      );
     });
   });
 });

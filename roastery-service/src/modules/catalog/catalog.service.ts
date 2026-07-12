@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { and, eq, ilike, sql } from 'drizzle-orm';
 import type { SQL } from 'drizzle-orm';
 import { DRIZZLE } from '../../database/drizzle.constants';
@@ -9,7 +14,11 @@ import { products } from './catalog.schema';
 import { brands } from './brands/brands.schema';
 import { categories } from './categories/categories.schema';
 import { origins } from './origins/origins.schema';
-import { baseProductQuery, mapProductListItem, productListColumns } from './catalog.query';
+import {
+  baseProductQuery,
+  mapProductListItem,
+  productListColumns,
+} from './catalog.query';
 import type { ProductListRow } from './catalog.query';
 import { beanDetails, beanVariants } from './beans/beans.schema';
 import { machineDetails } from './machines/machines.schema';
@@ -17,7 +26,11 @@ import { grinderDetails } from './grinders/grinders.schema';
 import type { ProductDetailDto } from './dto/product-detail.dto';
 import type { CreateProductDto, UpdateProductDto } from './dto/product.dto';
 
-const CODE_PREFIX: Record<string, string> = { bean: 'BEN', machine: 'MCH', grinder: 'GRD' };
+const CODE_PREFIX: Record<string, string> = {
+  bean: 'BEN',
+  machine: 'MCH',
+  grinder: 'GRD',
+};
 
 interface FindAllProductsParams {
   type?: string;
@@ -51,7 +64,10 @@ export class CatalogService {
 
     const [rows, totalRows] = await Promise.all([
       baseProductQuery(this.db).where(where).limit(params.limit).offset(offset),
-      this.db.select({ count: sql<number>`count(*)::int` }).from(products).where(where),
+      this.db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(products)
+        .where(where),
     ]);
 
     return {
@@ -86,7 +102,9 @@ export class CatalogService {
         counter: `product_${dto.type}`,
       });
       const slug = await uniqueSlug(dto.name, async (candidate) => {
-        const found = await tx.query.products.findFirst({ where: eq(products.slug, candidate) });
+        const found = await tx.query.products.findFirst({
+          where: eq(products.slug, candidate),
+        });
         return !!found;
       });
 
@@ -140,7 +158,9 @@ export class CatalogService {
   }
 
   async updateProduct(id: string, dto: UpdateProductDto) {
-    const existing = await this.db.query.products.findFirst({ where: eq(products.id, id) });
+    const existing = await this.db.query.products.findFirst({
+      where: eq(products.id, id),
+    });
     if (!existing) {
       throw new NotFoundException('Produk tidak ditemukan');
     }
@@ -148,9 +168,11 @@ export class CatalogService {
     await this.db.transaction(async (tx) => {
       const productPatch: Partial<typeof products.$inferInsert> = {};
       if (dto.name !== undefined) productPatch.name = dto.name;
-      if (dto.description !== undefined) productPatch.description = dto.description;
+      if (dto.description !== undefined)
+        productPatch.description = dto.description;
       if (dto.brandId !== undefined) productPatch.brandId = dto.brandId;
-      if (dto.categoryId !== undefined) productPatch.categoryId = dto.categoryId;
+      if (dto.categoryId !== undefined)
+        productPatch.categoryId = dto.categoryId;
       if (dto.imageUrl !== undefined) productPatch.imageUrl = dto.imageUrl;
       if (dto.isActive !== undefined) productPatch.isActive = dto.isActive;
       if (Object.keys(productPatch).length > 0) {
@@ -161,32 +183,53 @@ export class CatalogService {
       if (dto.detail) {
         if (existing.type === 'bean') {
           const patch: Partial<typeof beanDetails.$inferInsert> = {};
-          if (dto.detail.originId !== undefined) patch.originId = dto.detail.originId;
-          if (dto.detail.process !== undefined) patch.process = dto.detail.process;
-          if (dto.detail.roastLevel !== undefined) patch.roastLevel = dto.detail.roastLevel;
-          if (dto.detail.fulfillmentType !== undefined) patch.fulfillmentType = dto.detail.fulfillmentType;
-          if (dto.detail.altitude !== undefined) patch.altitude = dto.detail.altitude;
-          if (dto.detail.variety !== undefined) patch.variety = dto.detail.variety;
-          if (dto.detail.tastingNotes !== undefined) patch.tastingNotes = dto.detail.tastingNotes;
-          if (dto.detail.roastedAt !== undefined) patch.roastedAt = dto.detail.roastedAt;
+          if (dto.detail.originId !== undefined)
+            patch.originId = dto.detail.originId;
+          if (dto.detail.process !== undefined)
+            patch.process = dto.detail.process;
+          if (dto.detail.roastLevel !== undefined)
+            patch.roastLevel = dto.detail.roastLevel;
+          if (dto.detail.fulfillmentType !== undefined)
+            patch.fulfillmentType = dto.detail.fulfillmentType;
+          if (dto.detail.altitude !== undefined)
+            patch.altitude = dto.detail.altitude;
+          if (dto.detail.variety !== undefined)
+            patch.variety = dto.detail.variety;
+          if (dto.detail.tastingNotes !== undefined)
+            patch.tastingNotes = dto.detail.tastingNotes;
+          if (dto.detail.roastedAt !== undefined)
+            patch.roastedAt = dto.detail.roastedAt;
           if (Object.keys(patch).length > 0) {
-            await tx.update(beanDetails).set(patch).where(eq(beanDetails.productId, id));
+            await tx
+              .update(beanDetails)
+              .set(patch)
+              .where(eq(beanDetails.productId, id));
           }
         } else if (existing.type === 'machine') {
           const patch: Partial<typeof machineDetails.$inferInsert> = {};
           if (dto.detail.specs !== undefined) patch.specs = dto.detail.specs;
-          if (dto.detail.voltage !== undefined) patch.voltage = dto.detail.voltage;
-          if (dto.detail.warrantyMonths !== undefined) patch.warrantyMonths = dto.detail.warrantyMonths;
+          if (dto.detail.voltage !== undefined)
+            patch.voltage = dto.detail.voltage;
+          if (dto.detail.warrantyMonths !== undefined)
+            patch.warrantyMonths = dto.detail.warrantyMonths;
           if (Object.keys(patch).length > 0) {
-            await tx.update(machineDetails).set(patch).where(eq(machineDetails.productId, id));
+            await tx
+              .update(machineDetails)
+              .set(patch)
+              .where(eq(machineDetails.productId, id));
           }
         } else {
           const patch: Partial<typeof grinderDetails.$inferInsert> = {};
-          if (dto.detail.burrType !== undefined) patch.burrType = dto.detail.burrType;
+          if (dto.detail.burrType !== undefined)
+            patch.burrType = dto.detail.burrType;
           if (dto.detail.specs !== undefined) patch.specs = dto.detail.specs;
-          if (dto.detail.warrantyMonths !== undefined) patch.warrantyMonths = dto.detail.warrantyMonths;
+          if (dto.detail.warrantyMonths !== undefined)
+            patch.warrantyMonths = dto.detail.warrantyMonths;
           if (Object.keys(patch).length > 0) {
-            await tx.update(grinderDetails).set(patch).where(eq(grinderDetails.productId, id));
+            await tx
+              .update(grinderDetails)
+              .set(patch)
+              .where(eq(grinderDetails.productId, id));
           }
         }
       }
@@ -196,7 +239,9 @@ export class CatalogService {
   }
 
   async removeProduct(id: string) {
-    const existing = await this.db.query.products.findFirst({ where: eq(products.id, id) });
+    const existing = await this.db.query.products.findFirst({
+      where: eq(products.id, id),
+    });
     if (!existing) {
       throw new NotFoundException('Produk tidak ditemukan');
     }
@@ -206,7 +251,11 @@ export class CatalogService {
       .where(eq(products.id, id));
   }
 
-  private validateDetail(type: string, brandId: string | undefined, detail: ProductDetailDto) {
+  private validateDetail(
+    type: string,
+    brandId: string | undefined,
+    detail: ProductDetailDto,
+  ) {
     if (type === 'bean') {
       if (!detail.process || !detail.roastLevel) {
         throw new BadRequestException(
@@ -216,13 +265,17 @@ export class CatalogService {
       return;
     }
     if (!brandId) {
-      throw new BadRequestException('brandId wajib diisi untuk produk machine/grinder');
+      throw new BadRequestException(
+        'brandId wajib diisi untuk produk machine/grinder',
+      );
     }
     if (detail.warrantyMonths === undefined) {
       throw new BadRequestException('detail.warrantyMonths wajib diisi');
     }
     if (type === 'grinder' && !detail.burrType) {
-      throw new BadRequestException('detail.burrType wajib diisi untuk produk grinder');
+      throw new BadRequestException(
+        'detail.burrType wajib diisi untuk produk grinder',
+      );
     }
   }
 
@@ -248,7 +301,9 @@ export class CatalogService {
       slug: row.slug,
       description: row.description,
       brand: row.brandId ? { id: row.brandId, name: row.brandName } : null,
-      category: row.categoryId ? { id: row.categoryId, name: row.categoryName } : null,
+      category: row.categoryId
+        ? { id: row.categoryId, name: row.categoryName }
+        : null,
       imageUrl: row.imageUrl,
       isActive: row.isActive,
     };
@@ -286,7 +341,11 @@ export class CatalogService {
         ...base,
         detail: {
           origin: detailRow?.originId
-            ? { id: detailRow.originId, name: detailRow.originName, country: detailRow.originCountry }
+            ? {
+                id: detailRow.originId,
+                name: detailRow.originName,
+                country: detailRow.originCountry,
+              }
             : null,
           process: detailRow?.process ?? null,
           roastLevel: detailRow?.roastLevel ?? null,

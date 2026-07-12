@@ -47,4 +47,6 @@ export class CreateProductDto {
 }
 
 // `type` tidak boleh diubah setelah produk dibuat.
-export class UpdateProductDto extends PartialType(OmitType(CreateProductDto, ['type'] as const)) {}
+export class UpdateProductDto extends PartialType(
+  OmitType(CreateProductDto, ['type'] as const),
+) {}

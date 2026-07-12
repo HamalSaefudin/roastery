@@ -8,11 +8,17 @@ import {
 import { and, asc, eq, inArray, sql } from 'drizzle-orm';
 import type { SQL } from 'drizzle-orm';
 import { DRIZZLE } from '../../database/drizzle.constants';
-import type { DrizzleDB, DrizzleDbOrTx } from '../../database/drizzle.constants';
+import type {
+  DrizzleDB,
+  DrizzleDbOrTx,
+} from '../../database/drizzle.constants';
 import { products } from '../catalog/catalog.schema';
 import { beanVariants } from '../catalog/beans/beans.schema';
 import { beanStock, equipmentUnits, stockMovements } from './inventory.schema';
-import type { CreateEquipmentUnitDto, UpdateEquipmentUnitDto } from './dto/equipment-unit.dto';
+import type {
+  CreateEquipmentUnitDto,
+  UpdateEquipmentUnitDto,
+} from './dto/equipment-unit.dto';
 import type { SetBeanStockDto } from './dto/set-bean-stock.dto';
 
 interface BeanStockRow {
@@ -62,7 +68,10 @@ export class InventoryService {
     const [beanRows, countRows] = await Promise.all([
       this.beanStockQuery(),
       this.db
-        .select({ status: equipmentUnits.status, count: sql<number>`count(*)::int` })
+        .select({
+          status: equipmentUnits.status,
+          count: sql<number>`count(*)::int`,
+        })
         .from(equipmentUnits)
         .groupBy(equipmentUnits.status),
     ]);
@@ -99,12 +108,17 @@ export class InventoryService {
       });
       const oldQuantity = existing?.quantity ?? 0;
       const change = dto.quantity - oldQuantity;
-      const lowStockThreshold = dto.lowStockThreshold ?? existing?.lowStockThreshold ?? 5;
+      const lowStockThreshold =
+        dto.lowStockThreshold ?? existing?.lowStockThreshold ?? 5;
 
       const [stock] = existing
         ? await tx
             .update(beanStock)
-            .set({ quantity: dto.quantity, lowStockThreshold, updatedAt: new Date() })
+            .set({
+              quantity: dto.quantity,
+              lowStockThreshold,
+              updatedAt: new Date(),
+            })
             .where(eq(beanStock.variantId, variantId))
             .returning()
         : await tx
@@ -112,7 +126,9 @@ export class InventoryService {
             .values({ variantId, quantity: dto.quantity, lowStockThreshold })
             .returning();
 
-      await tx.insert(stockMovements).values({ variantId, change, reason: dto.reason });
+      await tx
+        .insert(stockMovements)
+        .values({ variantId, change, reason: dto.reason });
 
       return this.mapBeanStock({ ...stock, sku: variant.sku });
     });
@@ -138,7 +154,9 @@ export class InventoryService {
         .insert(equipmentUnits)
         .values({ productId: dto.productId, serialNumber: dto.serialNumber })
         .returning();
-      await tx.insert(stockMovements).values({ unitId: unit.id, change: 1, reason: 'purchase' });
+      await tx
+        .insert(stockMovements)
+        .values({ unitId: unit.id, change: 1, reason: 'purchase' });
       return unit;
     });
   }
@@ -155,8 +173,16 @@ export class InventoryService {
     const offset = (params.page - 1) * params.limit;
 
     const [rows, totalRows] = await Promise.all([
-      this.db.select().from(equipmentUnits).where(where).limit(params.limit).offset(offset),
-      this.db.select({ count: sql<number>`count(*)::int` }).from(equipmentUnits).where(where),
+      this.db
+        .select()
+        .from(equipmentUnits)
+        .where(where)
+        .limit(params.limit)
+        .offset(offset),
+      this.db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(equipmentUnits)
+        .where(where),
     ]);
 
     return { data: rows, total: totalRows[0]?.count ?? 0 };
@@ -176,7 +202,9 @@ export class InventoryService {
         .set({ status: dto.status })
         .where(eq(equipmentUnits.id, id))
         .returning();
-      await tx.insert(stockMovements).values({ unitId: id, change: 0, reason: 'adjustment' });
+      await tx
+        .insert(stockMovements)
+        .values({ unitId: id, change: 0, reason: 'adjustment' });
       return unit;
     });
   }
@@ -193,7 +221,12 @@ export class InventoryService {
       const [row] = await this.db
         .select({ count: sql<number>`count(*)::int` })
         .from(equipmentUnits)
-        .where(and(eq(equipmentUnits.productId, productId), eq(equipmentUnits.status, 'in_stock')));
+        .where(
+          and(
+            eq(equipmentUnits.productId, productId),
+            eq(equipmentUnits.status, 'in_stock'),
+          ),
+        );
       const quantity = row?.count ?? 0;
       return { available: quantity > 0, quantity };
     }
@@ -236,7 +269,10 @@ export class InventoryService {
   ): Promise<void> {
     await tx
       .update(beanStock)
-      .set({ reserved: sql`${beanStock.reserved} - ${qty}`, updatedAt: new Date() })
+      .set({
+        reserved: sql`${beanStock.reserved} - ${qty}`,
+        updatedAt: new Date(),
+      })
       .where(eq(beanStock.variantId, variantId));
     await tx.insert(stockMovements).values({
       variantId,
@@ -277,7 +313,12 @@ export class InventoryService {
     const rows = await tx
       .select()
       .from(equipmentUnits)
-      .where(and(eq(equipmentUnits.productId, productId), eq(equipmentUnits.status, 'in_stock')))
+      .where(
+        and(
+          eq(equipmentUnits.productId, productId),
+          eq(equipmentUnits.status, 'in_stock'),
+        ),
+      )
       .orderBy(asc(equipmentUnits.createdAt))
       .limit(qty)
       .for('update');
@@ -285,9 +326,17 @@ export class InventoryService {
       throw new ConflictException('Stok unit tidak cukup');
     }
     const ids = rows.map((r) => r.id);
-    await tx.update(equipmentUnits).set({ status: 'reserved' }).where(inArray(equipmentUnits.id, ids));
+    await tx
+      .update(equipmentUnits)
+      .set({ status: 'reserved' })
+      .where(inArray(equipmentUnits.id, ids));
     for (const id of ids) {
-      await tx.insert(stockMovements).values({ unitId: id, change: 0, reason: 'reserve', refOrderId: orderId });
+      await tx.insert(stockMovements).values({
+        unitId: id,
+        change: 0,
+        reason: 'reserve',
+        refOrderId: orderId,
+      });
     }
     return ids;
   }
@@ -297,9 +346,17 @@ export class InventoryService {
     orderId: string,
     tx: DrizzleDbOrTx = this.db,
   ): Promise<void> {
-    await tx.update(equipmentUnits).set({ status: 'in_stock' }).where(inArray(equipmentUnits.id, unitIds));
+    await tx
+      .update(equipmentUnits)
+      .set({ status: 'in_stock' })
+      .where(inArray(equipmentUnits.id, unitIds));
     for (const id of unitIds) {
-      await tx.insert(stockMovements).values({ unitId: id, change: 0, reason: 'release', refOrderId: orderId });
+      await tx.insert(stockMovements).values({
+        unitId: id,
+        change: 0,
+        reason: 'release',
+        refOrderId: orderId,
+      });
     }
   }
 
@@ -308,9 +365,14 @@ export class InventoryService {
     orderId: string,
     tx: DrizzleDbOrTx = this.db,
   ): Promise<void> {
-    await tx.update(equipmentUnits).set({ status: 'sold' }).where(inArray(equipmentUnits.id, unitIds));
+    await tx
+      .update(equipmentUnits)
+      .set({ status: 'sold' })
+      .where(inArray(equipmentUnits.id, unitIds));
     for (const id of unitIds) {
-      await tx.insert(stockMovements).values({ unitId: id, change: 0, reason: 'sale', refOrderId: orderId });
+      await tx
+        .insert(stockMovements)
+        .values({ unitId: id, change: 0, reason: 'sale', refOrderId: orderId });
     }
   }
 }

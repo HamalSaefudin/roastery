@@ -9,8 +9,15 @@ import { CatalogService } from './catalog.service';
 import { CatalogController } from './catalog.controller';
 
 @Module({
-  imports: [BeansModule, MachinesModule, GrindersModule, BrandsModule, OriginsModule, CategoriesModule],
+  imports: [
+    BeansModule,
+    MachinesModule,
+    GrindersModule,
+    BrandsModule,
+    OriginsModule,
+    CategoriesModule,
+  ],
   providers: [CatalogService],
-  controllers: [CatalogController]
+  controllers: [CatalogController],
 })
 export class CatalogModule {}

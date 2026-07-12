@@ -23,7 +23,9 @@ import * as schema from './schema';
       provide: PG_POOL,
       inject: [ConfigService],
       useFactory: (config: ConfigService) =>
-        new Pool({ connectionString: config.getOrThrow<string>('DATABASE_URL') }),
+        new Pool({
+          connectionString: config.getOrThrow<string>('DATABASE_URL'),
+        }),
     },
     {
       provide: DRIZZLE,

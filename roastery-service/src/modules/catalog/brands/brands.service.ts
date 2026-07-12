@@ -1,4 +1,9 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { DRIZZLE } from '../../../database/drizzle.constants';
 import type { DrizzleDB } from '../../../database/drizzle.constants';
@@ -24,22 +29,35 @@ export class BrandsService {
     });
     const [brand] = await this.db
       .insert(brands)
-      .values({ name: dto.name, slug, logoUrl: dto.logoUrl, description: dto.description })
+      .values({
+        name: dto.name,
+        slug,
+        logoUrl: dto.logoUrl,
+        description: dto.description,
+      })
       .returning();
     return brand;
   }
 
   async update(id: string, dto: UpdateBrandDto) {
-    const existing = await this.db.query.brands.findFirst({ where: eq(brands.id, id) });
+    const existing = await this.db.query.brands.findFirst({
+      where: eq(brands.id, id),
+    });
     if (!existing) {
       throw new NotFoundException('Brand tidak ditemukan');
     }
-    const [updated] = await this.db.update(brands).set(dto).where(eq(brands.id, id)).returning();
+    const [updated] = await this.db
+      .update(brands)
+      .set(dto)
+      .where(eq(brands.id, id))
+      .returning();
     return updated;
   }
 
   async remove(id: string): Promise<void> {
-    const existing = await this.db.query.brands.findFirst({ where: eq(brands.id, id) });
+    const existing = await this.db.query.brands.findFirst({
+      where: eq(brands.id, id),
+    });
     if (!existing) {
       throw new NotFoundException('Brand tidak ditemukan');
     }
@@ -49,6 +67,9 @@ export class BrandsService {
     if (referenced) {
       throw new ConflictException('Masih dipakai produk');
     }
-    await this.db.update(brands).set({ isActive: false }).where(eq(brands.id, id));
+    await this.db
+      .update(brands)
+      .set({ isActive: false })
+      .where(eq(brands.id, id));
   }
 }

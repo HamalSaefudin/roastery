@@ -4,6 +4,6 @@ import { BeansController } from './beans.controller';
 
 @Module({
   providers: [BeansService],
-  controllers: [BeansController]
+  controllers: [BeansController],
 })
 export class BeansModule {}

@@ -35,8 +35,14 @@ describe('Inventory (e2e)', () => {
     db = app.get<DrizzleDB>(DRIZZLE);
     inventoryService = app.get<InventoryService>(InventoryService);
 
-    await request(server()).post('/api/auth/register').send({ email: staffEmail, password }).expect(201);
-    await db.update(users).set({ role: 'staff' }).where(eq(users.email, staffEmail));
+    await request(server())
+      .post('/api/auth/register')
+      .send({ email: staffEmail, password })
+      .expect(201);
+    await db
+      .update(users)
+      .set({ role: 'staff' })
+      .where(eq(users.email, staffEmail));
     const staffLogin = await request(server())
       .post('/api/auth/login')
       .send({ email: staffEmail, password })
@@ -88,7 +94,9 @@ describe('Inventory (e2e)', () => {
   });
 
   afterAll(async () => {
-    await db.delete(products).where(inArray(products.id, [beanId, machineId].filter(Boolean)));
+    await db
+      .delete(products)
+      .where(inArray(products.id, [beanId, machineId].filter(Boolean)));
     if (brandId) await db.delete(brands).where(eq(brands.id, brandId));
     await db.delete(users).where(inArray(users.email, [staffEmail, custEmail]));
     await app.close();
@@ -138,7 +146,11 @@ describe('Inventory (e2e)', () => {
         .get('/api/inventory/overview')
         .set('Cookie', staffCookies)
         .expect(200);
-      expect(res.body.beans.some((b: { variantId: string }) => b.variantId === variantId)).toBe(true);
+      expect(
+        res.body.beans.some(
+          (b: { variantId: string }) => b.variantId === variantId,
+        ),
+      ).toBe(true);
     });
 
     it('GET low-stock -> kosong (40 > threshold 5)', async () => {
@@ -146,7 +158,11 @@ describe('Inventory (e2e)', () => {
         .get('/api/inventory/low-stock')
         .set('Cookie', staffCookies)
         .expect(200);
-      expect(res.body.data.some((b: { variantId: string }) => b.variantId === variantId)).toBe(false);
+      expect(
+        res.body.data.some(
+          (b: { variantId: string }) => b.variantId === variantId,
+        ),
+      ).toBe(false);
     });
 
     it('GET availability publik -> available true quantity 40', async () => {
@@ -168,7 +184,11 @@ describe('Inventory (e2e)', () => {
         .get('/api/inventory/low-stock')
         .set('Cookie', staffCookies)
         .expect(200);
-      expect(res.body.data.some((b: { variantId: string }) => b.variantId === variantId)).toBe(true);
+      expect(
+        res.body.data.some(
+          (b: { variantId: string }) => b.variantId === variantId,
+        ),
+      ).toBe(true);
     });
 
     it('GET availability tanpa variantId/productId -> 400', () => {
@@ -211,7 +231,9 @@ describe('Inventory (e2e)', () => {
         .query({ productId: machineId })
         .set('Cookie', staffCookies)
         .expect(200);
-      expect(res.body.data.some((u: { id: string }) => u.id === unitId)).toBe(true);
+      expect(res.body.data.some((u: { id: string }) => u.id === unitId)).toBe(
+        true,
+      );
     });
 
     it('GET availability?productId= -> quantity 1 (in_stock)', async () => {
@@ -241,7 +263,9 @@ describe('Inventory (e2e)', () => {
 
     it('PATCH unit tidak ada -> 404', () => {
       return request(server())
-        .patch('/api/inventory/equipment-units/00000000-0000-0000-0000-000000000000')
+        .patch(
+          '/api/inventory/equipment-units/00000000-0000-0000-0000-000000000000',
+        )
         .set('Cookie', staffCookies)
         .send({ status: 'defective' })
         .expect(404);
@@ -293,7 +317,11 @@ describe('Inventory (e2e)', () => {
         productId: machineId,
         serialNumber: `SN-INV-RESERVE-${runId}`,
       });
-      const ids = await inventoryService.reserveEquipmentUnits(machineId, 1, orderId);
+      const ids = await inventoryService.reserveEquipmentUnits(
+        machineId,
+        1,
+        orderId,
+      );
       expect(ids).toEqual([freshUnit.id]);
 
       const avail = await inventoryService.availability(undefined, machineId);
@@ -305,7 +333,9 @@ describe('Inventory (e2e)', () => {
         .query({ productId: machineId, status: 'sold' })
         .set('Cookie', staffCookies)
         .expect(200);
-      expect(res.body.data.some((u: { id: string }) => u.id === freshUnit.id)).toBe(true);
+      expect(
+        res.body.data.some((u: { id: string }) => u.id === freshUnit.id),
+      ).toBe(true);
     });
 
     it('reserveEquipmentUnits melebihi stok -> ConflictException', async () => {
@@ -320,7 +350,12 @@ describe('Inventory (e2e)', () => {
         productId: machineId,
         serialNumber: `SN-INV-RELEASE-${runId}`,
       });
-      const ids = await inventoryService.reserveEquipmentUnits(machineId, 1, orderId);
+      const ids = await inventoryService.reserveEquipmentUnits(
+        machineId,
+        1,
+        orderId,
+      );
+      expect(ids).toEqual([freshUnit.id]);
       let avail = await inventoryService.availability(undefined, machineId);
       expect(avail.quantity).toBe(0);
 

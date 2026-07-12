@@ -19,7 +19,10 @@ import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
             level: config.get<string>('LOG_LEVEL', isProd ? 'info' : 'debug'),
             transport: isProd
               ? undefined
-              : { target: 'pino-pretty', options: { colorize: true, singleLine: true } },
+              : {
+                  target: 'pino-pretty',
+                  options: { colorize: true, singleLine: true },
+                },
             redact: {
               paths: [
                 'req.headers.cookie',

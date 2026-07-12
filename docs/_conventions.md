@@ -431,3 +431,9 @@ Folder sama dengan source (`*.spec.ts` di sebelah file yang diuji, konvensi defa
 ### Definition of Done tiap modul (update §14)
 
 Selain 4 poin di §14, tiap modul **wajib** tambah: e2e test untuk endpoint-endpoint utamanya, `pnpm test:e2e` hijau (bukan cuma `pnpm build`).
+
+### Lint (`pnpm lint`, WAJIB hijau)
+
+- `app.getHttpServer()` dan `Response.body` dari `supertest` mengetik `any` **by design** (bukan bug) — assert-nya lewat `expect()`, bukan lewat static typing. Karena itu `eslint.config.mjs` sudah punya override khusus `test/**/*.e2e-spec.ts` yang mematikan 4 rule `@typescript-eslint/no-unsafe-*` (argument/assignment/call/member-access/return) HANYA untuk file e2e — jangan copy pattern ini ke `src/`.
+- Di `src/`, kalau ketemu "unsafe assignment/call/member-access" dari Express `Request` (mis. `req.cookies?.[...]`, `ctx.switchToHttp().getRequest()`), itu **beneran** perlu di-type — pola yang dipakai: `as string | undefined` untuk cookie value, atau `getRequest<{ user: RequestUser }>()` untuk generic type param. Lihat `auth.controller.ts`, `current-user.decorator.ts`, `jwt-auth.guard.ts`.
+- Redline ESLint di VS Code (bukan dari `pnpm exec eslint` CLI) kadang false-positive karena TS language server gagal resolve generic `DrizzleDB` yang dalam — cek dulu via CLI (`pnpm exec eslint <file>`) sebelum "memperbaiki" kode yang sebenarnya sudah benar; kalau CLI bersih tapi editor merah, restart TS Server + ESLint Server dulu.

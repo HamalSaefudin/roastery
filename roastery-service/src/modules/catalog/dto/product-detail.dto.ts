@@ -1,4 +1,13 @@
-import { IsDateString, IsIn, IsInt, IsObject, IsOptional, IsString, IsUUID, Min } from 'class-validator';
+import {
+  IsDateString,
+  IsIn,
+  IsInt,
+  IsObject,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Min,
+} from 'class-validator';
 
 const BEAN_PROCESSES = ['washed', 'natural', 'honey', 'other'] as const;
 const ROAST_LEVELS = ['light', 'medium', 'dark'] as const;

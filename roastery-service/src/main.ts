@@ -18,7 +18,9 @@ async function bootstrap() {
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Roastery API')
-    .setDescription('Service API roastery — kontrak detail per modul ada di folder docs/')
+    .setDescription(
+      'Service API roastery — kontrak detail per modul ada di folder docs/',
+    )
     .setVersion('1.0')
     .addCookieAuth('access_token')
     .build();
@@ -27,4 +29,4 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 3000);
 }
-bootstrap();
+void bootstrap();

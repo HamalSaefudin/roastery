@@ -33,7 +33,10 @@ export class BeansController {
 
   @Roles('staff', 'admin')
   @Post(':id/variants')
-  async createVariant(@Param('id') productId: string, @Body() dto: CreateBeanVariantDto) {
+  async createVariant(
+    @Param('id') productId: string,
+    @Body() dto: CreateBeanVariantDto,
+  ) {
     const variant = await this.beansService.createVariant(productId, dto);
     return { variant };
   }

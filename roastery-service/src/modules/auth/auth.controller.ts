@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpCode, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
@@ -19,15 +27,27 @@ import {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  private setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
+  private setAuthCookies(
+    res: Response,
+    accessToken: string,
+    refreshToken: string,
+  ) {
     res.cookie(ACCESS_TOKEN_COOKIE, accessToken, ACCESS_TOKEN_COOKIE_OPTIONS);
-    res.cookie(REFRESH_TOKEN_COOKIE, refreshToken, REFRESH_TOKEN_COOKIE_OPTIONS);
+    res.cookie(
+      REFRESH_TOKEN_COOKIE,
+      refreshToken,
+      REFRESH_TOKEN_COOKIE_OPTIONS,
+    );
   }
 
   @Public()
   @Post('register')
-  async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
-    const { user, accessToken, refreshToken } = await this.authService.register(dto);
+  async register(
+    @Body() dto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { user, accessToken, refreshToken } =
+      await this.authService.register(dto);
     this.setAuthCookies(res, accessToken, refreshToken);
     return { user };
   }
@@ -35,8 +55,12 @@ export class AuthController {
   @Public()
   @Post('login')
   @HttpCode(200)
-  async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
-    const { user, accessToken, refreshToken } = await this.authService.login(dto);
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { user, accessToken, refreshToken } =
+      await this.authService.login(dto);
     this.setAuthCookies(res, accessToken, refreshToken);
     return { user };
   }
@@ -44,9 +68,14 @@ export class AuthController {
   @Public()
   @Post('refresh')
   @HttpCode(200)
-  async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const currentRefreshToken: string | undefined = req.cookies?.[REFRESH_TOKEN_COOKIE];
-    const { accessToken, refreshToken } = await this.authService.refresh(currentRefreshToken);
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const currentRefreshToken = req.cookies?.[REFRESH_TOKEN_COOKIE] as
+      string | undefined;
+    const { accessToken, refreshToken } =
+      await this.authService.refresh(currentRefreshToken);
     this.setAuthCookies(res, accessToken, refreshToken);
     return { ok: true };
   }
@@ -55,7 +84,8 @@ export class AuthController {
   @HttpCode(204)
   @ApiCookieAuth()
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const currentRefreshToken: string | undefined = req.cookies?.[REFRESH_TOKEN_COOKIE];
+    const currentRefreshToken = req.cookies?.[REFRESH_TOKEN_COOKIE] as
+      string | undefined;
     await this.authService.logout(currentRefreshToken);
     res.clearCookie(ACCESS_TOKEN_COOKIE, ACCESS_TOKEN_COOKIE_OPTIONS);
     res.clearCookie(REFRESH_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE_OPTIONS);

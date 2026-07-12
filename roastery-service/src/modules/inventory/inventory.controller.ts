@@ -1,10 +1,21 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { InventoryService } from './inventory.service';
 import { Public } from '../auth/decorators/public.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { parseLimit, parsePage } from '../../common/pagination.util';
-import { CreateEquipmentUnitDto, UpdateEquipmentUnitDto } from './dto/equipment-unit.dto';
+import {
+  CreateEquipmentUnitDto,
+  UpdateEquipmentUnitDto,
+} from './dto/equipment-unit.dto';
 import { SetBeanStockDto } from './dto/set-bean-stock.dto';
 
 @ApiTags('inventory')
@@ -26,13 +37,19 @@ export class InventoryController {
 
   @Public()
   @Get('availability')
-  async availability(@Query('variantId') variantId?: string, @Query('productId') productId?: string) {
+  async availability(
+    @Query('variantId') variantId?: string,
+    @Query('productId') productId?: string,
+  ) {
     return this.inventoryService.availability(variantId, productId);
   }
 
   @Roles('staff', 'admin')
   @Patch('bean-stock/:variantId')
-  async setBeanStock(@Param('variantId') variantId: string, @Body() dto: SetBeanStockDto) {
+  async setBeanStock(
+    @Param('variantId') variantId: string,
+    @Body() dto: SetBeanStockDto,
+  ) {
     const stock = await this.inventoryService.setBeanStock(variantId, dto);
     return { stock };
   }
@@ -61,7 +78,10 @@ export class InventoryController {
 
   @Roles('staff', 'admin')
   @Patch('equipment-units/:id')
-  async updateEquipmentUnit(@Param('id') id: string, @Body() dto: UpdateEquipmentUnitDto) {
+  async updateEquipmentUnit(
+    @Param('id') id: string,
+    @Body() dto: UpdateEquipmentUnitDto,
+  ) {
     const unit = await this.inventoryService.updateEquipmentUnitStatus(id, dto);
     return { unit };
   }

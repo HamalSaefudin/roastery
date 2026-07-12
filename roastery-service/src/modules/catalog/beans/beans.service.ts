@@ -1,4 +1,9 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { and, eq, ilike, sql } from 'drizzle-orm';
 import type { SQL } from 'drizzle-orm';
 import { DRIZZLE } from '../../../database/drizzle.constants';
@@ -27,7 +32,10 @@ export class BeansService {
   constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
 
   async listPublic(params: ListBeansParams) {
-    const conditions: SQL[] = [eq(products.type, 'bean'), eq(products.isActive, true)];
+    const conditions: SQL[] = [
+      eq(products.type, 'bean'),
+      eq(products.isActive, true),
+    ];
     if (params.originId) {
       conditions.push(eq(beanDetails.originId, params.originId));
     }
@@ -81,7 +89,12 @@ export class BeansService {
 
     const [variant] = await this.db
       .insert(beanVariants)
-      .values({ productId, weightGrams: dto.weightGrams, grind: dto.grind, sku })
+      .values({
+        productId,
+        weightGrams: dto.weightGrams,
+        grind: dto.grind,
+        sku,
+      })
       .returning();
     return variant;
   }
