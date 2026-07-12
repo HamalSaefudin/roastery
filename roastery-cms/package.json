@@ -14,7 +14,9 @@
     "lint": "eslint",
     "format": "prettier --write . && eslint --fix",
     "check": "prettier --check .",
-    "generate:api": "openapi-typescript http://localhost:3000/api/docs-json -o src/lib/api/schema.d.ts"
+    "generate:api": "openapi-typescript http://localhost:3000/api/docs-json -o src/lib/api/schema.d.ts",
+    "test:e2e": "playwright test",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
@@ -46,6 +48,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/devtools-vite": "^0.8.1",
     "@tanstack/eslint-config": "^0.4.0",

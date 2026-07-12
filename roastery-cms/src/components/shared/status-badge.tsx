@@ -124,8 +124,10 @@ export function StatusBadge<TJenis extends StatusJenis>({
   jenis,
   status,
   className,
-}: StatusBadgeProps<J>) {
-  const info = (MAPPING[jenis] as Record<string, StatusInfo>)[status as string] ?? {
+}: StatusBadgeProps<TJenis>) {
+  const info = (MAPPING[jenis] as Record<string, StatusInfo>)[
+    status as string
+  ] ?? {
     // Status tidak dikenal (enum backend nambah tapi FE belum update) —
     // tampilkan mentah sebagai netral, jangan crash
     label: String(status),

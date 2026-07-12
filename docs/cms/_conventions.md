@@ -8,7 +8,10 @@
 2. Komponen shadcn ditambah via CLI-nya (`pnpm dlx shadcn@latest add <nama>`), jangan tulis manual.
 3. Setiap selesai item → centang todo.md; selesai fase/step → update tabel progress CLAUDE.md.
 4. `api-contract.md` tiap modul backend = sumber kebenaran endpoint. Types dari `src/lib/api/schema.d.ts` (regenerate: `pnpm generate:api`).
-5. Verifikasi per step = **manual di browser** (dev server + backend nyala) mengikuti checklist todo — WAJIB memicu sendiri kondisi loading (Network throttling di DevTools), sukses, dan minimal satu error case nyata per halaman. Unit test (vitest) hanya untuk helper murni (formatter dll). E2E Playwright = backlog, belum di-setup.
+5. Verifikasi per step = **e2e Playwright** (`pnpm test:e2e`, folder `roastery-cms/e2e/`) + cek visual manual seperlunya. Tiap step WAJIB menulis `e2e/<step>.spec.ts` yang meng-otomasi checklist verifikasinya — termasuk kondisi loading (tombol disabled/skeleton), sukses (toast/redirect), dan error (pesan tampil). Unit test (vitest) hanya untuk helper murni (formatter dll).
+   - Playwright auto-start dev server :3001 (`webServer` di `playwright.config.ts`). Spec yang butuh API mengasumsikan backend nyala di :3000 — sebutkan di komentar atas spec-nya.
+   - **Interaksi wajib lewat helper `buka()` dari `e2e/utils.ts`** — menunggu `html[data-hydrated]` (di-set `__root.tsx`); klik sebelum React hydrate mendarat di tombol SSR tanpa handler dan diam-diam tidak terjadi apa-apa.
+   - Tiap spec halaman baru menyertakan assert console bersih (`kumpulkanErrorConsole`) — penjaga regresi hydration/error runtime.
 
 ## 2. Struktur folder
 
@@ -99,7 +102,7 @@ src/
 
 ## 10. Definition of Done per step
 
-1. Semua item todo tercentang; `pnpm build` + `pnpm lint` + `pnpm check` hijau.
-2. Checklist verifikasi manual (loading/sukses/error per halaman) terbukti di browser.
-3. Tidak ada `console.error` liar di happy path.
+1. Semua item todo tercentang; `pnpm typecheck` + `pnpm build` + `pnpm lint` + `pnpm check` + `pnpm test` hijau. (**Catatan: `vite build` TIDAK type-check** — esbuild cuma strip types; `pnpm typecheck` (tsc --noEmit) wajib.)
+2. `pnpm test:e2e` hijau — spec step ini meng-cover loading/sukses/error per halaman (lihat §1 poin 5).
+3. Tidak ada `console.error` liar di happy path (di-assert otomatis di e2e).
 4. CLAUDE.md progress + commit.

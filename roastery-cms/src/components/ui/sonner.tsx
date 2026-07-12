@@ -6,8 +6,8 @@ import {
   OctagonXIcon,
   TriangleAlertIcon,
 } from 'lucide-react'
-import { Toaster as Sonner  } from 'sonner'
-import type {ToasterProps} from 'sonner';
+import { Toaster as Sonner } from 'sonner'
+import type { ToasterProps } from 'sonner'
 
 // Ikuti tema dari data-theme di <html> (sistem tema kita, bukan next-themes)
 function subscribeTheme(onChange: () => void) {
@@ -24,7 +24,11 @@ function getTheme(): 'light' | 'dark' {
 }
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const theme = useSyncExternalStore(subscribeTheme, getTheme, () => 'dark')
+  const theme = useSyncExternalStore(
+    subscribeTheme,
+    getTheme,
+    (): 'light' | 'dark' => 'dark',
+  )
 
   return (
     <Sonner

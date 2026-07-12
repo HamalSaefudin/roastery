@@ -9,7 +9,8 @@ import type { paths } from './schema'
  * jadi baseUrl TANPA `/api` (origin saja).
  */
 const apiUrl =
-  (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://localhost:3000/api'
+  (import.meta.env.VITE_API_URL as string | undefined) ??
+  'http://localhost:3000/api'
 const baseUrl = apiUrl.replace(/\/api\/?$/, '')
 
 export const api = createClient<paths>({

@@ -1,7 +1,13 @@
 import { Skeleton } from '../ui/skeleton'
 
 /** Skeleton baris tabel — dipakai di DALAM <tbody> area tabel saat load pertama. */
-export function TableSkeleton({ kolom = 4, baris = 5 }: { kolom?: number; baris?: number }) {
+export function TableSkeleton({
+  kolom = 4,
+  baris = 5,
+}: {
+  kolom?: number
+  baris?: number
+}) {
   return (
     <div className="space-y-2 p-4" role="status" aria-label="Memuat data">
       {Array.from({ length: baris }).map((_, i) => (

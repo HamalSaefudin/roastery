@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import {
   HeadContent,
   Scripts,
@@ -46,6 +47,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  // Penanda hydration selesai — dipakai e2e Playwright utk menunggu sebelum
+  // berinteraksi (klik ke tombol SSR sebelum hydrate = handler belum terpasang)
+  useEffect(() => {
+    document.documentElement.dataset.hydrated = 'true'
+  }, [])
+
   return (
     // data-theme di-set ulang oleh temaInitScript sebelum paint (localStorage) —
     // mismatch atribut ini disengaja, makanya suppressHydrationWarning

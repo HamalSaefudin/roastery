@@ -26,14 +26,36 @@ export const Route = createFileRoute('/dev/kitchen-sink')({
 })
 
 const SEMUA_STATUS = {
-  order: ['created', 'paid', 'processing', 'out_for_delivery', 'ready_for_pickup', 'delivered', 'cancelled'],
+  order: [
+    'created',
+    'paid',
+    'processing',
+    'out_for_delivery',
+    'ready_for_pickup',
+    'delivered',
+    'cancelled',
+  ],
   payment: ['pending', 'paid', 'failed', 'refunded', 'partially_refunded'],
   invoice: ['issued', 'paid', 'overdue', 'cancelled'],
-  delivery: ['pending', 'assigned', 'picked_up', 'en_route', 'delivered', 'failed'],
+  delivery: [
+    'pending',
+    'assigned',
+    'picked_up',
+    'en_route',
+    'delivered',
+    'failed',
+  ],
   settlement: ['pending', 'confirmed'],
   unit: ['in_stock', 'reserved', 'sold', 'defective'],
   wholesale: ['pending', 'approved', 'rejected'],
-  repair: ['open', 'diagnosing', 'in_progress', 'waiting_parts', 'completed', 'cancelled'],
+  repair: [
+    'open',
+    'diagnosing',
+    'in_progress',
+    'waiting_parts',
+    'completed',
+    'cancelled',
+  ],
   content: ['draft', 'published'],
   user: ['active', 'pending', 'suspended'],
   customerType: ['retail', 'wholesale'],
@@ -74,7 +96,9 @@ function KitchenSink() {
       />
 
       <Card>
-        <CardHeader><CardTitle className="font-heading">Tombol & Loading</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle className="font-heading">Tombol & Loading</CardTitle>
+        </CardHeader>
         <CardContent className="flex flex-wrap items-center gap-3">
           <Button>Primer</Button>
           <Button variant="secondary">Sekunder</Button>
@@ -82,32 +106,62 @@ function KitchenSink() {
           <Button variant="ghost">Ghost</Button>
           <Button variant="destructive">Hapus</Button>
           <Button disabled>Disabled</Button>
-          <LoadingButton loading={simulasiLoading} loadingText="Menyimpan…" onClick={simulasiSubmit}>
+          <LoadingButton
+            loading={simulasiLoading}
+            loadingText="Menyimpan…"
+            onClick={simulasiSubmit}
+          >
             Simulasi submit (1,5 dtk)
           </LoadingButton>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader><CardTitle className="font-heading">Toast</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle className="font-heading">Toast</CardTitle>
+        </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
-          <Button variant="outline" onClick={() => toastSukses('Perubahan disimpan')}>
+          <Button
+            variant="outline"
+            onClick={() => toastSukses('Perubahan disimpan')}
+          >
             Toast sukses
           </Button>
-          <Button variant="outline" onClick={() => toastError({ statusCode: 409, message: 'Kombinasi berat & gilingan sudah ada' })}>
+          <Button
+            variant="outline"
+            onClick={() =>
+              toastError({
+                statusCode: 409,
+                message: 'Kombinasi berat & gilingan sudah ada',
+              })
+            }
+          >
             Toast error 409 (pesan backend)
           </Button>
-          <Button variant="outline" onClick={() => toastError({ statusCode: 400, message: ['nama tidak boleh kosong', 'harga minimal 1000'] })}>
+          <Button
+            variant="outline"
+            onClick={() =>
+              toastError({
+                statusCode: 400,
+                message: ['nama tidak boleh kosong', 'harga minimal 1000'],
+              })
+            }
+          >
             Toast error validasi (array)
           </Button>
-          <Button variant="outline" onClick={() => toastError(new TypeError('fetch failed'))}>
+          <Button
+            variant="outline"
+            onClick={() => toastError(new TypeError('fetch failed'))}
+          >
             Toast network error
           </Button>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader><CardTitle className="font-heading">ConfirmDialog</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle className="font-heading">ConfirmDialog</CardTitle>
+        </CardHeader>
         <CardContent>
           <Button variant="destructive" onClick={() => setDialogTerbuka(true)}>
             Hapus brand "Rocket"
@@ -125,13 +179,23 @@ function KitchenSink() {
       </Card>
 
       <Card>
-        <CardHeader><CardTitle className="font-heading">StatusBadge — semua enum backend</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle className="font-heading">
+            StatusBadge — semua enum backend
+          </CardTitle>
+        </CardHeader>
         <CardContent className="space-y-3">
           {Object.entries(SEMUA_STATUS).map(([jenis, daftar]) => (
             <div key={jenis} className="flex flex-wrap items-center gap-2">
-              <span className="w-28 shrink-0 font-mono text-xs text-muted-foreground">{jenis}</span>
+              <span className="w-28 shrink-0 font-mono text-xs text-muted-foreground">
+                {jenis}
+              </span>
               {daftar.map((s) => (
-                <StatusBadge key={s} jenis={jenis as keyof typeof SEMUA_STATUS} status={s} />
+                <StatusBadge
+                  key={s}
+                  jenis={jenis as keyof typeof SEMUA_STATUS}
+                  status={s}
+                />
               ))}
             </div>
           ))}
@@ -139,45 +203,75 @@ function KitchenSink() {
       </Card>
 
       <Card>
-        <CardHeader><CardTitle className="font-heading">Skeleton / Empty / Error</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle className="font-heading">
+            Skeleton / Empty / Error
+          </CardTitle>
+        </CardHeader>
         <CardContent className="grid gap-6 lg:grid-cols-2">
           <div className="rounded-lg border">
-            <p className="border-b px-4 py-2 text-sm text-muted-foreground">TableSkeleton</p>
+            <p className="border-b px-4 py-2 text-sm text-muted-foreground">
+              TableSkeleton
+            </p>
             <TableSkeleton />
           </div>
           <div className="rounded-lg border">
-            <p className="border-b px-4 py-2 text-sm text-muted-foreground">EmptyState</p>
+            <p className="border-b px-4 py-2 text-sm text-muted-foreground">
+              EmptyState
+            </p>
             <EmptyState
               judul="Belum ada produk"
               deskripsi="Produk yang kamu buat akan tampil di sini dan otomatis muncul di storefront."
-              aksi={<Button size="sm"><PlusIcon className="size-4" />Tambah Produk</Button>}
+              aksi={
+                <Button size="sm">
+                  <PlusIcon className="size-4" />
+                  Tambah Produk
+                </Button>
+              }
             />
           </div>
           <div className="rounded-lg border">
-            <p className="border-b px-4 py-2 text-sm text-muted-foreground">ErrorState</p>
+            <p className="border-b px-4 py-2 text-sm text-muted-foreground">
+              ErrorState
+            </p>
             <ErrorState
               error={{ statusCode: 500, message: 'Internal server error' }}
               onRetry={() => toastSukses('Refetch dipanggil')}
             />
           </div>
           <div className="rounded-lg border">
-            <p className="border-b px-4 py-2 text-sm text-muted-foreground">PageSkeleton (mini)</p>
-            <div className="max-h-64 overflow-hidden"><PageSkeleton /></div>
+            <p className="border-b px-4 py-2 text-sm text-muted-foreground">
+              PageSkeleton (mini)
+            </p>
+            <div className="max-h-64 overflow-hidden">
+              <PageSkeleton />
+            </div>
           </div>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader><CardTitle className="font-heading">Form & Format</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle className="font-heading">Form & Format</CardTitle>
+        </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid max-w-sm gap-2">
             <Label htmlFor="demo-nama">Nama Produk</Label>
             <Input id="demo-nama" defaultValue="Gayo Wine Process 250g" />
           </div>
           <div className="space-y-1 text-sm">
-            <p>formatRupiah(2450000) → <b className="font-mono">{formatRupiah(2450000)}</b></p>
-            <p>formatTanggal(sekarang) → <b className="font-mono">{formatTanggal(new Date())}</b></p>
-            <p>Kode publik (mono): <span className="font-mono">ORD-20260712-0042</span></p>
+            <p>
+              formatRupiah(2450000) →{' '}
+              <b className="font-mono">{formatRupiah(2450000)}</b>
+            </p>
+            <p>
+              formatTanggal(sekarang) →{' '}
+              <b className="font-mono">{formatTanggal(new Date())}</b>
+            </p>
+            <p>
+              Kode publik (mono):{' '}
+              <span className="font-mono">ORD-20260712-0042</span>
+            </p>
           </div>
         </CardContent>
       </Card>

@@ -18,7 +18,8 @@ export function ErrorState({ error, pesan, onRetry }: ErrorStateProps) {
       <AlertTriangleIcon className="size-10 text-bahaya" />
       <p className="font-heading text-lg font-semibold">Gagal memuat data</p>
       <p className="max-w-sm text-sm text-muted-foreground">
-        {pesan ?? (error ? getErrorMessage(error) : 'Terjadi kesalahan. Coba lagi.')}
+        {pesan ??
+          (error ? getErrorMessage(error) : 'Terjadi kesalahan. Coba lagi.')}
       </p>
       {onRetry && (
         <Button variant="outline" size="sm" className="mt-3" onClick={onRetry}>

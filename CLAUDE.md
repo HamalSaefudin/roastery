@@ -94,9 +94,12 @@ pnpm test:e2e            # e2e test — auto provision+migrate+seed DB roastery_
 ```bash
 cd roastery-cms
 pnpm dev                 # dev server CMS (port 3001 — CORS backend sudah mengarah ke sini)
+pnpm typecheck           # tsc --noEmit (WAJIB — vite build TIDAK type-check)
 pnpm build               # build produksi
 pnpm lint                # eslint
 pnpm check               # prettier --check
+pnpm test                # unit test vitest (helper murni)
+pnpm test:e2e            # e2e Playwright (auto-start dev server; spec ber-API butuh backend :3000)
 pnpm generate:api        # regenerate types dari Swagger backend (backend harus nyala di :3000)
 ```
 

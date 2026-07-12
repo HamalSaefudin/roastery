@@ -33,9 +33,15 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={toggle}
-      aria-label={tema === 'dark' ? 'Ganti ke mode terang' : 'Ganti ke mode gelap'}
+      aria-label={
+        tema === 'dark' ? 'Ganti ke mode terang' : 'Ganti ke mode gelap'
+      }
     >
-      {tema === 'dark' ? <SunIcon className="size-4" /> : <MoonIcon className="size-4" />}
+      {tema === 'dark' ? (
+        <SunIcon className="size-4" />
+      ) : (
+        <MoonIcon className="size-4" />
+      )}
     </Button>
   )
 }

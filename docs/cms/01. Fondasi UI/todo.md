@@ -32,3 +32,12 @@ Aturan: per fase, urut. Detail di [plan.md](./plan.md), aturan umum di [../_conv
 - [x] Verifikasi manual via browser preview: toast sukses & error (409/validasi array/network) tampil benar; ConfirmDialog loading (tombol disabled + "Menghapus…"); toggle tema → localStorage persist setelah reload; light mode pakai emas tua #A97B1C (kontras); badge 15 kelompok kebaca di dark & light; console bersih (hydration error di-fix)
 - [x] `pnpm build` + `pnpm lint` + `pnpm check` + `pnpm test` (6 test) hijau
 - [x] Update CLAUDE.md + commit
+
+## Fase 4 — Infra e2e Playwright (retrofit, permintaan user setelah step 01)
+
+- [x] `@playwright/test` + `playwright.config.ts` (auto-start dev server :3001, chromium, trace on failure)
+- [x] `e2e/utils.ts`: helper `buka()` (tunggu `html[data-hydrated]` — klik sebelum hydrate = handler belum terpasang, 6 test gagal sebelum fix ini) + `kumpulkanErrorConsole()`
+- [x] `e2e/kitchen-sink.spec.ts` — 8 test: console bersih (regresi hydration), tema toggle+persist+warna kontras light, toast sukses/error array, LoadingButton pending, ConfirmDialog terkunci saat loading, StatusBadge label, Empty/ErrorState + CTA
+- [x] Pisahkan vitest vs playwright (`test.exclude: e2e/**` di vite.config), script `pnpm test:e2e`
+- [x] Script `pnpm typecheck` (tsc --noEmit) — ketahuan `vite build` TIDAK type-check (esbuild strip types); typecheck langsung menangkap 3 error nyata (generic `J` sisa rename di status-badge, theme string di sonner, import mati di router.tsx) — semua di-fix
+- [x] Konvensi §1/§10 diupdate: e2e per step wajib, DoD tambah typecheck + test:e2e
