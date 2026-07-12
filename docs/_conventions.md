@@ -215,6 +215,7 @@ Format JSON error mengikuti default Nest: `{ "statusCode", "message", "error" }`
 - Endpoint role tertentu ditandai `@Roles('staff', 'admin')`.
 - Ambil user login: `@CurrentUser() user` → berisi `{ id, email, role }` dari JWT payload.
 - Cek kepemilikan: query resource harus difilter `customer_id` milik user login — kalau bukan miliknya lempar `ForbiddenException` (atau `NotFoundException` biar tidak bocor info).
+- **Soft-auth (opsional login) di endpoint `@Public()`** (mis. `GET /pricing/resolve` — publik, tapi kalau login dapat harga wholesale): `JwtAuthGuard` (sejak modul 05) tetap MENCOBA baca+verify cookie `access_token` walau endpoint `@Public()`, dan nempelin `request.user` kalau valid — tapi TIDAK PERNAH throw 401 di endpoint `@Public()` (cookie kosong/basi/invalid tetap lolos, cuma `request.user` jadi `undefined`). Di controller, pakai `@CurrentUser() user?: RequestUser` (optional) untuk endpoint begini, BUKAN `RequestUser` non-optional biasa.
 
 ## 11. Slug
 

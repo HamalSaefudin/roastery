@@ -29,13 +29,14 @@ export class JwtAuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    if (isPublic) {
-      return true;
-    }
 
     const request = context.switchToHttp().getRequest<Request>();
     const token = request.cookies?.[ACCESS_TOKEN_COOKIE] as string | undefined;
+
     if (!token) {
+      if (isPublic) {
+        return true;
+      }
       throw new UnauthorizedException('Belum login');
     }
 
@@ -49,6 +50,10 @@ export class JwtAuthGuard implements CanActivate {
       (request as Request & { user: RequestUser }).user = user;
       return true;
     } catch {
+      // Endpoint @Public() dgn cookie basi/invalid tetap lolos (soft-auth) — cuma tanpa request.user.
+      if (isPublic) {
+        return true;
+      }
       throw new UnauthorizedException('Sesi tidak valid, silakan login ulang');
     }
   }

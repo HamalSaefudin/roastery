@@ -68,4 +68,30 @@ describe('JwtAuthGuard', () => {
       role: 'retail',
     });
   });
+
+  it('soft-auth: endpoint @Public() dgn cookie valid tetap nempel request.user (mis. GET /pricing/resolve)', () => {
+    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(true);
+    (jwtService.verify as jest.Mock).mockReturnValue({
+      sub: 'user-2',
+      email: 'b@b.com',
+      role: 'wholesale',
+    });
+    const { ctx, request } = mockContext({ access_token: 'token-valid' });
+    expect(guard.canActivate(ctx)).toBe(true);
+    expect(request.user).toEqual({
+      id: 'user-2',
+      email: 'b@b.com',
+      role: 'wholesale',
+    });
+  });
+
+  it('soft-auth: endpoint @Public() dgn cookie basi/invalid tetap lolos tanpa request.user (bukan 401)', () => {
+    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(true);
+    (jwtService.verify as jest.Mock).mockImplementation(() => {
+      throw new Error('invalid signature');
+    });
+    const { ctx, request } = mockContext({ access_token: 'token-rusak' });
+    expect(guard.canActivate(ctx)).toBe(true);
+    expect(request.user).toBeUndefined();
+  });
 });

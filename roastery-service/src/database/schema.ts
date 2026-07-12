@@ -22,3 +22,4 @@ export * from '../modules/catalog/beans/beans.schema';
 export * from '../modules/catalog/machines/machines.schema';
 export * from '../modules/catalog/grinders/grinders.schema';
 export * from '../modules/inventory/inventory.schema';
+export * from '../modules/pricing/pricing.schema';
