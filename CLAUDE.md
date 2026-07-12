@@ -28,7 +28,8 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 | — | Design system | ✅ dipilih user: **Dark Roast** (dark default + light mode; Space Grotesk/Inter/JetBrains Mono, aksen emas crema) — token & referensi di [docs/cms/design system/](docs/cms/design%20system/README.md) |
 | — | Docs & konvensi CMS | ✅ [\_conventions.md](docs/cms/_conventions.md) (WAJIB: matriks feedback loading/sukses/error tiap interaksi) + plan/todo step 01–11 |
 | 01 | Fondasi UI (token, toast, komponen feedback) | ✅ selesai — token Dark Roast → shadcn vars (dark default + light), font self-host, toggle tema anti-FOUC, openapi-fetch client + `getErrorMessage`, toast helper, LoadingButton/Skeleton/Empty/Error/ConfirmDialog/StatusBadge(15 enum)/PageHeader, kitchen-sink dev-only diverifikasi visual (fix: sonner tanpa next-themes, `suppressHydrationWarning`) |
-| 02 | Auth & Sesi (login, guard, logout) | ⬜ belum mulai |
+| 02 | Auth & Sesi (login, guard, logout) | ✅ selesai — login (TanStack Form+Zod, error inline), guard `_auth.tsx` (role staff/admin only), logout, interceptor 401 refresh-retry, 18 e2e Playwright (backend :3000 wajib nyala). Fix bug nyata: SSR tidak neruskan cookie (pakai `createServerOnlyFn`+`getRequestHeader`), paket nyasar `/Users/macbook/node_modules` bikin bundle client rusak (fix: `@tanstack/router-core` jadi dependency eksplisit) |
+| 03 | Layout & Dashboard | ⬜ belum mulai |
 | 03 | Layout & Dashboard | ⬜ belum mulai |
 | 04 | Katalog & Master Data | ⬜ belum mulai |
 | 05 | Stok | ⬜ belum mulai |
