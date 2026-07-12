@@ -129,6 +129,8 @@ Aturan tipe:
 - **Uang: `integer` rupiah bulat** (tidak ada desimal, tidak pakai float/numeric). Currency default `IDR`.
 - Soft delete pakai kolom `is_active boolean default true` — **jangan** hard delete data yang direferensikan.
 - **FK ke `users` yang sifatnya "siapa yang melakukan X" (reviewer/approver/assignee/teknisi, mis. `reviewed_by`, `assigned_to`) pakai `{ onDelete: 'set null' }`**, BUKAN `cascade` dan BUKAN default (`no action`). Alasan: kalau staf/reviewer itu dihapus dari sistem nanti, record histori (order, aplikasi, tiket) harus tetap ada — jangan ikut kehapus (`cascade` salah) dan jangan sampai user itu tidak bisa dihapus sama sekali (`no action`/default bikin FK constraint block delete). Beda dengan FK "pemilik data" (mis. `customer_profiles.user_id`, `orders.customer_id`) yang memang harus `cascade` karena datanya milik entitas itu.
+- **FK "snapshot histori" (mis. `order_items.product_id`/`variant_id`)** juga pakai `{ onDelete: 'set null' }`, sama alasannya dengan `stock_movements.variant_id`/`unit_id` (modul 04): baris itu sudah punya kolom snapshot sendiri (`name`, `unit_price`, dll — tidak bergantung pada row asal masih ada), jadi produk/varian boleh dihapus tanpa terhalang riwayat transaksi. Kolomnya juga jadi **nullable**, bukan `notNull()`.
+- **FK "master-data reference" (mis. `deliveries.driver_id`, `deliveries.zone_id`) sengaja dibiarkan default `no action`** (bukan bug) — konsisten dengan pola `products.brand_id` dkk di modul 03: mencegah hapus driver/zona yang masih dipakai riwayat pengiriman. **Konsekuensi buat e2e test**: `afterAll` harus hapus baris `deliveries`/`cod_settlements` yang mereferensikan driver/zona test SEBELUM hapus `users`/`vehicles`/`delivery_zones` — kalau cuma andalkan cascade dari `users`, delete akan gagal FK violation karena `deliveries.driver_id` tidak ikut cascade.
 
 ## 6. Akses DB di service
 
@@ -189,7 +191,7 @@ Field opsional selalu `@IsOptional()` + `?`. Enum pakai `@IsIn([...])` atau `@Is
 - Objek tunggal: dibungkus nama objeknya → `{ "user": {...} }`, `{ "order": {...} }`.
 - List + pagination: `{ "data": [...], "total": number, "page": number, "limit": number }`.
 - Delete sukses: HTTP `204`, tanpa body (`@HttpCode(204)`).
-- Create sukses: HTTP `201` (default POST di Nest). **Kalau api-contract bilang endpoint POST return `200`** (mis. login, refresh, validate, webhook — bukan "membuat resource baru"), **wajib tambahkan `@HttpCode(200)` eksplisit** di handler, jangan andalkan default. Selalu cocokkan dengan status code yang tertulis di api-contract.md tiap modul.
+- Create sukses: HTTP `201` (default POST di Nest). **Kalau api-contract bilang endpoint POST return `200`** (mis. login, refresh, validate, webhook — bukan "membuat resource baru"), **wajib tambahkan `@HttpCode(200)` eksplisit** di handler, jangan andalkan default. Selalu cocokkan dengan status code yang tertulis di api-contract.md tiap modul. Bug ini **berulang 5x** sepanjang proyek (login/refresh modul 01, promo/validate modul 05, webhook/assign/cod-collect modul 06-08) — SELALU baru ketahuan lewat e2e test asli (`.expect(200)` gagal dgn "got 201"), TIDAK PERNAH ketahuan dari `pnpm build` atau review kode manual. Kalau bikin endpoint POST baru yang bukan "create resource", cek dulu api-contract.md SEBELUM nulis handler, jangan sesudah.
 - **Jangan pernah return `password_hash`, `token_hash`**, atau field sensitif lain.
 
 Pagination default: `page=1`, `limit=20`, `limit` maksimum `100`. Rumus: `offset = (page - 1) * limit`.
@@ -225,6 +227,15 @@ Fungsi util bersama (`src/common/slug.util.ts`, buat sekali di modul 03):
 ## 12. Status & transisi
 
 Semua perubahan status (order, delivery, repair) **wajib divalidasi** terhadap tabel transisi yang ada di plan modul masing-masing. Transisi di luar tabel → `ConflictException`. Perubahan status selalu dicatat ke tabel history/events modul tsb.
+
+### Orkestrasi lintas-modul & circular dependency (sejak modul 06/07/08)
+
+Orders↔Payments↔Delivery saling panggil dua arah (checkout Orders butuh `DispatchService.createForOrder()` + `PaymentsService.createCodPayment()`; webhook Payments & status `delivered` Delivery butuh balik panggil `OrdersService.changeStatus()`). Ini circular dependency asli antar module, bukan cuma antar service dalam satu module. Pola wajib:
+
+1. **Module-level**: sisi yang menutup siklus pakai `imports: [forwardRef(() => XModule)]` (lihat `PaymentsModule`, `DispatchModule` → import `forwardRef(() => OrdersModule)`; `OrdersModule` → import `forwardRef(() => PaymentsModule)` dan `forwardRef(() => DispatchModule)` **langsung**, bukan lewat `DeliveryModule` — lebih sederhana, cycle 2-node bukan 3-node).
+2. **Constructor-level**: sisi yang sama juga pakai `@Inject(forwardRef(() => XService)) private readonly x: XService`.
+3. **Method cross-service yang dipanggil di tengah transaksi WAJIB terima parameter `tx: DrizzleDbOrTx = this.db` dan meneruskannya** — kalau tidak, dua write (mis. `deliveries.status='delivered'` lalu `OrdersService.changeStatus()`) jalan di transaksi terpisah; kalau yang kedua gagal (mis. urutan transisi order tidak valid), yang pertama **sudah kadung commit** → state korup (delivery bilang `delivered`, order masih `processing`). Ditemukan & diperbaiki 3x saat build modul 06-08 (`DispatchService.updateStatus/assign/codCollect`, `PaymentsService.handleWebhook/payInvoice`) — semua sekarang wrap `this.db.transaction(async (tx) => {...})` dan oper `tx` ke pemanggilan service lain.
+4. Relasi yang **tidak** dipanggil balik (mis. Delivery→Payments untuk `markCodPaid`, satu arah saja) pakai import module biasa, tidak perlu `forwardRef`.
 
 ## 13. Environment variable
 

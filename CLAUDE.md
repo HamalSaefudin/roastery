@@ -18,7 +18,7 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 > Update tabel ini setiap ada perubahan checkbox di todo.md. Regenerate angka:
 > `cd docs && for d in [0-9]*/; do echo "${d%/}: $(grep -c '^- \[x\]' "$d/todo.md")/$(grep -c '^- \[' "$d/todo.md") item, fase $(grep -c '^## Fase' "$d/todo.md")"; done`
 
-**Modul selesai: 5/11** · Item: 204/345
+**Modul selesai: 7/11** · Item: 313/357
 
 | #   | Modul                    | Fase | Item  | Status         |
 | --- | ------------------------ | ---- | ----- | -------------- |
@@ -28,9 +28,9 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 | 03  | Catalog                  | 7/7  | 40/40 | ✅ selesai — produk polimorfik (bean/machine/grinder) + master data (brand/origin/category) diverifikasi e2e (34 test), kode BEN-/MCH-/GRD-, SKU varian auto-generate, fix dok slug brand (409→auto-suffix) |
 | 04  | Inventory                | 7/7  | 27/27 | ✅ selesai — stok biji (quantity/reserved) + unit equipment ber-serial + audit stock_movements, diverifikasi e2e (24 test, termasuk reserve/release/commit lewat DI), `refOrderId` tanpa FK dulu (tabel orders belum ada) |
 | 05  | Pricing                  | 7/7  | 26/26 | ✅ selesai — harga retail+wholesale tier+promo code diverifikasi e2e (30 test), `JwtAuthGuard` diperluas dgn soft-auth utk `GET /pricing/resolve` publik, fix `@HttpCode(200)` promo/validate |
-| 06  | Orders                   | 0/7  | 0/30 | ⬜ belum mulai |
-| 07  | Payments                 | 0/7  | 0/30 | ⬜ belum mulai |
-| 08  | Delivery                 | 0/7  | 0/38 | ⬜ belum mulai |
+| 06  | Orders                   | 7/7  | 33/33 | ✅ selesai — cart+checkout (online/COD/pickup/luar-zona/wholesale) diverifikasi e2e (24 test), commit stok saat `delivered` (keputusan implementasi, plan.md tak eksplisit) |
+| 07  | Payments                 | 7/7  | 33/34 | 🔄 fungsional selesai — 1 item (job `overdue` invoice) nunggu infra scheduled job; checkout/webhook/refund/invoice diverifikasi e2e (18 test), provider mock di belakang interface `PaymentProvider` (Midtrans target real, belum ada kredensial) |
+| 08  | Delivery                 | 7/7  | 43/43 | ✅ selesai — zona+dispatch+driver app+COD settlement diverifikasi e2e (26 test), fix bug atomicity lintas-service (transaksi tak lengkap) + fix duplikat plat kendaraan (500→409) |
 | 09  | Service Desk             | 0/7  | 0/24 | ⬜ belum mulai |
 | 10  | Content                  | 0/6  | 0/19 | ⬜ belum mulai |
 
@@ -49,8 +49,10 @@ Status: ⬜ belum mulai · 🔄 dikerjakan (sebut fase-nya) · ✅ selesai
 
 ### Keputusan pending
 
-- [ ] Pilih payment gateway (Midtrans / Xendit) — dibutuhkan modul 07 Fase 0
 - [ ] **Backlog penting (setelah MVP):** ulasan/review produk — belum ada di docs modul mana pun
+- [ ] **Backlog:** job scheduled/cron utk tandai invoice `overdue` (modul 07) — proyek belum punya infrastruktur cron sama sekali
+
+> Keputusan 2026-07-12: payment gateway = **Midtrans** (target real-world, kandidat paling umum Indonesia) dipilih otonom saat kredensial sandbox belum ada — modul 07 dibangun provider-agnostic (`PaymentProvider` interface + `MockPaymentProvider`), tinggal ganti binding begitu kredensial Midtrans tersedia.
 
 > Keputusan 2026-07-09 (final, sudah dipropagate ke docs): ID = uuid internal + **kode publik ber-sequence** (BEN-/CUS-/ORD-/DLV- dst — registry & helper di [_conventions.md §16](docs/_conventions.md)); ongkir luar zona = flat (zona fallback, tarif disamakan dalam kota); COD tanpa batas nominal; pickup + COD + resi manual masuk scope (lihat section "Update Desain — 2026-07-09" di plan modul 02/03/05/06/07/08/09).
 

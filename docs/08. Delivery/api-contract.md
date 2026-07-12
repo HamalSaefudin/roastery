@@ -122,3 +122,8 @@ Luar zona → `"shippingMethod": "external", "outOfZone": true`, fee = tarif fla
 - `GET /delivery/driver/cod-balance` _(driver)_ — **Response `200`:** `{ "balance": 370000, "deliveries": [ { "deliveryNumber", "codAmount", "codCollectedAt" } ] }`
 - `POST /delivery/cod-settlements` _(staff/admin)_ — body `{ "driverId": "uuid" }` → **`201`:** `{ "settlement": { "id", "settlementNumber", "amount", "status": "pending" } }`. **Error:** `409` tidak ada uang yang perlu disetor.
 - `PATCH /delivery/cod-settlements/:id/confirm` _(staff/admin)_ — **`200`:** `{ "settlement": { ..., "status": "confirmed" } }`
+
+## Update Kontrak — 2026-07-12 (implementasi modul 06-08)
+
+1. `POST /delivery/zones` body **TAMBAH field opsional** `"isFallback"?: boolean` — cara membuat zona fallback (satu-satunya, `district_codes` wajib kosong `[]` kalau `isFallback: true`; kalau bukan fallback, `district_codes` wajib diisi). Endpoint yang sama, bukan endpoint baru.
+2. `PATCH /delivery/zones/:id` _(staff/admin, baru)_ — konsisten dengan pola master data modul lain (brands/categories dst). Body: subset field zona. **Response `200`:** `{ "zone": DeliveryZone }`.

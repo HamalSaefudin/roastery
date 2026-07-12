@@ -50,6 +50,20 @@
       "when": 1783832099295,
       "tag": "0006_tricky_madrox",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1783834596398,
+      "tag": "0007_next_starhawk",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1783838260240,
+      "tag": "0008_ancient_satana",
+      "breakpoints": true
     }
   ]
 }

@@ -6,51 +6,57 @@ Aturan: **per fase, urut**. Detail di [plan.md](./plan.md), kontrak di [api-cont
 
 ## Fase 0 — Setup
 
-- [ ] Pastikan `catalog`, `inventory`, `pricing` selesai
-- [ ] Sepakati format `order_number` (mis. `ORD-20260708-0001`)
+- [x] Pastikan `catalog`, `inventory`, `pricing` selesai
+- [x] Sepakati format `order_number` (mis. `ORD-20260708-0001`) — via `nextCode()` (`ORD`, daily, width 4)
 
 ## Fase 1 — Schema & migration
 
-- [ ] `carts`, `cart_items`
-- [ ] `orders` + enum `order_status`, `payment_type`
-- [ ] `order_items`, `order_status_history`
-- [ ] Re-export di `src/database/schema.ts`
-- [ ] `pnpm db:generate` → `pnpm db:migrate`
+- [x] `carts`, `cart_items` (CHECK XOR `variant_id`/`product_id`; `carts.customer_id` unique — satu keranjang aktif)
+- [x] `orders` + enum `order_status`, `payment_type`, `fulfillment_method`, `shipping_method` (semua kolom Update Desain 2026-07-09 sekaligus: `courier_name`, `tracking_number`, `pickup_code`)
+- [x] `order_items` (FK `product_id`/`variant_id` → `set null`, snapshot histori), `order_status_history`
+- [x] Re-export di `src/database/schema.ts` — **digabung 1 migrasi bareng modul 07+08** (`0007_next_starhawk.sql`, 14 tabel) karena Orders↔Payments↔Delivery saling FK
+- [x] `pnpm db:generate` → `pnpm db:migrate` (+ migrasi susulan `0008_ancient_satana.sql` utk fix FK `order_items`)
 
 ## Fase 2 — Scaffold file (Nest CLI)
 
-- [ ] `nest g service modules/orders --no-spec`
-- [ ] `nest g controller modules/orders --no-spec`
-- [ ] DTO add-cart-item, checkout, update-status
+- [x] `nest g service modules/orders --no-spec`
+- [x] `nest g controller modules/orders --no-spec`
+- [x] DTO add-cart-item, checkout, update-status, update-shipping
+- [x] `OrdersModule` exports `OrdersService`; `forwardRef()` ke `PaymentsModule`+`DispatchModule` (circular, lihat konvensi §12)
 
 ## Fase 3 — Keranjang
 
-- [ ] `GET /orders/cart` (auto-create cart jika belum ada)
-- [ ] `POST /orders/cart/items` (validasi stok via inventory)
-- [ ] `PATCH /orders/cart/items/:id`, `DELETE /orders/cart/items/:id`
+- [x] `GET /orders/cart` (auto-create cart jika belum ada)
+- [x] `POST /orders/cart/items` (validasi stok via inventory, qty item sama dijumlahkan)
+- [x] `PATCH /orders/cart/items/:id`, `DELETE /orders/cart/items/:id`
 
 ## Fase 4 — Checkout
 
-- [ ] `POST /orders/checkout` — validasi stok, resolve harga (pricing), apply promo, hitung ongkir (delivery/zones)
-- [ ] Checkout: `fulfillmentMethod` delivery|pickup + `paymentMethod` online|cod (COD → langsung `processing`, hanya delivery internal)
-- [ ] Alur luar zona: `shipping_method=external`, ongkir flat zona fallback; `PATCH /orders/:id/shipping` (kurir + resi manual)
-- [ ] Alur pickup: status `ready_for_pickup` + `pickup_code` random; tandai `delivered` saat diambil
-- [ ] Reserve stok (inventory) di dalam **transaksi DB**
-- [ ] Buat order + order_items (snapshot) + status `created`
-- [ ] Tulis `order_status_history`
+- [x] `POST /orders/checkout` — validasi stok, resolve harga (pricing), apply promo, hitung ongkir (delivery/zones)
+- [x] Checkout: `fulfillmentMethod` delivery|pickup + `paymentMethod` online|cod (COD → langsung `processing`, hanya delivery internal)
+- [x] Alur luar zona: `shipping_method=external`, ongkir flat zona fallback; `PATCH /orders/:id/shipping` (kurir + resi manual)
+- [x] Alur pickup: status `ready_for_pickup` + `pickup_code` random; tandai `delivered` saat diambil
+- [x] Reserve stok (inventory) di dalam **transaksi DB** (order id di-generate duluan via `randomUUID()` biar bisa dipakai reserve sebelum row `orders` di-insert)
+- [x] Buat order + order_items (snapshot) + status `created`
+- [x] Tulis `order_status_history`
 
 ## Fase 5 — Riwayat & admin
 
-- [ ] `GET /orders` + `GET /orders/:id` (punya sendiri)
-- [ ] `GET /orders/admin` (staff, filter status)
-- [ ] `PATCH /orders/:id/status` (transisi valid + history)
+- [x] `GET /orders` + `GET /orders/:id` (punya sendiri)
+- [x] `GET /orders/admin` (staff, filter status)
+- [x] `PATCH /orders/:id/status` (transisi valid + history)
 
 ## Fase 6 — Verifikasi
 
-- [ ] Alur end-to-end: add cart → checkout → order muncul → ubah status
-- [ ] Stok berkurang/reserve benar; rollback jika checkout gagal
-- [ ] Endpoint modul ini muncul di Swagger (`/api/docs`) dengan tag yang benar
-- [ ] Tulis `test/orders.e2e-spec.ts` — cakupan golden path + tiap error case di api-contract.md (lihat konvensi §18)
-- [ ] `pnpm test:e2e` hijau
-- [ ] `pnpm build` hijau & boot OK
-- [ ] Tandai selesai → lanjut `07. Payments`
+- [x] Alur end-to-end: add cart → checkout → order muncul → ubah status (diuji utk online/COD/pickup/luar-zona/wholesale sekaligus, manual curl + e2e)
+- [x] Stok berkurang/reserve benar; rollback jika checkout gagal
+- [x] Endpoint modul ini muncul di Swagger (`/api/docs`) dengan tag yang benar (`orders`)
+- [x] Tulis `test/orders.e2e-spec.ts` — cakupan golden path + tiap error case di api-contract.md (24 test)
+- [x] `pnpm test:e2e` hijau
+- [x] `pnpm build` hijau & boot OK
+- [x] Tandai selesai → lanjut `07. Payments`
+
+### Keputusan implementasi tambahan (tidak tertulis eksplisit di plan.md)
+
+- [x] **Kapan `commitBeanStock`/`commitEquipmentUnits` dipanggil**: plan.md hanya sebut `reserve()` (checkout) dan `release()` (cancel), tidak menyebut kapan stok "dipermanenkan" (quantity beneran berkurang). Diputuskan: commit terjadi tepat saat `changeStatus(orderId, 'delivered')` — alasan: tabel transisi status order membuktikan `cancelled` HANYA bisa dicapai dari `created`/`paid` (sebelum `processing`), sedangkan `delivered` adalah status final — jadi tidak ada risiko commit-lalu-cancel (double bug) dengan aturan ini. `changeStatus()` juga yang jadi satu-satunya method untuk semua transisi (dipanggil controller staff, webhook Payments, status update Delivery) — konsisten dgn plan.md poin 4.
+- [x] `OrdersService.getProfile()` **tidak** auto-create `customer_profiles` (beda dari `CustomersService.getOrCreateProfile()`) — customer harus sudah pernah panggil endpoint `/customers/*` (mis. `GET /customers/me`, yang auto-create) sebelum bisa pakai cart/checkout. Ini realistis krn frontend pasti panggil `GET /customers/me` saat login/app-load duluan; kalau belum, `NotFoundException('Profil customer tidak ditemukan')`.
