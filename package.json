@@ -1,0 +1,7 @@
+{
+  "name": "roastery",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Roastery — e-commerce + operasional roastery kopi (monorepo: service API + clients)",
+  "packageManager": "pnpm@8.15.4"
+}

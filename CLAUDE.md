@@ -2,7 +2,7 @@
 
 Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin espresso, grinder; pengiriman dikelola sendiri (driver in-house); melayani retail & wholesale.
 
-**Arsitektur:** 1 Service API (**NestJS 11 + PostgreSQL + Drizzle**, di `roastery-service/`) + 3 client TanStack Start (Storefront, CMS/Admin, Driver App — belum dibuat).
+**Arsitektur:** 1 Service API (**NestJS 11 + PostgreSQL + Drizzle**, di `roastery-service/`) + 3 client TanStack Start (CMS/Admin di `roastery-cms/` 🔄 dikerjakan; Storefront & Driver App belum dibuat). Repo = **pnpm workspace** (lockfile tunggal di root).
 
 ## Aturan kerja (WAJIB)
 
@@ -18,7 +18,14 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 > Update tabel ini setiap ada perubahan checkbox di todo.md. Regenerate angka:
 > `cd docs && for d in [0-9]*/; do echo "${d%/}: $(grep -c '^- \[x\]' "$d/todo.md")/$(grep -c '^- \[' "$d/todo.md") item, fase $(grep -c '^## Fase' "$d/todo.md")"; done`
 
-**Modul selesai: 11/11** · Item: 361/361 — semua modul backend rencana selesai & terverifikasi
+**Backend: modul selesai 11/11** · Item: 361/361 — semua modul backend rencana selesai & terverifikasi
+
+**Frontend CMS (`roastery-cms/`, docs di `docs/cms/`):**
+
+| Step | Nama | Status |
+| ---- | ---- | ------ |
+| 00 | Setup — workspace, scaffold & fondasi | ✅ selesai — pnpm workspace (backend tetap hijau 224 e2e), scaffold via `npx @tanstack/cli create` (Start+shadcn+Query+Table+Form), port dev 3001, types API ter-generate dari Swagger (`pnpm generate:api`) |
+| 01+ | Auth, layout, halaman modul | ⬜ belum mulai — didefinisikan di step berikutnya |
 
 | #   | Modul                    | Fase | Item  | Status         |
 | --- | ------------------------ | ---- | ----- | -------------- |
@@ -72,6 +79,17 @@ pnpm test                # unit test (guard/logic murni, cepat, tanpa DB)
 pnpm test:e2e            # e2e test — auto provision+migrate+seed DB roastery_test, lalu jalan
 ```
 
+```bash
+cd roastery-cms
+pnpm dev                 # dev server CMS (port 3001 — CORS backend sudah mengarah ke sini)
+pnpm build               # build produksi
+pnpm lint                # eslint
+pnpm check               # prettier --check
+pnpm generate:api        # regenerate types dari Swagger backend (backend harus nyala di :3000)
+```
+
+> Install dependency dari **root repo** (`pnpm install`) — ini pnpm workspace, lockfile tunggal di root.
+
 Postgres lokal jalan via **Docker Compose** (`roastery-service/docker-compose.yml`), kredensial sama dengan `.env` (`postgres:postgres@localhost:5432/roastery`). Jalankan `pnpm db:up` sebelum `start:dev` atau `db:migrate`.
 
 Database test (`roastery_test`) terpisah dari dev (`roastery`) — `pnpm test:e2e` otomatis siapkan sendiri lewat `test:e2e:setup` (script `scripts/setup-test-db.sh`). Tiap modul wajib punya `test/<modul>.e2e-spec.ts`.
@@ -79,7 +97,9 @@ Database test (`roastery_test`) terpisah dari dev (`roastery`) — `pnpm test:e2
 ## Peta repo
 
 - `roastery-service/` — API NestJS (modul di `src/modules/`, DB di `src/database/`)
+- `roastery-cms/` — CMS/Admin (TanStack Start + shadcn/ui + TanStack Query/Table/Form; types API di-generate ke `src/lib/api/schema.d.ts`)
 - `docs/gambaran-bisnis.md` — **big picture bisnis**: aktor, kemampuan tiap aplikasi (CMS/Storefront/Driver), alur end-to-end A–G — baca ini paling awal
 - `docs/rencana-fase.md` — overview arsitektur & fase rilis (Wave 1 MVP → 4)
-- `docs/_conventions.md` — konvensi implementasi global
-- `docs/NN. <Modul>/` — plan + todo + api-contract per modul
+- `docs/_conventions.md` — konvensi implementasi global (backend)
+- `docs/NN. <Modul>/` — plan + todo + api-contract per modul backend
+- `docs/cms/NN. <Step>/` — plan + todo per step frontend CMS
