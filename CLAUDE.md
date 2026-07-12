@@ -27,7 +27,7 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 | 00 | Setup — workspace, scaffold & fondasi | ✅ selesai — pnpm workspace (backend tetap hijau 224 e2e), scaffold via `npx @tanstack/cli create` (Start+shadcn+Query+Table+Form), port dev 3001, types API ter-generate dari Swagger (`pnpm generate:api`) |
 | — | Design system | ✅ dipilih user: **Dark Roast** (dark default + light mode; Space Grotesk/Inter/JetBrains Mono, aksen emas crema) — token & referensi di [docs/cms/design system/](docs/cms/design%20system/README.md) |
 | — | Docs & konvensi CMS | ✅ [\_conventions.md](docs/cms/_conventions.md) (WAJIB: matriks feedback loading/sukses/error tiap interaksi) + plan/todo step 01–11 |
-| 01 | Fondasi UI (token, toast, komponen feedback) | ⬜ belum mulai |
+| 01 | Fondasi UI (token, toast, komponen feedback) | ✅ selesai — token Dark Roast → shadcn vars (dark default + light), font self-host, toggle tema anti-FOUC, openapi-fetch client + `getErrorMessage`, toast helper, LoadingButton/Skeleton/Empty/Error/ConfirmDialog/StatusBadge(15 enum)/PageHeader, kitchen-sink dev-only diverifikasi visual (fix: sonner tanpa next-themes, `suppressHydrationWarning`) |
 | 02 | Auth & Sesi (login, guard, logout) | ⬜ belum mulai |
 | 03 | Layout & Dashboard | ⬜ belum mulai |
 | 04 | Katalog & Master Data | ⬜ belum mulai |

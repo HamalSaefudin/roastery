@@ -10,33 +10,43 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DevKitchenSinkRouteImport } from './routes/dev.kitchen-sink'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevKitchenSinkRoute = DevKitchenSinkRouteImport.update({
+  id: '/dev/kitchen-sink',
+  path: '/dev/kitchen-sink',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dev/kitchen-sink': typeof DevKitchenSinkRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dev/kitchen-sink': typeof DevKitchenSinkRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dev/kitchen-sink': typeof DevKitchenSinkRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/dev/kitchen-sink'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/dev/kitchen-sink'
+  id: '__root__' | '/' | '/dev/kitchen-sink'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DevKitchenSinkRoute: typeof DevKitchenSinkRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +58,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/kitchen-sink': {
+      id: '/dev/kitchen-sink'
+      path: '/dev/kitchen-sink'
+      fullPath: '/dev/kitchen-sink'
+      preLoaderRoute: typeof DevKitchenSinkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DevKitchenSinkRoute: DevKitchenSinkRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
