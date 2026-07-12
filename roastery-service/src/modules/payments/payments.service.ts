@@ -4,10 +4,12 @@ import {
   forwardRef,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { desc, eq, sql } from 'drizzle-orm';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { and, desc, eq, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../../database/drizzle.constants';
 import type {
   DrizzleDB,
@@ -27,6 +29,8 @@ import type { CreateInvoiceDto } from './dto/invoice.dto';
 
 @Injectable()
 export class PaymentsService {
+  private readonly logger = new Logger(PaymentsService.name);
+
   constructor(
     @Inject(DRIZZLE) private readonly db: DrizzleDB,
     @Inject(PAYMENT_PROVIDER) private readonly provider: PaymentProvider,
@@ -341,5 +345,28 @@ export class PaymentsService {
       .update(payments)
       .set({ status: 'paid', paidAt: new Date() })
       .where(eq(payments.id, payment.id));
+  }
+
+  // --- Scheduled job: tandai invoice lewat jatuh tempo (Fase 7, konvensi §19) ---
+
+  @Cron(CronExpression.EVERY_DAY_AT_1AM)
+  async markOverdueInvoices() {
+    const overdue = await this.db
+      .update(invoices)
+      .set({ status: 'overdue' })
+      .where(
+        and(
+          eq(invoices.status, 'issued'),
+          sql`${invoices.dueDate} < current_date`,
+        ),
+      )
+      .returning({ id: invoices.id, invoiceNumber: invoices.invoiceNumber });
+
+    if (overdue.length > 0) {
+      this.logger.log(
+        `Menandai ${overdue.length} invoice sebagai overdue: ${overdue.map((i) => i.invoiceNumber).join(', ')}`,
+      );
+    }
+    return overdue;
   }
 }

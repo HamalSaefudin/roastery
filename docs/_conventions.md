@@ -430,6 +430,7 @@ Kenapa Pino (bukan `Logger` bawaan Nest polos): output **structured JSON** (gamp
 - **Isolasi data**: pakai email/kode unik per run (mis. `` `test-${Date.now()}@example.com` ``) — JANGAN truncate tabel (bisa nabrak data modul lain kalau beberapa spec file jalan bareng). Bersihkan row yang dibuat sendiri di `afterAll`.
 - Ambil cookie dari `Set-Cookie` response lalu pasang lagi via `.set('Cookie', [...])` di request berikutnya (supertest tidak punya cookie jar otomatis) — lihat contoh di `test/auth.e2e-spec.ts`.
 - Butuh akses DB langsung di test (mis. ubah status jadi `suspended`, atau cleanup)? Ambil instance Drizzle dari testing module: `app.get<DrizzleDB>(DRIZZLE)`.
+- **Butuh akses langsung ke service yang terlibat circular dependency** (mis. `PaymentsService`, yang saling `import` dengan `orders.service.ts`↔`dispatch.service.ts` — lihat §12) via `app.get(XxxService)`? **Jangan** `import { XxxService } from '...'` statis di top-level file test. Static import di top-level jadi entry point PALING AWAL ke rantai circular itu — lebih awal dari `createTestApp()` sendiri — dan bikin `DispatchService` gagal resolve constructor param (`"argument at index [N] appears to be undefined at runtime"`) karena modulnya belum selesai load saat dibutuhkan. Pakai `import type { XxxService }` untuk keperluan tipe, lalu `require('.../xxx.service')` di dalam `beforeAll` **setelah** `createTestApp()` selesai, supaya modulnya sudah ke-cache lengkap lewat urutan load yang aman (dari `AppModule`). Contoh: `test/payments.e2e-spec.ts` describe block "Job overdue invoice".
 - Jalankan dengan `pnpm test:e2e` (BUKAN `pnpm test`, itu untuk unit test / beda config & folder).
 
 ### Unit test (opsional, HANYA untuk logic murni yang kompleks)
@@ -449,3 +450,26 @@ Selain 4 poin di §14, tiap modul **wajib** tambah: e2e test untuk endpoint-endp
 - `app.getHttpServer()` dan `Response.body` dari `supertest` mengetik `any` **by design** (bukan bug) — assert-nya lewat `expect()`, bukan lewat static typing. Karena itu `eslint.config.mjs` sudah punya override khusus `test/**/*.e2e-spec.ts` yang mematikan 4 rule `@typescript-eslint/no-unsafe-*` (argument/assignment/call/member-access/return) HANYA untuk file e2e — jangan copy pattern ini ke `src/`.
 - Di `src/`, kalau ketemu "unsafe assignment/call/member-access" dari Express `Request` (mis. `req.cookies?.[...]`, `ctx.switchToHttp().getRequest()`), itu **beneran** perlu di-type — pola yang dipakai: `as string | undefined` untuk cookie value, atau `getRequest<{ user: RequestUser }>()` untuk generic type param. Lihat `auth.controller.ts`, `current-user.decorator.ts`, `jwt-auth.guard.ts`.
 - Redline ESLint di VS Code (bukan dari `pnpm exec eslint` CLI) kadang false-positive karena TS language server gagal resolve generic `DrizzleDB` yang dalam — cek dulu via CLI (`pnpm exec eslint <file>`) sebelum "memperbaiki" kode yang sebenarnya sudah benar; kalau CLI bersih tapi editor merah, restart TS Server + ESLint Server dulu.
+
+## 19. Scheduled job / cron (WAJIB — `@nestjs/schedule`, terpasang sejak modul 07)
+
+**Setup sudah selesai** (root infra, `ScheduleModule.forRoot()` di-import **paling akhir** di `imports` array `app.module.ts` — taruh di akhir, bukan di depan, supaya tidak mengganggu urutan resolusi modul yang punya circular dependency lewat `forwardRef()`, lihat §12). Modul yang butuh job terjadwal tinggal pakai decorator langsung di method service, tidak perlu setup apa pun lagi:
+
+```ts
+import { Cron, CronExpression } from '@nestjs/schedule';
+
+@Injectable()
+export class PaymentsService {
+  @Cron(CronExpression.EVERY_DAY_AT_1AM)
+  async markOverdueInvoices() {
+    // ...
+  }
+}
+```
+
+**Kenapa `@nestjs/schedule` (bukan cron OS / worker terpisah)**: in-process, tanpa infra tambahan (tidak butuh Redis/queue/OS crontab) — cocok untuk skala proyek ini sekarang. Kalau nanti butuh distributed lock (banyak instance API jalan bareng, job bisa dobel-eksekusi), baru pertimbangkan upgrade ke queue (BullMQ dkk).
+
+**Aturan:**
+1. Method yang di-`@Cron`/`@Interval` **tidak boleh** juga jadi route controller — job internal murni, bukan endpoint yang bisa dipicu dari luar (kalau butuh trigger manual utk keperluan admin, itu keputusan terpisah, buat endpoint sendiri yang eksplisit).
+2. Selalu log jumlah row yang ke-affect (`this.logger.log(...)`) — supaya kelihatan di log terstruktur job ini jalan & efeknya, bukan silent.
+3. Testing: **jangan tunggu jadwal asli** — panggil method-nya langsung via DI (`app.get(XxxService).methodName()`) di e2e test, manipulasi state (mis. `dueDate`) langsung lewat DB dulu biar kondisinya kepenuhi saat method dipanggil. Lihat §18 soal cara aman ambil service yang terlibat circular dependency di test.

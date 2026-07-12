@@ -35,8 +35,8 @@ Aturan: **per fase, urut**. Detail di [plan.md](./plan.md), kontrak di [api-cont
 
 > Item di fase ini **baru bisa dicentang saat modul 02/08 dibangun** (belum ada saat ini — modul 00 dikerjakan lebih dulu sebagai fondasi). Skema kolomnya sudah didesain di docs modul terkait; ini cuma pengingat verifikasi silang nanti, **bukan blocker** untuk lanjut ke modul 01.
 
-- [ ] `customers.addresses` referensi `province_code/regency_code/district_code/village_code` — cek saat modul `02. Customers` dibangun
-- [ ] `delivery.delivery_zones` referensi daftar `district_code` (ganti `postal_codes` jsonb) — cek saat modul `08. Delivery` dibangun
+- [x] `customers.addresses` referensi `province_code/regency_code/district_code/village_code` — dicek saat modul `02. Customers` dibangun (`customers.schema.ts`), FK ke `provinces/regencies/districts/villages` terpasang & teruji e2e
+- [x] `delivery.delivery_zones` referensi daftar `district_code` (jsonb `districtCodes`, ganti rencana awal `postal_codes`) — dicek saat modul `08. Delivery` dibangun (`zones.schema.ts`), teruji e2e
 
 ## Fase 5 — Verifikasi
 
@@ -46,4 +46,4 @@ Aturan: **per fase, urut**. Detail di [plan.md](./plan.md), kontrak di [api-cont
 - [x] Tulis `test/regions.e2e-spec.ts` — golden path (list provinsi, cascade 4 level, search) + error case (`400` param wajib kosong) (retrofit bareng modul 01, lihat konvensi §18)
 - [x] `pnpm test:e2e` hijau (4 test regions + 10 test auth + 1 default)
 - [x] `pnpm build` hijau & boot OK — semua 20 modul + `RegionsModule` ter-init, 5 route `/regions/*` ter-mapping
-- [x] **Modul 00 Regions selesai secara fungsional** → lanjut `01. Authentication` (2 item Fase 4 + 1 item Swagger di atas adalah pengingat lintas-modul, dikerjakan saat modul terkait tiba, bukan penghalang)
+- [x] **Modul 00 Regions selesai 100%** — 2 item Fase 4 (integrasi lintas-modul) sudah dicentang balik setelah modul 02/08 selesai & terverifikasi

@@ -9,6 +9,8 @@ import { products } from '../src/modules/catalog/catalog.schema';
 import { customerProfiles } from '../src/modules/customers/customers.schema';
 import { deliveryZones } from '../src/modules/delivery/zones/zones.schema';
 import { deliveries } from '../src/modules/delivery/dispatch/dispatch.schema';
+import { invoices } from '../src/modules/payments/payments.schema';
+import type { PaymentsService } from '../src/modules/payments/payments.service';
 import { createTestApp } from './utils/test-app';
 import { extractCookies } from './utils/cookies';
 
@@ -417,6 +419,84 @@ describe('Payments (e2e)', () => {
         .patch(`/api/payments/invoices/${invoiceId}/pay`)
         .set('Cookie', staffCookies)
         .expect(409);
+    });
+  });
+
+  describe('Job overdue invoice (Cron, dipanggil langsung via DI)', () => {
+    let overdueOrderId: string;
+    let overdueInvoiceId: string;
+    let futureOrderId: string;
+    let futureInvoiceId: string;
+    let paymentsService: PaymentsService;
+
+    beforeAll(async () => {
+      // import dinamis (bukan static import di atas) supaya modul ini baru
+      // ter-load SETELAH createTestApp() selesai — payments.service.ts,
+      // orders.service.ts, dan dispatch.service.ts saling import satu sama
+      // lain (circular), static import di top-level file akan jadi entry
+      // point pertama ke siklus itu dan bikin DispatchService gagal resolve
+      // PaymentsService saat DI (module belum selesai inisialisasi).
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const mod = require('../src/modules/payments/payments.service') as {
+        PaymentsService: new (...args: unknown[]) => PaymentsService;
+      };
+      paymentsService = app.get(mod.PaymentsService);
+
+      overdueOrderId = await checkoutPickupOrder(wsCookies);
+      const overdueRes = await request(server())
+        .post('/api/payments/invoices')
+        .set('Cookie', staffCookies)
+        .send({ orderId: overdueOrderId, dueDate: '2026-08-01' })
+        .expect(201);
+      overdueInvoiceId = overdueRes.body.invoice.id;
+      // paksa due_date ke masa lalu langsung via DB — cara yang sama dipakai
+      // utk trigger state promo (starts_at/ends_at) di pricing.e2e-spec.ts
+      await db
+        .update(invoices)
+        .set({ dueDate: '2020-01-01' })
+        .where(eq(invoices.id, overdueInvoiceId));
+
+      futureOrderId = await checkoutPickupOrder(wsCookies);
+      const futureRes = await request(server())
+        .post('/api/payments/invoices')
+        .set('Cookie', staffCookies)
+        .send({ orderId: futureOrderId, dueDate: '2099-01-01' })
+        .expect(201);
+      futureInvoiceId = futureRes.body.invoice.id;
+    });
+
+    it('markOverdueInvoices() -> hanya invoice issued+lewat jatuh tempo yg jadi overdue', async () => {
+      const result = await paymentsService.markOverdueInvoices();
+      expect(result.some((i) => i.id === overdueInvoiceId)).toBe(true);
+      expect(result.some((i) => i.id === futureInvoiceId)).toBe(false);
+
+      const overdue = await db.query.invoices.findFirst({
+        where: eq(invoices.id, overdueInvoiceId),
+      });
+      expect(overdue?.status).toBe('overdue');
+
+      const future = await db.query.invoices.findFirst({
+        where: eq(invoices.id, futureInvoiceId),
+      });
+      expect(future?.status).toBe('issued');
+    });
+
+    it('invoice yg sudah paid tidak ikut ditandai overdue meski due_date lewat', async () => {
+      await request(server())
+        .patch(`/api/payments/invoices/${futureInvoiceId}/pay`)
+        .set('Cookie', staffCookies)
+        .expect(200);
+      await db
+        .update(invoices)
+        .set({ dueDate: '2020-01-01' })
+        .where(eq(invoices.id, futureInvoiceId));
+
+      await paymentsService.markOverdueInvoices();
+
+      const paid = await db.query.invoices.findFirst({
+        where: eq(invoices.id, futureInvoiceId),
+      });
+      expect(paid?.status).toBe('paid');
     });
   });
 });

@@ -43,7 +43,7 @@ Aturan: **per fase, urut**. Detail di [plan.md](./plan.md), kontrak di [api-cont
 
 - [x] `POST /payments/invoices` (order wholesale → terbitkan invoice + due date)
 - [x] `PATCH /payments/invoices/:id/pay` (juga memicu `OrdersService.changeStatus(orderId, 'paid')`)
-- [ ] Job/flag `overdue` bila lewat `due_date` — **ditunda**, belum ada infrastruktur scheduled job/cron di proyek ini; `invoice_status` enum sudah punya nilai `overdue` di schema, tinggal tambah job saat infra cron tersedia
+- [x] Job/flag `overdue` bila lewat `due_date` — `PaymentsService.markOverdueInvoices()` (`@Cron(CronExpression.EVERY_DAY_AT_1AM)`, infra `@nestjs/schedule` `ScheduleModule.forRoot()` ditambahkan di `app.module.ts`), update `status='issued' AND due_date < current_date` → `overdue`; diverifikasi e2e dgn manipulasi `due_date` langsung + panggil method via DI (tidak ada endpoint HTTP trigger manual, memang cron internal)
 
 ## Fase 6 — Verifikasi
 

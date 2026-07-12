@@ -18,18 +18,18 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 > Update tabel ini setiap ada perubahan checkbox di todo.md. Regenerate angka:
 > `cd docs && for d in [0-9]*/; do echo "${d%/}: $(grep -c '^- \[x\]' "$d/todo.md")/$(grep -c '^- \[' "$d/todo.md") item, fase $(grep -c '^## Fase' "$d/todo.md")"; done`
 
-**Modul selesai: 9/11** · Item: 358/361 (2 modul — 00, 07 — fungsional selesai, sisa item nunggu infra/integrasi di luar scope backend saat ini)
+**Modul selesai: 11/11** · Item: 361/361 — semua modul backend rencana selesai & terverifikasi
 
 | #   | Modul                    | Fase | Item  | Status         |
 | --- | ------------------------ | ---- | ----- | -------------- |
-| 00  | Regions (master wilayah) | 5/6  | 22/24 | 🔄 fungsional selesai — 2 item nunggu modul 02/08 (integrasi) |
+| 00  | Regions (master wilayah) | 6/6  | 24/24 | ✅ selesai — 2 item integrasi (customers/delivery pakai kode wilayah) dicentang balik setelah modul 02/08 terverifikasi |
 | 01  | Authentication           | 8/8  | 53/53 | ✅ selesai — diverifikasi end-to-end (register/login/refresh/logout/me, role guard, status suspended, Swagger, logging, e2e+unit test) |
 | 02  | Customers                | 6/6  | 36/36 | ✅ selesai — profil+alamat+wholesale diverifikasi e2e (20 test), fix FK `reviewed_by` SET NULL, fix `pnpm test:e2e` chaining |
 | 03  | Catalog                  | 7/7  | 40/40 | ✅ selesai — produk polimorfik (bean/machine/grinder) + master data (brand/origin/category) diverifikasi e2e (34 test), kode BEN-/MCH-/GRD-, SKU varian auto-generate, fix dok slug brand (409→auto-suffix) |
 | 04  | Inventory                | 7/7  | 27/27 | ✅ selesai — stok biji (quantity/reserved) + unit equipment ber-serial + audit stock_movements, diverifikasi e2e (24 test, termasuk reserve/release/commit lewat DI), `refOrderId` tanpa FK dulu (tabel orders belum ada) |
 | 05  | Pricing                  | 7/7  | 26/26 | ✅ selesai — harga retail+wholesale tier+promo code diverifikasi e2e (30 test), `JwtAuthGuard` diperluas dgn soft-auth utk `GET /pricing/resolve` publik, fix `@HttpCode(200)` promo/validate |
 | 06  | Orders                   | 7/7  | 33/33 | ✅ selesai — cart+checkout (online/COD/pickup/luar-zona/wholesale) diverifikasi e2e (24 test), commit stok saat `delivered` (keputusan implementasi, plan.md tak eksplisit) |
-| 07  | Payments                 | 7/7  | 33/34 | 🔄 fungsional selesai — 1 item (job `overdue` invoice) nunggu infra scheduled job; checkout/webhook/refund/invoice diverifikasi e2e (18 test), provider mock di belakang interface `PaymentProvider` (Midtrans target real, belum ada kredensial) |
+| 07  | Payments                 | 7/7  | 34/34 | ✅ selesai — checkout/webhook/refund/invoice diverifikasi e2e (20 test), provider mock di belakang interface `PaymentProvider` (Midtrans target real, belum ada kredensial), job `overdue` invoice via `@nestjs/schedule` cron |
 | 08  | Delivery                 | 7/7  | 43/43 | ✅ selesai — zona+dispatch+driver app+COD settlement diverifikasi e2e (26 test), fix bug atomicity lintas-service (transaksi tak lengkap) + fix duplikat plat kendaraan (500→409) |
 | 09  | Service Desk             | 7/7  | 26/26 | ✅ selesai — registrasi garansi (nomor seri, masa berlaku dari warrantyMonths) + tiket reparasi (klaim garansi/berbayar) diverifikasi e2e (17 test), fix FK violation mentah (500→404) saat assign teknisi tidak valid |
 | 10  | Content                  | 6/6  | 19/19 | ✅ selesai — CMS artikel (brew guide/blog/origin story/page) diverifikasi e2e (13 test), slug auto dari title, publish/unpublish jaga `published_at` tetap (tidak reset saat republish) |
@@ -50,9 +50,10 @@ Status: ⬜ belum mulai · 🔄 dikerjakan (sebut fase-nya) · ✅ selesai
 ### Keputusan pending
 
 - [ ] **Backlog penting (setelah MVP):** ulasan/review produk — belum ada di docs modul mana pun
-- [ ] **Backlog:** job scheduled/cron utk tandai invoice `overdue` (modul 07) — proyek belum punya infrastruktur cron sama sekali
 
 > Keputusan 2026-07-12: payment gateway = **Midtrans** (target real-world, kandidat paling umum Indonesia) dipilih otonom saat kredensial sandbox belum ada — modul 07 dibangun provider-agnostic (`PaymentProvider` interface + `MockPaymentProvider`), tinggal ganti binding begitu kredensial Midtrans tersedia.
+
+> Keputusan 2026-07-12: infra cron ditambahkan — **`@nestjs/schedule`** (`ScheduleModule.forRoot()` di `app.module.ts`), in-process, tanpa dependency infra eksternal. Konsumen pertama: `PaymentsService.markOverdueInvoices()` (modul 07, `@Cron(CronExpression.EVERY_DAY_AT_1AM)`). Modul lain yang butuh scheduled job cukup pakai `@Cron`/`@Interval` langsung di service-nya, infra sudah siap dipakai bersama.
 
 > Keputusan 2026-07-09 (final, sudah dipropagate ke docs): ID = uuid internal + **kode publik ber-sequence** (BEN-/CUS-/ORD-/DLV- dst — registry & helper di [_conventions.md §16](docs/_conventions.md)); ongkir luar zona = flat (zona fallback, tarif disamakan dalam kota); COD tanpa batas nominal; pickup + COD + resi manual masuk scope (lihat section "Update Desain — 2026-07-09" di plan modul 02/03/05/06/07/08/09).
 
