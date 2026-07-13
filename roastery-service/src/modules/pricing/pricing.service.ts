@@ -202,6 +202,16 @@ export class PricingService {
     return tier;
   }
 
+  async removeWholesaleTier(id: string): Promise<void> {
+    const existing = await this.db.query.wholesaleTiers.findFirst({
+      where: eq(wholesaleTiers.id, id),
+    });
+    if (!existing) {
+      throw new NotFoundException('Tier tidak ditemukan');
+    }
+    await this.db.delete(wholesaleTiers).where(eq(wholesaleTiers.id, id));
+  }
+
   async createPromoCode(dto: CreatePromoCodeDto) {
     if (dto.type === 'percent' && dto.value > 100) {
       throw new BadRequestException('value persen maksimal 100');
@@ -229,15 +239,49 @@ export class PricingService {
   }
 
   listPromoCodes() {
+    return this.db.select().from(promoCodes).orderBy(desc(promoCodes.startsAt));
+  }
+
+  /**
+   * List semua harga + nama/SKU item (join manual per baris, bukan satu
+   * query gabungan — `prices` XOR variant/product jadi butuh 2 kemungkinan
+   * join; jumlah baris harga kecil (dikurasi staff), pola sama dgn
+   * `describeItem` di OrdersService drpd LEFT JOIN products dua alias).
+   */
+  async listPrices() {
+    const rows = await this.db
+      .select()
+      .from(prices)
+      .orderBy(desc(prices.updatedAt));
+
+    return Promise.all(
+      rows.map(async (row) => {
+        if (row.variantId) {
+          const variant = await this.db.query.beanVariants.findFirst({
+            where: eq(beanVariants.id, row.variantId),
+          });
+          const product = variant
+            ? await this.db.query.products.findFirst({
+                where: eq(products.id, variant.productId),
+              })
+            : null;
+          return { ...row, itemSku: variant?.sku, itemName: product?.name };
+        }
+        if (row.productId) {
+          const product = await this.db.query.products.findFirst({
+            where: eq(products.id, row.productId),
+          });
+          return { ...row, itemSku: product?.code, itemName: product?.name };
+        }
+        return row;
+      }),
+    );
+  }
+
+  listWholesaleTiers() {
     return this.db
-      .select({
-        id: promoCodes.id,
-        code: promoCodes.code,
-        type: promoCodes.type,
-        value: promoCodes.value,
-        usedCount: promoCodes.usedCount,
-        isActive: promoCodes.isActive,
-      })
-      .from(promoCodes);
+      .select()
+      .from(wholesaleTiers)
+      .orderBy(wholesaleTiers.minQuantity);
   }
 }

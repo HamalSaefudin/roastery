@@ -51,4 +51,12 @@ Aturan: **per fase, urut**. Detail di [plan.md](./plan.md), kontrak di [api-cont
 - [x] `pnpm build` hijau & boot OK
 - [x] Tandai selesai → lanjut `06. Orders`
 
+### Fix ditemukan integrasi CMS (2026-07-13)
+
+- [x] **Endpoint list yang belum ada**: modul ini awalnya cuma scope create/update per item (`POST/PATCH /pricing/prices`, `POST /pricing/wholesale-tiers`) — CMS step 06 (halaman Harga/Tier Grosir) butuh browsing semua data sekaligus, dan `GET /pricing/prices` yang dipanggil FE balikin `404` (route belum ada), bukan cuma test yang salah.
+- [x] Tambah `GET /pricing/prices` (join manual ke nama/SKU varian atau produk, pola sama `describeItem` di Orders), `GET /pricing/wholesale-tiers`, `DELETE /pricing/wholesale-tiers/:id` (404 kalau tidak ada).
+- [x] Fix sekalian: `listPromoCodes()` cuma select kolom parsial, FE butuh full row (`minOrder`/`maxDiscount`/`startsAt`/`endsAt`/`usageLimit`) — diubah ke full-row select.
+- [x] 6 e2e baru ditambahkan (`test/pricing.e2e-spec.ts`): list prices + join, 401, list tiers ordering, delete-then-verify, delete-404, delete-403-retail. Total 36 test, `pnpm test:e2e` 232/232 hijau.
+- [x] `api-contract.md` diupdate dengan 3 endpoint baru.
+
 **Perubahan cross-module (modul 01 Auth):** `GET /pricing/resolve` butuh "opsional login" (publik, tapi kalau login sbg wholesale dapat harga wholesale). `JwtAuthGuard` diperluas: endpoint `@Public()` sekarang tetap MENCOBA verify cookie (soft-auth) — nempelin `request.user` kalau valid, tapi tidak pernah throw 401 di endpoint publik (cookie kosong/basi tetap lolos). 4 unit test lama tetap hijau (perilaku lama tidak berubah), + 2 unit test baru utk soft-auth. Didokumentasikan di konvensi §10.

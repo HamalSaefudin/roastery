@@ -40,6 +40,12 @@ Harga efektif untuk item. Jika user login sebagai `wholesale`, harga menyesuaika
 
 ---
 
+## GET /pricing/prices  _(staff/admin)_
+
+> Ditambahkan 2026-07-13 saat integrasi CMS step 06 — halaman Harga butuh list semua harga (retail), endpoint aslinya cuma create/update per item.
+
+**Response `200`:** `{ "data": [ { "id", "variantId", "productId", "price", "currency", "updatedAt", "itemSku"?, "itemName"? } ] }` — diurut `updatedAt` terbaru dulu. `itemSku`/`itemName` hasil join manual ke varian biji atau produk (tergantung mana yang diisi), bisa `undefined` kalau item sumbernya sudah terhapus.
+
 ## POST /pricing/prices  _(staff/admin)_
 
 **Body:** `{ "variantId"?: "uuid", "productId"?: "uuid", "price": 85000 }` (isi salah satu)
@@ -49,10 +55,22 @@ Harga efektif untuk item. Jika user login sebagai `wholesale`, harga menyesuaika
 
 **Body:** `{ "price": 90000 }`. **Response `200`:** `{ "price": ... }`.
 
+## GET /pricing/wholesale-tiers  _(staff/admin)_
+
+> Ditambahkan 2026-07-13 saat integrasi CMS step 06 — halaman Tier Grosir butuh list semua tier.
+
+**Response `200`:** `{ "data": [ { "id", "name", "minQuantity", "discountPercent", "isActive" } ] }` — diurut `minQuantity` ascending.
+
 ## POST /pricing/wholesale-tiers  _(staff/admin)_
 
 **Body:** `{ "name": "Grosir A", "minQuantity": 10, "discountPercent": 15 }`
 **Response `201`:** `{ "tier": { "id", ... } }`
+
+## DELETE /pricing/wholesale-tiers/:id  _(staff/admin)_
+
+> Ditambahkan 2026-07-13 saat integrasi CMS step 06.
+
+**Response `204`.** **Error:** `404` tier tidak ditemukan.
 
 ## POST /pricing/promo-codes  _(staff/admin)_
 

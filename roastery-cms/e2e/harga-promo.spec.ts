@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { buka, kumpulkanErrorConsole } from './utils'
+import { buka, kumpulkanErrorConsole, navigasiSidebar } from './utils'
 import { daftarUser, hapusUserTest, jadikanStaff } from './helpers/backend'
 
 /**
@@ -26,17 +26,20 @@ test.afterEach(async ({ page }) => {
   await page.context().clearCookies()
 })
 
-test('sidebar Harga & Promo punya sub-menu dan halaman Harga termuat', async ({
-  page,
-}) => {
-  const errors = kumpulkanErrorConsole(page)
+async function login(page: Parameters<typeof buka>[0]) {
   await buka(page, '/login')
   await page.getByLabel('Email').fill(email)
   await page.getByLabel('Password').fill(password)
   await page.getByRole('button', { name: 'Masuk' }).click()
+}
 
-  // parent menu Harga & Promo — ada 2 link (parent + child pertama)
-  await page.getByRole('link', { name: 'Harga' }).first().click()
+test('sidebar Harga & Promo punya sub-menu dan halaman Harga termuat', async ({
+  page,
+}) => {
+  const errors = kumpulkanErrorConsole(page)
+  await login(page)
+
+  await navigasiSidebar(page, 'Harga & Promo', 'Harga')
   await expect(
     page.getByRole('heading', { name: 'Harga Retail' }),
   ).toBeVisible()
@@ -46,12 +49,9 @@ test('sidebar Harga & Promo punya sub-menu dan halaman Harga termuat', async ({
 test('halaman Harga: dialog set harga bisa dibuka (via tombol Set Harga saat empty)', async ({
   page,
 }) => {
-  await buka(page, '/login')
-  await page.getByLabel('Email').fill(email)
-  await page.getByLabel('Password').fill(password)
-  await page.getByRole('button', { name: 'Masuk' }).click()
+  await login(page)
 
-  await page.getByRole('link', { name: 'Harga' }).first().click()
+  await navigasiSidebar(page, 'Harga & Promo', 'Harga')
   await expect(
     page.getByRole('heading', { name: 'Harga Retail' }),
   ).toBeVisible()
@@ -66,19 +66,22 @@ test('halaman Harga: dialog set harga bisa dibuka (via tombol Set Harga saat emp
     await btnEdit.click()
   }
   await expect(page.getByRole('dialog')).toBeVisible()
-  await expect(page.getByText('Harga Retail')).toBeVisible()
+  // "Harga Retail" ambigu (muncul di heading halaman, label field, DAN
+  // deskripsi dialog) — scope ke dalam dialog & pakai getByLabel field-nya
+  await expect(
+    page.getByRole('dialog').getByLabel('Harga Retail'),
+  ).toBeVisible()
 
-  await page.getByRole('button', { name: 'Batal' }).click()
+  // dialog tambah/edit (bukan ConfirmDialog) tidak punya tombol "Batal",
+  // cuma ikon X close bawaan shadcn Dialog (aria: "Close")
+  await page.getByRole('button', { name: 'Close' }).click()
   await expect(page.getByRole('dialog')).toBeHidden()
 })
 
 test('InputRupiah memformat angka saat diketik', async ({ page }) => {
-  await buka(page, '/login')
-  await page.getByLabel('Email').fill(email)
-  await page.getByLabel('Password').fill(password)
-  await page.getByRole('button', { name: 'Masuk' }).click()
+  await login(page)
 
-  await page.getByRole('link', { name: 'Harga' }).first().click()
+  await navigasiSidebar(page, 'Harga & Promo', 'Harga')
   await expect(
     page.getByRole('heading', { name: 'Harga Retail' }),
   ).toBeVisible()
@@ -102,21 +105,24 @@ test('halaman Tier Grosir termuat dan dialog tambah bisa dibuka/tutup', async ({
   page,
 }) => {
   const errors = kumpulkanErrorConsole(page)
-  await buka(page, '/login')
-  await page.getByLabel('Email').fill(email)
-  await page.getByLabel('Password').fill(password)
-  await page.getByRole('button', { name: 'Masuk' }).click()
+  await login(page)
 
-  await page.getByRole('link', { name: 'Tier Grosir' }).click()
+  await navigasiSidebar(page, 'Harga & Promo', 'Tier Grosir')
   await expect(page.getByRole('heading', { name: 'Tier Grosir' })).toBeVisible()
   expect(errors, `Console error:\n${errors.join('\n')}`).toHaveLength(0)
 
-  // dialog tambah tier
-  await page.getByRole('button', { name: /tambah tier/i }).click()
+  // dialog tambah tier — dev DB bisa kosong, saat itu tombol "Tambah Tier"
+  // muncul 2x (PageHeader aksi + EmptyState aksi), pakai .first()
+  await page
+    .getByRole('button', { name: /tambah tier/i })
+    .first()
+    .click()
   await expect(page.getByText('Nama Tier')).toBeVisible()
   await expect(page.getByText('Diskon (%)')).toBeVisible()
 
-  await page.getByRole('button', { name: 'Batal' }).click()
+  // dialog tambah/edit (bukan ConfirmDialog) tidak punya tombol "Batal",
+  // cuma ikon X close bawaan shadcn Dialog (aria: "Close")
+  await page.getByRole('button', { name: 'Close' }).click()
   await expect(page.getByRole('dialog')).toBeHidden()
 })
 
@@ -124,25 +130,30 @@ test('halaman Kode Promo termuat dan dialog tambah bisa dibuka/tutup', async ({
   page,
 }) => {
   const errors = kumpulkanErrorConsole(page)
-  await buka(page, '/login')
-  await page.getByLabel('Email').fill(email)
-  await page.getByLabel('Password').fill(password)
-  await page.getByRole('button', { name: 'Masuk' }).click()
+  await login(page)
 
-  await page.getByRole('link', { name: 'Kode Promo' }).click()
+  await navigasiSidebar(page, 'Harga & Promo', 'Kode Promo')
   await expect(page.getByRole('heading', { name: 'Kode Promo' })).toBeVisible()
   expect(errors, `Console error:\n${errors.join('\n')}`).toHaveLength(0)
 
-  // dialog tambah promo
-  await page.getByRole('button', { name: /tambah promo/i }).click()
-  await expect(page.getByText('Kode')).toBeVisible()
-  await expect(page.getByText('Tipe')).toBeVisible()
+  // dialog tambah promo — getByLabel (bukan getByText) krn tabel Kode
+  // Promo JUGA punya kolom header "Kode"/"Tipe", getByText jadi ambigu
+  // dev DB bisa kosong, saat itu tombol "Tambah Promo" muncul 2x
+  // (PageHeader aksi + EmptyState aksi), pakai .first()
+  await page
+    .getByRole('button', { name: /tambah promo/i })
+    .first()
+    .click()
+  await expect(page.getByLabel('Kode')).toBeVisible()
+  await expect(page.getByLabel('Tipe')).toBeVisible()
 
   // isi kode promo (auto UPPERCASE)
   const inputKode = page.getByLabel('Kode')
   await inputKode.fill('promo10')
   await expect(inputKode).toHaveValue('PROMO10')
 
-  await page.getByRole('button', { name: 'Batal' }).click()
+  // dialog tambah/edit (bukan ConfirmDialog) tidak punya tombol "Batal",
+  // cuma ikon X close bawaan shadcn Dialog (aria: "Close")
+  await page.getByRole('button', { name: 'Close' }).click()
   await expect(page.getByRole('dialog')).toBeHidden()
 })

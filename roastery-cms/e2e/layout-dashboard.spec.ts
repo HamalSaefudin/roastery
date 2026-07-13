@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { buka } from './utils'
+import { buka, navigasiSidebar } from './utils'
 import { daftarUser, hapusUserTest, jadikanStaff } from './helpers/backend'
 
 test.describe.configure({ mode: 'serial' })
@@ -28,7 +28,8 @@ test('login -> dashboard dengan sidebar & topbar termuat', async ({ page }) => {
   await page.getByRole('button', { name: 'Masuk' }).click()
 
   await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
-  await expect(page.getByText('Selamat datang, ' + email)).toBeVisible()
+  // topbar menampilkan email user (dgn badge role di sebelahnya)
+  await expect(page.getByText(email)).toBeVisible()
   await expect(page.getByText('Order Baru')).toBeVisible()
 
   await expect(page.getByText('ROASTERY')).toBeVisible()
@@ -76,12 +77,14 @@ test('halaman 403 dan 404 termuat dalam layout', async ({ page }) => {
   await page.getByRole('button', { name: 'Masuk' }).click()
   await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
 
+  // '403'/'404' juga muncul di breadcrumb topbar (fallback dari path
+  // segment), jadi scope ke <main> biar tidak ambigu dgn breadcrumb
   await buka(page, '/403')
-  await expect(page.getByText('403')).toBeVisible()
+  await expect(page.getByRole('main').getByText('403')).toBeVisible()
   await expect(page.getByText('tidak punya izin')).toBeVisible()
 
   await buka(page, '/404')
-  await expect(page.getByText('404')).toBeVisible()
+  await expect(page.getByRole('main').getByText('404')).toBeVisible()
   await expect(page.getByText('tidak ditemukan')).toBeVisible()
 })
 
@@ -92,7 +95,6 @@ test('breadcrumb benar saat navigasi', async ({ page }) => {
   await page.getByRole('button', { name: 'Masuk' }).click()
   await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
 
-  await page.getByRole('link', { name: 'Katalog' }).click()
-  await page.getByRole('link', { name: 'Brand' }).click()
+  await navigasiSidebar(page, 'Katalog', 'Brand')
   await expect(page.getByRole('heading', { name: 'Brand' })).toBeVisible()
 })

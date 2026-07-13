@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -47,6 +48,13 @@ export class PricingController {
   }
 
   @Roles('staff', 'admin')
+  @Get('prices')
+  async listPrices() {
+    const data = await this.pricingService.listPrices();
+    return { data };
+  }
+
+  @Roles('staff', 'admin')
   @Post('prices')
   async createPrice(@Body() dto: CreatePriceDto) {
     const price = await this.pricingService.createPrice(dto);
@@ -61,10 +69,24 @@ export class PricingController {
   }
 
   @Roles('staff', 'admin')
+  @Get('wholesale-tiers')
+  async listWholesaleTiers() {
+    const data = await this.pricingService.listWholesaleTiers();
+    return { data };
+  }
+
+  @Roles('staff', 'admin')
   @Post('wholesale-tiers')
   async createWholesaleTier(@Body() dto: CreateWholesaleTierDto) {
     const tier = await this.pricingService.createWholesaleTier(dto);
     return { tier };
+  }
+
+  @Roles('staff', 'admin')
+  @Delete('wholesale-tiers/:id')
+  @HttpCode(204)
+  async removeWholesaleTier(@Param('id') id: string) {
+    await this.pricingService.removeWholesaleTier(id);
   }
 
   @Roles('staff', 'admin')

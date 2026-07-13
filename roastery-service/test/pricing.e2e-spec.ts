@@ -288,6 +288,76 @@ describe('Pricing (e2e)', () => {
     });
   });
 
+  describe('GET /pricing/prices & /pricing/wholesale-tiers (list utk CMS)', () => {
+    it('GET /prices -> memuat harga variant dgn itemName/itemSku (join)', async () => {
+      const res = await request(server())
+        .get('/api/pricing/prices')
+        .set('Cookie', staffCookies)
+        .expect(200);
+      const row = res.body.data.find((p: { id: string }) => p.id === priceId);
+      expect(row).toMatchObject({
+        variantId,
+        itemName: `Pricing Test Bean ${runId}`,
+      });
+      expect(row.itemSku).toEqual(expect.stringContaining('250'));
+    });
+
+    it('GET /prices tanpa login -> 401', () => {
+      return request(server()).get('/api/pricing/prices').expect(401);
+    });
+
+    it('GET /wholesale-tiers -> memuat kedua tier, urut min_quantity', async () => {
+      const res = await request(server())
+        .get('/api/pricing/wholesale-tiers')
+        .set('Cookie', staffCookies)
+        .expect(200);
+      const ids = res.body.data.map((t: { id: string }) => t.id);
+      expect(ids.indexOf(tierAId)).toBeLessThan(ids.indexOf(tierBId));
+    });
+
+    it('DELETE /wholesale-tiers/:id -> 204, lalu tidak muncul lagi di list', async () => {
+      const tierRes = await request(server())
+        .post('/api/pricing/wholesale-tiers')
+        .set('Cookie', staffCookies)
+        .send({
+          name: `Grosir Hapus ${runId}`,
+          minQuantity: 5,
+          discountPercent: 5,
+        })
+        .expect(201);
+      const tempTierId = tierRes.body.tier.id;
+
+      await request(server())
+        .delete(`/api/pricing/wholesale-tiers/${tempTierId}`)
+        .set('Cookie', staffCookies)
+        .expect(204);
+
+      const res = await request(server())
+        .get('/api/pricing/wholesale-tiers')
+        .set('Cookie', staffCookies)
+        .expect(200);
+      expect(
+        res.body.data.some((t: { id: string }) => t.id === tempTierId),
+      ).toBe(false);
+    });
+
+    it('DELETE /wholesale-tiers/:id tidak ada -> 404', () => {
+      return request(server())
+        .delete(
+          '/api/pricing/wholesale-tiers/00000000-0000-0000-0000-000000000000',
+        )
+        .set('Cookie', staffCookies)
+        .expect(404);
+    });
+
+    it('DELETE /wholesale-tiers/:id sebagai retail -> 403', () => {
+      return request(server())
+        .delete(`/api/pricing/wholesale-tiers/${tierAId}`)
+        .set('Cookie', custCookies)
+        .expect(403);
+    });
+  });
+
   describe('Promo code', () => {
     it('POST promo-codes percent -> 201', async () => {
       const res = await request(server())
