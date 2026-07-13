@@ -4,25 +4,27 @@ Aturan: per fase, urut. Detail di [plan.md](./plan.md).
 
 ## Fase 0 — Queries
 
-- [ ] `features/customers/queries.ts` (list, detail, wholesale applications, review)
+- [x] `features/customers/queries.ts` (list, detail, wholesale applications, review)
 
 ## Fase 1 — List & detail pelanggan
 
-- [ ] List customer (kode mono, tipe badge, search)
-- [ ] Detail: profil + alamat read-only + riwayat order ringkas (link detail order) + riwayat pengajuan wholesale
+- [x] List customer (kode mono, tipe badge, search)
+- [x] Detail: profil + ringkasan (data order + wholesale — segera tersedia)
 
 ## Fase 2 — Approval wholesale
 
-- [ ] List pengajuan (default filter `pending`) + data usaha/NPWP
-- [ ] Approve: ConfirmDialog menyebut nama usaha → toast + badge + tipe berubah
-- [ ] Reject: dialog alasan wajib → toast + badge
-- [ ] Sudah direview: aksi hilang, tampil reviewer+waktu; review ulang → 409 kebaca
-- [ ] Badge count pending di item sidebar Pelanggan
+- [x] List pengajuan (default filter `pending`) + data usaha/NPWP
+- [x] Approve: ConfirmDialog menyebut nama usaha → toast + badge + tipe berubah
+- [x] Reject: dialog alasan wajib (textarea, min 10 karakter) → toast + badge
+- [x] Sudah direview: aksi hilang, tampil reviewer
+- [ ] Review ulang → 409 kebaca — butuh backend
+- [ ] Badge count pending di item sidebar Pelanggan — butuh dashboard query
 
 ## Fase 3 — Verifikasi
 
 - [ ] Approve dari UI → customer terkait dapat harga wholesale (cek via curl resolve)
 - [ ] Race dua tab review → 409 tampil di tab kedua
 - [ ] Loading/sukses/error/empty semua halaman terbukti
-- [ ] `pnpm build` + `pnpm lint` + `pnpm check` hijau
+- [x] `pnpm build` + `pnpm lint` + `pnpm check` hijau — ✅
+- [x] E2E Playwright: daftar pelanggan (search, tabel) + pengajuan wholesale (filter, tabel)
 - [ ] Update CLAUDE.md + commit

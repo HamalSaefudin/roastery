@@ -26,6 +26,7 @@ import { Route as Auth403RouteImport } from './routes/_auth/403'
 import { Route as AuthStokIndexRouteImport } from './routes/_auth/stok/index'
 import { Route as AuthServiceDeskIndexRouteImport } from './routes/_auth/service-desk/index'
 import { Route as AuthPengirimanIndexRouteImport } from './routes/_auth/pengiriman/index'
+import { Route as AuthPelangganIndexRouteImport } from './routes/_auth/pelanggan/index'
 import { Route as AuthKatalogIndexRouteImport } from './routes/_auth/katalog/index'
 import { Route as AuthHargaPromoIndexRouteImport } from './routes/_auth/harga-promo/index'
 import { Route as AuthStokUnitRouteImport } from './routes/_auth/stok/unit'
@@ -36,6 +37,8 @@ import { Route as AuthPengirimanZonaRouteImport } from './routes/_auth/pengirima
 import { Route as AuthPengirimanKendaraanRouteImport } from './routes/_auth/pengiriman/kendaraan'
 import { Route as AuthPengirimanDriverRouteImport } from './routes/_auth/pengiriman/driver'
 import { Route as AuthPengirimanCodRouteImport } from './routes/_auth/pengiriman/cod'
+import { Route as AuthPelangganWholesaleRouteImport } from './routes/_auth/pelanggan/wholesale'
+import { Route as AuthPelangganIdRouteImport } from './routes/_auth/pelanggan/$id'
 import { Route as AuthKatalogOriginsRouteImport } from './routes/_auth/katalog/origins'
 import { Route as AuthKatalogCategoriesRouteImport } from './routes/_auth/katalog/categories'
 import { Route as AuthKatalogBrandsRouteImport } from './routes/_auth/katalog/brands'
@@ -129,6 +132,11 @@ const AuthPengirimanIndexRoute = AuthPengirimanIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthPengirimanRoute,
 } as any)
+const AuthPelangganIndexRoute = AuthPelangganIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthPelangganRoute,
+} as any)
 const AuthKatalogIndexRoute = AuthKatalogIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -179,6 +187,16 @@ const AuthPengirimanCodRoute = AuthPengirimanCodRouteImport.update({
   path: '/cod',
   getParentRoute: () => AuthPengirimanRoute,
 } as any)
+const AuthPelangganWholesaleRoute = AuthPelangganWholesaleRouteImport.update({
+  id: '/wholesale',
+  path: '/wholesale',
+  getParentRoute: () => AuthPelangganRoute,
+} as any)
+const AuthPelangganIdRoute = AuthPelangganIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthPelangganRoute,
+} as any)
 const AuthKatalogOriginsRoute = AuthKatalogOriginsRouteImport.update({
   id: '/origins',
   path: '/origins',
@@ -228,7 +246,7 @@ export interface FileRoutesByFullPath {
   '/harga-promo': typeof AuthHargaPromoRouteWithChildren
   '/katalog': typeof AuthKatalogRouteWithChildren
   '/konten': typeof AuthKontenRoute
-  '/pelanggan': typeof AuthPelangganRoute
+  '/pelanggan': typeof AuthPelangganRouteWithChildren
   '/pengiriman': typeof AuthPengirimanRouteWithChildren
   '/pesanan': typeof AuthPesananRoute
   '/service-desk': typeof AuthServiceDeskRouteWithChildren
@@ -241,6 +259,8 @@ export interface FileRoutesByFullPath {
   '/katalog/brands': typeof AuthKatalogBrandsRoute
   '/katalog/categories': typeof AuthKatalogCategoriesRoute
   '/katalog/origins': typeof AuthKatalogOriginsRoute
+  '/pelanggan/$id': typeof AuthPelangganIdRoute
+  '/pelanggan/wholesale': typeof AuthPelangganWholesaleRoute
   '/pengiriman/cod': typeof AuthPengirimanCodRoute
   '/pengiriman/driver': typeof AuthPengirimanDriverRoute
   '/pengiriman/kendaraan': typeof AuthPengirimanKendaraanRoute
@@ -251,6 +271,7 @@ export interface FileRoutesByFullPath {
   '/stok/unit': typeof AuthStokUnitRoute
   '/harga-promo/': typeof AuthHargaPromoIndexRoute
   '/katalog/': typeof AuthKatalogIndexRoute
+  '/pelanggan/': typeof AuthPelangganIndexRoute
   '/pengiriman/': typeof AuthPengirimanIndexRoute
   '/service-desk/': typeof AuthServiceDeskIndexRoute
   '/stok/': typeof AuthStokIndexRoute
@@ -261,7 +282,6 @@ export interface FileRoutesByTo {
   '/403': typeof Auth403Route
   '/404': typeof Auth404Route
   '/konten': typeof AuthKontenRoute
-  '/pelanggan': typeof AuthPelangganRoute
   '/pesanan': typeof AuthPesananRoute
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
   '/': typeof AuthIndexRoute
@@ -272,6 +292,8 @@ export interface FileRoutesByTo {
   '/katalog/brands': typeof AuthKatalogBrandsRoute
   '/katalog/categories': typeof AuthKatalogCategoriesRoute
   '/katalog/origins': typeof AuthKatalogOriginsRoute
+  '/pelanggan/$id': typeof AuthPelangganIdRoute
+  '/pelanggan/wholesale': typeof AuthPelangganWholesaleRoute
   '/pengiriman/cod': typeof AuthPengirimanCodRoute
   '/pengiriman/driver': typeof AuthPengirimanDriverRoute
   '/pengiriman/kendaraan': typeof AuthPengirimanKendaraanRoute
@@ -282,6 +304,7 @@ export interface FileRoutesByTo {
   '/stok/unit': typeof AuthStokUnitRoute
   '/harga-promo': typeof AuthHargaPromoIndexRoute
   '/katalog': typeof AuthKatalogIndexRoute
+  '/pelanggan': typeof AuthPelangganIndexRoute
   '/pengiriman': typeof AuthPengirimanIndexRoute
   '/service-desk': typeof AuthServiceDeskIndexRoute
   '/stok': typeof AuthStokIndexRoute
@@ -296,7 +319,7 @@ export interface FileRoutesById {
   '/_auth/harga-promo': typeof AuthHargaPromoRouteWithChildren
   '/_auth/katalog': typeof AuthKatalogRouteWithChildren
   '/_auth/konten': typeof AuthKontenRoute
-  '/_auth/pelanggan': typeof AuthPelangganRoute
+  '/_auth/pelanggan': typeof AuthPelangganRouteWithChildren
   '/_auth/pengiriman': typeof AuthPengirimanRouteWithChildren
   '/_auth/pesanan': typeof AuthPesananRoute
   '/_auth/service-desk': typeof AuthServiceDeskRouteWithChildren
@@ -310,6 +333,8 @@ export interface FileRoutesById {
   '/_auth/katalog/brands': typeof AuthKatalogBrandsRoute
   '/_auth/katalog/categories': typeof AuthKatalogCategoriesRoute
   '/_auth/katalog/origins': typeof AuthKatalogOriginsRoute
+  '/_auth/pelanggan/$id': typeof AuthPelangganIdRoute
+  '/_auth/pelanggan/wholesale': typeof AuthPelangganWholesaleRoute
   '/_auth/pengiriman/cod': typeof AuthPengirimanCodRoute
   '/_auth/pengiriman/driver': typeof AuthPengirimanDriverRoute
   '/_auth/pengiriman/kendaraan': typeof AuthPengirimanKendaraanRoute
@@ -320,6 +345,7 @@ export interface FileRoutesById {
   '/_auth/stok/unit': typeof AuthStokUnitRoute
   '/_auth/harga-promo/': typeof AuthHargaPromoIndexRoute
   '/_auth/katalog/': typeof AuthKatalogIndexRoute
+  '/_auth/pelanggan/': typeof AuthPelangganIndexRoute
   '/_auth/pengiriman/': typeof AuthPengirimanIndexRoute
   '/_auth/service-desk/': typeof AuthServiceDeskIndexRoute
   '/_auth/stok/': typeof AuthStokIndexRoute
@@ -348,6 +374,8 @@ export interface FileRouteTypes {
     | '/katalog/brands'
     | '/katalog/categories'
     | '/katalog/origins'
+    | '/pelanggan/$id'
+    | '/pelanggan/wholesale'
     | '/pengiriman/cod'
     | '/pengiriman/driver'
     | '/pengiriman/kendaraan'
@@ -358,6 +386,7 @@ export interface FileRouteTypes {
     | '/stok/unit'
     | '/harga-promo/'
     | '/katalog/'
+    | '/pelanggan/'
     | '/pengiriman/'
     | '/service-desk/'
     | '/stok/'
@@ -368,7 +397,6 @@ export interface FileRouteTypes {
     | '/403'
     | '/404'
     | '/konten'
-    | '/pelanggan'
     | '/pesanan'
     | '/dev/kitchen-sink'
     | '/'
@@ -379,6 +407,8 @@ export interface FileRouteTypes {
     | '/katalog/brands'
     | '/katalog/categories'
     | '/katalog/origins'
+    | '/pelanggan/$id'
+    | '/pelanggan/wholesale'
     | '/pengiriman/cod'
     | '/pengiriman/driver'
     | '/pengiriman/kendaraan'
@@ -389,6 +419,7 @@ export interface FileRouteTypes {
     | '/stok/unit'
     | '/harga-promo'
     | '/katalog'
+    | '/pelanggan'
     | '/pengiriman'
     | '/service-desk'
     | '/stok'
@@ -416,6 +447,8 @@ export interface FileRouteTypes {
     | '/_auth/katalog/brands'
     | '/_auth/katalog/categories'
     | '/_auth/katalog/origins'
+    | '/_auth/pelanggan/$id'
+    | '/_auth/pelanggan/wholesale'
     | '/_auth/pengiriman/cod'
     | '/_auth/pengiriman/driver'
     | '/_auth/pengiriman/kendaraan'
@@ -426,6 +459,7 @@ export interface FileRouteTypes {
     | '/_auth/stok/unit'
     | '/_auth/harga-promo/'
     | '/_auth/katalog/'
+    | '/_auth/pelanggan/'
     | '/_auth/pengiriman/'
     | '/_auth/service-desk/'
     | '/_auth/stok/'
@@ -559,6 +593,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthPengirimanIndexRouteImport
       parentRoute: typeof AuthPengirimanRoute
     }
+    '/_auth/pelanggan/': {
+      id: '/_auth/pelanggan/'
+      path: '/'
+      fullPath: '/pelanggan/'
+      preLoaderRoute: typeof AuthPelangganIndexRouteImport
+      parentRoute: typeof AuthPelangganRoute
+    }
     '/_auth/katalog/': {
       id: '/_auth/katalog/'
       path: '/'
@@ -628,6 +669,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/pengiriman/cod'
       preLoaderRoute: typeof AuthPengirimanCodRouteImport
       parentRoute: typeof AuthPengirimanRoute
+    }
+    '/_auth/pelanggan/wholesale': {
+      id: '/_auth/pelanggan/wholesale'
+      path: '/wholesale'
+      fullPath: '/pelanggan/wholesale'
+      preLoaderRoute: typeof AuthPelangganWholesaleRouteImport
+      parentRoute: typeof AuthPelangganRoute
+    }
+    '/_auth/pelanggan/$id': {
+      id: '/_auth/pelanggan/$id'
+      path: '/$id'
+      fullPath: '/pelanggan/$id'
+      preLoaderRoute: typeof AuthPelangganIdRouteImport
+      parentRoute: typeof AuthPelangganRoute
     }
     '/_auth/katalog/origins': {
       id: '/_auth/katalog/origins'
@@ -738,6 +793,22 @@ const AuthKatalogRouteWithChildren = AuthKatalogRoute._addFileChildren(
   AuthKatalogRouteChildren,
 )
 
+interface AuthPelangganRouteChildren {
+  AuthPelangganIdRoute: typeof AuthPelangganIdRoute
+  AuthPelangganWholesaleRoute: typeof AuthPelangganWholesaleRoute
+  AuthPelangganIndexRoute: typeof AuthPelangganIndexRoute
+}
+
+const AuthPelangganRouteChildren: AuthPelangganRouteChildren = {
+  AuthPelangganIdRoute: AuthPelangganIdRoute,
+  AuthPelangganWholesaleRoute: AuthPelangganWholesaleRoute,
+  AuthPelangganIndexRoute: AuthPelangganIndexRoute,
+}
+
+const AuthPelangganRouteWithChildren = AuthPelangganRoute._addFileChildren(
+  AuthPelangganRouteChildren,
+)
+
 interface AuthPengirimanRouteChildren {
   AuthPengirimanCodRoute: typeof AuthPengirimanCodRoute
   AuthPengirimanDriverRoute: typeof AuthPengirimanDriverRoute
@@ -796,7 +867,7 @@ interface AuthRouteChildren {
   AuthHargaPromoRoute: typeof AuthHargaPromoRouteWithChildren
   AuthKatalogRoute: typeof AuthKatalogRouteWithChildren
   AuthKontenRoute: typeof AuthKontenRoute
-  AuthPelangganRoute: typeof AuthPelangganRoute
+  AuthPelangganRoute: typeof AuthPelangganRouteWithChildren
   AuthPengirimanRoute: typeof AuthPengirimanRouteWithChildren
   AuthPesananRoute: typeof AuthPesananRoute
   AuthServiceDeskRoute: typeof AuthServiceDeskRouteWithChildren
@@ -810,7 +881,7 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthHargaPromoRoute: AuthHargaPromoRouteWithChildren,
   AuthKatalogRoute: AuthKatalogRouteWithChildren,
   AuthKontenRoute: AuthKontenRoute,
-  AuthPelangganRoute: AuthPelangganRoute,
+  AuthPelangganRoute: AuthPelangganRouteWithChildren,
   AuthPengirimanRoute: AuthPengirimanRouteWithChildren,
   AuthPesananRoute: AuthPesananRoute,
   AuthServiceDeskRoute: AuthServiceDeskRouteWithChildren,

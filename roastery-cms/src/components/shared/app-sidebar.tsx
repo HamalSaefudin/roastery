@@ -55,7 +55,14 @@ const MENU: MenuItem[] = [
       { label: 'Kode Promo', path: '/harga-promo/promo' },
     ],
   },
-  { label: 'Pelanggan', path: '/pelanggan', icon: UsersIcon },
+  {
+    label: 'Pelanggan',
+    icon: UsersIcon,
+    children: [
+      { label: 'Daftar', path: '/pelanggan' },
+      { label: 'Pengajuan Wholesale', path: '/pelanggan/wholesale' },
+    ],
+  },
   {
     label: 'Pengiriman',
     icon: TruckIcon,
