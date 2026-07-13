@@ -7,15 +7,15 @@ import {
   Building2Icon,
   AlertTriangleIcon,
 } from 'lucide-react'
-import { DashboardCard } from '../components/shared/dashboard-card'
-import { PageHeader } from '../components/shared/page-header'
+import { DashboardCard } from '#/components/shared/dashboard-card'
+import { PageHeader } from '#/components/shared/page-header'
 import {
   orderBaruQueryOptions,
   perluDiprosesQueryOptions,
   pengirimanAktifQueryOptions,
   wholesalePendingQueryOptions,
   stokMenipisQueryOptions,
-} from '../features/dashboard/queries'
+} from '#/features/dashboard/queries'
 
 export const Route = createFileRoute('/_auth/')({
   component: DashboardPage,

@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { FileQuestionIcon } from 'lucide-react'
-import { Button } from '../components/ui/button'
+import { Button } from '#/components/ui/button'
 
 export const Route = createFileRoute('/_auth/404')({
   component: NotFoundPage,

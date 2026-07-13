@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { ShieldXIcon } from 'lucide-react'
-import { Button } from '../components/ui/button'
+import { Button } from '#/components/ui/button'
 
 export const Route = createFileRoute('/_auth/403')({
   component: ForbiddenPage,
