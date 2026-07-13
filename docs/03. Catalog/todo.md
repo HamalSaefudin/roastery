@@ -55,7 +55,7 @@ Aturan: **per fase, urut**. Detail di [plan.md](./plan.md), kontrak di [api-cont
 
 ## Fase 6 — Verifikasi
 
-- [x] Seed beberapa brand/origin/category (manual curl, lalu dibersihkan)
+- [x] Seed beberapa brand/origin/category (manual curl, lalu dibersihkan) — **update 2026-07-13**: seed data referensi persisten ditambah via `pnpm db:seed:catalog` (`scripts/seed-catalog-master.ts`, idempotent) — 8 brand mesin/grinder, 12 origin biji (7 lokal Indonesia + 5 internasional), 4 kategori induk + 6 anak; dibutuhkan supaya dropdown form produk di CMS tidak kosong
 - [x] Buat 1 produk tiap tipe (pakai master id) → cek tampil publik dengan detail benar
 - [x] Biji punya minimal 2 varian SKU (dicek via e2e: sku auto-generate + 409 duplikat)
 - [x] Endpoint modul ini muncul di Swagger (`/api/docs`) dengan tag yang benar (`catalog`)

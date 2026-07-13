@@ -65,6 +65,7 @@ Status: ⬜ belum mulai · 🔄 dikerjakan (sebut fase-nya) · ✅ selesai
 - [x] Docs lengkap 11 modul (plan / todo / api-contract) + `_conventions.md`
 - [x] Postgres lokal via Docker Compose (`docker-compose.yml`, `pnpm db:up`/`db:down`)
 - [x] Master wilayah Indonesia ter-seed penuh (38 provinsi, 514 kab/kota, 7.285 kecamatan, 83.762 desa + kode pos) — sumber `cahyadsn/wilayah` + `wilayah_kodepos`, skrip `pnpm db:seed:regions`
+- [x] Data referensi katalog ter-seed (brand mesin/grinder, origin biji, kategori) — skrip idempoten `pnpm db:seed:catalog` (`roastery-service/scripts/seed-catalog-master.ts`), dibutuhkan supaya dropdown form produk CMS tidak kosong
 - [x] Auth siap dipakai modul lain: `JwtAuthGuard` + `RolesGuard` **global** (semua endpoint butuh login kecuali `@Public()`), `@CurrentUser()`, `@Roles('staff','admin')`. **Penting untuk modul berikutnya**: endpoint publik WAJIB `@Public()` eksplisit, kalau lupa → 401.
 - [x] Logging structured (Pino) terpasang global — modul lain tinggal pakai `new Logger(ClassName.name)` biasa, otomatis terstruktur + redacted (lihat [konvensi §17](docs/_conventions.md))
 - [x] Infra e2e test siap pakai: `pnpm test:e2e` (DB terpisah `roastery_test`, auto-provision/migrate/seed via `test:e2e:setup`). Tiap modul **wajib** bikin `test/<modul>.e2e-spec.ts` (lihat [konvensi §18](docs/_conventions.md))
