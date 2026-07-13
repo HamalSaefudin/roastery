@@ -56,6 +56,13 @@ Aturan: **per fase, urut**. Detail di [plan.md](./plan.md), kontrak di [api-cont
 - [x] `pnpm build` hijau & boot OK
 - [x] Tandai selesai → lanjut `07. Payments`
 
+### Fix ditemukan integrasi CMS (2026-07-13)
+
+- [x] **Bug nyata**: `GET /orders/admin?status=created,paid` (dipakai dashboard CMS step 03 utk kartu "order baru") balikin **500 mentah** — `listAdmin`/`listMine` cast `status` ke enum tanpa validasi (`eq(orders.status, status as OrderStatus)`), padahal `status` bisa berisi list dipisah koma dari FE. Postgres nolak cast `'created,paid'` sbg nilai enum tunggal → error mentah, bukan 400 bersih.
+- [x] Fix: helper `parseStatusFilter()` — split koma, validasi tiap nilai terhadap `orderStatusEnum.enumValues` (invalid → `400` bersih), `eq` utk 1 nilai / `inArray` utk banyak nilai. Dipakai di `listAdmin` DAN `listMine` (bug yang sama, ditemukan sekalian).
+- [x] 2 e2e baru ditambahkan (`test/orders.e2e-spec.ts`): multi-status dipisah koma → 200 + data benar; status ngaco → 400 (bukan 500). Total 26 test, `pnpm test:e2e` 226/226 hijau (2x run stabil).
+- [x] `api-contract.md` diupdate: `status` didokumentasikan boleh multi-nilai dipisah koma di `GET /orders` & `GET /orders/admin`.
+
 ### Keputusan implementasi tambahan (tidak tertulis eksplisit di plan.md)
 
 - [x] **Kapan `commitBeanStock`/`commitEquipmentUnits` dipanggil**: plan.md hanya sebut `reserve()` (checkout) dan `release()` (cancel), tidak menyebut kapan stok "dipermanenkan" (quantity beneran berkurang). Diputuskan: commit terjadi tepat saat `changeStatus(orderId, 'delivered')` — alasan: tabel transisi status order membuktikan `cancelled` HANYA bisa dicapai dari `created`/`paid` (sebelum `processing`), sedangkan `delivered` adalah status final — jadi tidak ada risiko commit-lalu-cancel (double bug) dengan aturan ini. `changeStatus()` juga yang jadi satu-satunya method untuk semua transisi (dipanggil controller staff, webhook Payments, status update Delivery) — konsisten dgn plan.md poin 4.

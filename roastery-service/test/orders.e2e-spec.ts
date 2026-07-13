@@ -488,6 +488,30 @@ describe('Orders (e2e)', () => {
       );
     });
 
+    it('staff GET /orders/admin?status=a,b -> 200 (banyak status dipisah koma, dipakai dashboard CMS)', async () => {
+      const single = await request(server())
+        .get('/api/orders/admin')
+        .set('Cookie', staffCookies)
+        .expect(200);
+      const current = single.body.data.find(
+        (o: { id: string }) => o.id === orderId,
+      ).status;
+      const res = await request(server())
+        .get(`/api/orders/admin?status=${current},cancelled`)
+        .set('Cookie', staffCookies)
+        .expect(200);
+      expect(res.body.data.some((o: { id: string }) => o.id === orderId)).toBe(
+        true,
+      );
+    });
+
+    it('staff GET /orders/admin?status=ngaco -> 400 (bukan 500 mentah)', () => {
+      return request(server())
+        .get('/api/orders/admin?status=ngaco')
+        .set('Cookie', staffCookies)
+        .expect(400);
+    });
+
     it('PATCH status transisi tidak valid -> 409', () => {
       return request(server())
         .patch(`/api/orders/${orderId}/status`)

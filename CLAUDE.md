@@ -20,7 +20,7 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 > Update tabel ini setiap ada perubahan checkbox di todo.md. Regenerate angka:
 > `cd docs && for d in [0-9]*/; do echo "${d%/}: $(grep -c '^- \[x\]' "$d/todo.md")/$(grep -c '^- \[' "$d/todo.md") item, fase $(grep -c '^## Fase' "$d/todo.md")"; done`
 
-**Backend: modul selesai 11/11** · Item: 361/361 — semua modul backend rencana selesai & terverifikasi
+**Backend: modul selesai 11/11** · Item: 365/365 — semua modul backend rencana selesai & terverifikasi
 
 **Frontend CMS (`roastery-cms/`, docs di `docs/cms/`):**
 
@@ -50,7 +50,7 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 | 03  | Catalog                  | 7/7  | 40/40 | ✅ selesai — produk polimorfik (bean/machine/grinder) + master data (brand/origin/category) diverifikasi e2e (34 test), kode BEN-/MCH-/GRD-, SKU varian auto-generate, fix dok slug brand (409→auto-suffix) |
 | 04  | Inventory                | 7/7  | 27/27 | ✅ selesai — stok biji (quantity/reserved) + unit equipment ber-serial + audit stock_movements, diverifikasi e2e (24 test, termasuk reserve/release/commit lewat DI), `refOrderId` tanpa FK dulu (tabel orders belum ada) |
 | 05  | Pricing                  | 7/7  | 26/26 | ✅ selesai — harga retail+wholesale tier+promo code diverifikasi e2e (30 test), `JwtAuthGuard` diperluas dgn soft-auth utk `GET /pricing/resolve` publik, fix `@HttpCode(200)` promo/validate |
-| 06  | Orders                   | 7/7  | 33/33 | ✅ selesai — cart+checkout (online/COD/pickup/luar-zona/wholesale) diverifikasi e2e (24 test), commit stok saat `delivered` (keputusan implementasi, plan.md tak eksplisit) |
+| 06  | Orders                   | 7/7  | 37/37 | ✅ selesai — cart+checkout (online/COD/pickup/luar-zona/wholesale) diverifikasi e2e (26 test), commit stok saat `delivered` (keputusan implementasi, plan.md tak eksplisit). Fix 2026-07-13: `status` filter `/orders`+`/orders/admin` dukung multi-nilai dipisah koma (bug ditemukan dari integrasi dashboard CMS — 500 mentah jadi 400 bersih) |
 | 07  | Payments                 | 7/7  | 34/34 | ✅ selesai — checkout/webhook/refund/invoice diverifikasi e2e (20 test), provider mock di belakang interface `PaymentProvider` (Midtrans target real, belum ada kredensial), job `overdue` invoice via `@nestjs/schedule` cron |
 | 08  | Delivery                 | 7/7  | 43/43 | ✅ selesai — zona+dispatch+driver app+COD settlement diverifikasi e2e (26 test), fix bug atomicity lintas-service (transaksi tak lengkap) + fix duplikat plat kendaraan (500→409) |
 | 09  | Service Desk             | 7/7  | 26/26 | ✅ selesai — registrasi garansi (nomor seri, masa berlaku dari warrantyMonths) + tiket reparasi (klaim garansi/berbayar) diverifikasi e2e (17 test), fix FK violation mentah (500→404) saat assign teknisi tidak valid |

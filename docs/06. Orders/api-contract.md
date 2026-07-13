@@ -80,7 +80,7 @@ Zona & ongkir ditentukan otomatis dari `district_code` alamat (`addressId`) — 
 
 ## GET /orders
 
-**Query:** `?status=&page=1`
+**Query:** `?status=&page=1` (`status` boleh multi-nilai dipisah koma, sama seperti `/orders/admin`)
 **Response `200`:** `{ "data": Order[], "total", "page" }` (milik sendiri).
 
 ## GET /orders/:id
@@ -92,6 +92,8 @@ Zona & ongkir ditentukan otomatis dari `district_code` alamat (`addressId`) — 
 ## GET /orders/admin _(staff/admin)_
 
 **Query:** `?status=&search=&page=1`
+- `status` boleh satu nilai (`?status=paid`) ATAU beberapa dipisah koma (`?status=created,paid`, dipakai dashboard CMS utk filter "butuh perhatian"). Nilai tidak valid → `400`.
+
 **Response `200`:** `{ "data": Order[], "total" }`
 
 ## PATCH /orders/:id/status _(staff/admin)_

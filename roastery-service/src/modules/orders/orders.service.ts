@@ -9,7 +9,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { randomBytes, randomUUID } from 'node:crypto';
-import { and, desc, eq, isNotNull, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNotNull, sql } from 'drizzle-orm';
 import type { SQL } from 'drizzle-orm';
 import { DRIZZLE } from '../../database/drizzle.constants';
 import type {
@@ -38,6 +38,7 @@ import {
   cartItems,
   orderItems,
   orders,
+  orderStatusEnum,
   orderStatusHistory,
 } from './orders.schema';
 import type { AddCartItemDto, UpdateCartItemDto } from './dto/cart-item.dto';
@@ -62,6 +63,32 @@ const ORDER_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   delivered: [],
   cancelled: [],
 };
+
+/**
+ * Filter `status` query param — dukung satu nilai ATAU beberapa dipisah
+ * koma (mis. `?status=created,paid`, dipakai dashboard CMS utk kartu
+ * "order baru"). Validasi tiap nilai terhadap enum asli supaya nilai
+ * ngaco tidak nyampe ke Postgres sbg cast enum mentah (raw 500).
+ */
+function parseStatusFilter(
+  status: string | undefined,
+  column: typeof orders.status,
+): SQL | undefined {
+  if (!status) return undefined;
+  const values = status
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const valid = new Set<string>(orderStatusEnum.enumValues);
+  const invalid = values.filter((v) => !valid.has(v));
+  if (invalid.length > 0) {
+    throw new BadRequestException(`Status tidak valid: ${invalid.join(', ')}`);
+  }
+  const statuses = values as Array<OrderStatus>;
+  return statuses.length === 1
+    ? eq(column, statuses[0])
+    : inArray(column, statuses);
+}
 
 function generatePickupCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -561,7 +588,8 @@ export class OrdersService {
   ) {
     const profile = await this.getProfile(userId);
     const conditions: SQL[] = [eq(orders.customerId, profile.id)];
-    if (status) conditions.push(eq(orders.status, status as OrderStatus));
+    const statusCondition = parseStatusFilter(status, orders.status);
+    if (statusCondition) conditions.push(statusCondition);
     const where = and(...conditions);
     const offset = (page - 1) * limit;
 
@@ -592,7 +620,8 @@ export class OrdersService {
     limit: number,
   ) {
     const conditions: SQL[] = [];
-    if (status) conditions.push(eq(orders.status, status as OrderStatus));
+    const statusCondition = parseStatusFilter(status, orders.status);
+    if (statusCondition) conditions.push(statusCondition);
     if (search)
       conditions.push(sql`${orders.orderNumber} ilike ${'%' + search + '%'}`);
     const where = conditions.length > 0 ? and(...conditions) : undefined;
