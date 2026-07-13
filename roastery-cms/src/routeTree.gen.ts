@@ -27,6 +27,7 @@ import { Route as AuthStokIndexRouteImport } from './routes/_auth.stok.index'
 import { Route as AuthServiceDeskIndexRouteImport } from './routes/_auth.service-desk.index'
 import { Route as AuthPengirimanIndexRouteImport } from './routes/_auth.pengiriman.index'
 import { Route as AuthKatalogIndexRouteImport } from './routes/_auth.katalog.index'
+import { Route as AuthHargaPromoIndexRouteImport } from './routes/_auth.harga-promo.index'
 import { Route as AuthStokUnitRouteImport } from './routes/_auth.stok.unit'
 import { Route as AuthStokRiwayatRouteImport } from './routes/_auth.stok.riwayat'
 import { Route as AuthStokBijiRouteImport } from './routes/_auth.stok.biji'
@@ -40,6 +41,8 @@ import { Route as AuthKatalogCategoriesRouteImport } from './routes/_auth.katalo
 import { Route as AuthKatalogBrandsRouteImport } from './routes/_auth.katalog.brands'
 import { Route as AuthKatalogBaruRouteImport } from './routes/_auth.katalog.baru'
 import { Route as AuthKatalogSlugRouteImport } from './routes/_auth.katalog.$slug'
+import { Route as AuthHargaPromoTierRouteImport } from './routes/_auth.harga-promo.tier'
+import { Route as AuthHargaPromoPromoRouteImport } from './routes/_auth.harga-promo.promo'
 import { Route as AuthKatalogSlugEditRouteImport } from './routes/_auth.katalog.$slug.edit'
 
 const LoginRoute = LoginRouteImport.update({
@@ -131,6 +134,11 @@ const AuthKatalogIndexRoute = AuthKatalogIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthKatalogRoute,
 } as any)
+const AuthHargaPromoIndexRoute = AuthHargaPromoIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthHargaPromoRoute,
+} as any)
 const AuthStokUnitRoute = AuthStokUnitRouteImport.update({
   id: '/unit',
   path: '/unit',
@@ -196,6 +204,16 @@ const AuthKatalogSlugRoute = AuthKatalogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => AuthKatalogRoute,
 } as any)
+const AuthHargaPromoTierRoute = AuthHargaPromoTierRouteImport.update({
+  id: '/tier',
+  path: '/tier',
+  getParentRoute: () => AuthHargaPromoRoute,
+} as any)
+const AuthHargaPromoPromoRoute = AuthHargaPromoPromoRouteImport.update({
+  id: '/promo',
+  path: '/promo',
+  getParentRoute: () => AuthHargaPromoRoute,
+} as any)
 const AuthKatalogSlugEditRoute = AuthKatalogSlugEditRouteImport.update({
   id: '/edit',
   path: '/edit',
@@ -207,7 +225,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/403': typeof Auth403Route
   '/404': typeof Auth404Route
-  '/harga-promo': typeof AuthHargaPromoRoute
+  '/harga-promo': typeof AuthHargaPromoRouteWithChildren
   '/katalog': typeof AuthKatalogRouteWithChildren
   '/konten': typeof AuthKontenRoute
   '/pelanggan': typeof AuthPelangganRoute
@@ -216,6 +234,8 @@ export interface FileRoutesByFullPath {
   '/service-desk': typeof AuthServiceDeskRouteWithChildren
   '/stok': typeof AuthStokRouteWithChildren
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
+  '/harga-promo/promo': typeof AuthHargaPromoPromoRoute
+  '/harga-promo/tier': typeof AuthHargaPromoTierRoute
   '/katalog/$slug': typeof AuthKatalogSlugRouteWithChildren
   '/katalog/baru': typeof AuthKatalogBaruRoute
   '/katalog/brands': typeof AuthKatalogBrandsRoute
@@ -229,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/stok/biji': typeof AuthStokBijiRoute
   '/stok/riwayat': typeof AuthStokRiwayatRoute
   '/stok/unit': typeof AuthStokUnitRoute
+  '/harga-promo/': typeof AuthHargaPromoIndexRoute
   '/katalog/': typeof AuthKatalogIndexRoute
   '/pengiriman/': typeof AuthPengirimanIndexRoute
   '/service-desk/': typeof AuthServiceDeskIndexRoute
@@ -239,12 +260,13 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/403': typeof Auth403Route
   '/404': typeof Auth404Route
-  '/harga-promo': typeof AuthHargaPromoRoute
   '/konten': typeof AuthKontenRoute
   '/pelanggan': typeof AuthPelangganRoute
   '/pesanan': typeof AuthPesananRoute
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
   '/': typeof AuthIndexRoute
+  '/harga-promo/promo': typeof AuthHargaPromoPromoRoute
+  '/harga-promo/tier': typeof AuthHargaPromoTierRoute
   '/katalog/$slug': typeof AuthKatalogSlugRouteWithChildren
   '/katalog/baru': typeof AuthKatalogBaruRoute
   '/katalog/brands': typeof AuthKatalogBrandsRoute
@@ -258,6 +280,7 @@ export interface FileRoutesByTo {
   '/stok/biji': typeof AuthStokBijiRoute
   '/stok/riwayat': typeof AuthStokRiwayatRoute
   '/stok/unit': typeof AuthStokUnitRoute
+  '/harga-promo': typeof AuthHargaPromoIndexRoute
   '/katalog': typeof AuthKatalogIndexRoute
   '/pengiriman': typeof AuthPengirimanIndexRoute
   '/service-desk': typeof AuthServiceDeskIndexRoute
@@ -270,7 +293,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_auth/403': typeof Auth403Route
   '/_auth/404': typeof Auth404Route
-  '/_auth/harga-promo': typeof AuthHargaPromoRoute
+  '/_auth/harga-promo': typeof AuthHargaPromoRouteWithChildren
   '/_auth/katalog': typeof AuthKatalogRouteWithChildren
   '/_auth/konten': typeof AuthKontenRoute
   '/_auth/pelanggan': typeof AuthPelangganRoute
@@ -280,6 +303,8 @@ export interface FileRoutesById {
   '/_auth/stok': typeof AuthStokRouteWithChildren
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
   '/_auth/': typeof AuthIndexRoute
+  '/_auth/harga-promo/promo': typeof AuthHargaPromoPromoRoute
+  '/_auth/harga-promo/tier': typeof AuthHargaPromoTierRoute
   '/_auth/katalog/$slug': typeof AuthKatalogSlugRouteWithChildren
   '/_auth/katalog/baru': typeof AuthKatalogBaruRoute
   '/_auth/katalog/brands': typeof AuthKatalogBrandsRoute
@@ -293,6 +318,7 @@ export interface FileRoutesById {
   '/_auth/stok/biji': typeof AuthStokBijiRoute
   '/_auth/stok/riwayat': typeof AuthStokRiwayatRoute
   '/_auth/stok/unit': typeof AuthStokUnitRoute
+  '/_auth/harga-promo/': typeof AuthHargaPromoIndexRoute
   '/_auth/katalog/': typeof AuthKatalogIndexRoute
   '/_auth/pengiriman/': typeof AuthPengirimanIndexRoute
   '/_auth/service-desk/': typeof AuthServiceDeskIndexRoute
@@ -315,6 +341,8 @@ export interface FileRouteTypes {
     | '/service-desk'
     | '/stok'
     | '/dev/kitchen-sink'
+    | '/harga-promo/promo'
+    | '/harga-promo/tier'
     | '/katalog/$slug'
     | '/katalog/baru'
     | '/katalog/brands'
@@ -328,6 +356,7 @@ export interface FileRouteTypes {
     | '/stok/biji'
     | '/stok/riwayat'
     | '/stok/unit'
+    | '/harga-promo/'
     | '/katalog/'
     | '/pengiriman/'
     | '/service-desk/'
@@ -338,12 +367,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/403'
     | '/404'
-    | '/harga-promo'
     | '/konten'
     | '/pelanggan'
     | '/pesanan'
     | '/dev/kitchen-sink'
     | '/'
+    | '/harga-promo/promo'
+    | '/harga-promo/tier'
     | '/katalog/$slug'
     | '/katalog/baru'
     | '/katalog/brands'
@@ -357,6 +387,7 @@ export interface FileRouteTypes {
     | '/stok/biji'
     | '/stok/riwayat'
     | '/stok/unit'
+    | '/harga-promo'
     | '/katalog'
     | '/pengiriman'
     | '/service-desk'
@@ -378,6 +409,8 @@ export interface FileRouteTypes {
     | '/_auth/stok'
     | '/dev/kitchen-sink'
     | '/_auth/'
+    | '/_auth/harga-promo/promo'
+    | '/_auth/harga-promo/tier'
     | '/_auth/katalog/$slug'
     | '/_auth/katalog/baru'
     | '/_auth/katalog/brands'
@@ -391,6 +424,7 @@ export interface FileRouteTypes {
     | '/_auth/stok/biji'
     | '/_auth/stok/riwayat'
     | '/_auth/stok/unit'
+    | '/_auth/harga-promo/'
     | '/_auth/katalog/'
     | '/_auth/pengiriman/'
     | '/_auth/service-desk/'
@@ -532,6 +566,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthKatalogIndexRouteImport
       parentRoute: typeof AuthKatalogRoute
     }
+    '/_auth/harga-promo/': {
+      id: '/_auth/harga-promo/'
+      path: '/'
+      fullPath: '/harga-promo/'
+      preLoaderRoute: typeof AuthHargaPromoIndexRouteImport
+      parentRoute: typeof AuthHargaPromoRoute
+    }
     '/_auth/stok/unit': {
       id: '/_auth/stok/unit'
       path: '/unit'
@@ -623,6 +664,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthKatalogSlugRouteImport
       parentRoute: typeof AuthKatalogRoute
     }
+    '/_auth/harga-promo/tier': {
+      id: '/_auth/harga-promo/tier'
+      path: '/tier'
+      fullPath: '/harga-promo/tier'
+      preLoaderRoute: typeof AuthHargaPromoTierRouteImport
+      parentRoute: typeof AuthHargaPromoRoute
+    }
+    '/_auth/harga-promo/promo': {
+      id: '/_auth/harga-promo/promo'
+      path: '/promo'
+      fullPath: '/harga-promo/promo'
+      preLoaderRoute: typeof AuthHargaPromoPromoRouteImport
+      parentRoute: typeof AuthHargaPromoRoute
+    }
     '/_auth/katalog/$slug/edit': {
       id: '/_auth/katalog/$slug/edit'
       path: '/edit'
@@ -632,6 +687,22 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthHargaPromoRouteChildren {
+  AuthHargaPromoPromoRoute: typeof AuthHargaPromoPromoRoute
+  AuthHargaPromoTierRoute: typeof AuthHargaPromoTierRoute
+  AuthHargaPromoIndexRoute: typeof AuthHargaPromoIndexRoute
+}
+
+const AuthHargaPromoRouteChildren: AuthHargaPromoRouteChildren = {
+  AuthHargaPromoPromoRoute: AuthHargaPromoPromoRoute,
+  AuthHargaPromoTierRoute: AuthHargaPromoTierRoute,
+  AuthHargaPromoIndexRoute: AuthHargaPromoIndexRoute,
+}
+
+const AuthHargaPromoRouteWithChildren = AuthHargaPromoRoute._addFileChildren(
+  AuthHargaPromoRouteChildren,
+)
 
 interface AuthKatalogSlugRouteChildren {
   AuthKatalogSlugEditRoute: typeof AuthKatalogSlugEditRoute
@@ -722,7 +793,7 @@ const AuthStokRouteWithChildren = AuthStokRoute._addFileChildren(
 interface AuthRouteChildren {
   Auth403Route: typeof Auth403Route
   Auth404Route: typeof Auth404Route
-  AuthHargaPromoRoute: typeof AuthHargaPromoRoute
+  AuthHargaPromoRoute: typeof AuthHargaPromoRouteWithChildren
   AuthKatalogRoute: typeof AuthKatalogRouteWithChildren
   AuthKontenRoute: typeof AuthKontenRoute
   AuthPelangganRoute: typeof AuthPelangganRoute
@@ -736,7 +807,7 @@ interface AuthRouteChildren {
 const AuthRouteChildren: AuthRouteChildren = {
   Auth403Route: Auth403Route,
   Auth404Route: Auth404Route,
-  AuthHargaPromoRoute: AuthHargaPromoRoute,
+  AuthHargaPromoRoute: AuthHargaPromoRouteWithChildren,
   AuthKatalogRoute: AuthKatalogRouteWithChildren,
   AuthKontenRoute: AuthKontenRoute,
   AuthPelangganRoute: AuthPelangganRoute,

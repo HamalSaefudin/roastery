@@ -44,6 +44,7 @@ const MAPPING = {
     paid: { label: 'Lunas', variant: 'sukses' },
     overdue: { label: 'Jatuh tempo', variant: 'bahaya' },
     cancelled: { label: 'Dibatalkan', variant: 'netral' },
+    expired: { label: 'Kadaluarsa', variant: 'netral' },
   },
   delivery: {
     pending: { label: 'Belum di-assign', variant: 'peringatan' },
@@ -82,6 +83,7 @@ const MAPPING = {
   },
   user: {
     active: { label: 'Aktif', variant: 'sukses' },
+    inactive: { label: 'Nonaktif', variant: 'netral' },
     pending: { label: 'Pending', variant: 'peringatan' },
     suspended: { label: 'Ditangguhkan', variant: 'bahaya' },
   },

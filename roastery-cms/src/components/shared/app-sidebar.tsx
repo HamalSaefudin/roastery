@@ -46,7 +46,15 @@ const MENU: MenuItem[] = [
       { label: 'Riwayat', path: '/stok/riwayat' },
     ],
   },
-  { label: 'Harga & Promo', path: '/harga-promo', icon: BadgePercentIcon },
+  {
+    label: 'Harga & Promo',
+    icon: BadgePercentIcon,
+    children: [
+      { label: 'Harga', path: '/harga-promo' },
+      { label: 'Tier Grosir', path: '/harga-promo/tier' },
+      { label: 'Kode Promo', path: '/harga-promo/promo' },
+    ],
+  },
   { label: 'Pelanggan', path: '/pelanggan', icon: UsersIcon },
   {
     label: 'Pengiriman',

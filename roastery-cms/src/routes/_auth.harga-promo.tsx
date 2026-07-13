@@ -1,12 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { PlaceholderPage } from '../components/shared/placeholder-page'
-import { PageHeader } from '../components/shared/page-header'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_auth/harga-promo')({
-  component: () => (
-    <div className="space-y-6">
-      <PageHeader judul="Harga & Promo" />
-      <PlaceholderPage judul="Harga & Promo" />
-    </div>
-  ),
+  component: () => <Outlet />,
 })

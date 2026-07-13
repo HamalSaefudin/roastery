@@ -34,9 +34,7 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 | 03 | Layout & Dashboard | ✅ selesai — layout shell (sidebar collapsible + topbar breadcrumb + theme toggle + user menu), 17 route files (termasuk nested katalog/pengiriman/service-desk), dashboard 5 kartu ringkasan (order baru, perlu diproses, pengiriman aktif, wholesale pending, stok menipis) — error per-kartu independen, placeholder "Segera" utk menu non-built, 403/404 pages, PageSkeleton defaultPendingComponent, CatchBoundary error boundary di konten area. e2e Playwright gagal lokal karena browser extensions (Grammarly) flooding console — perlu di CI |
 | 04 | Katalog & Master Data | ✅ selesai — DataTable reusable (TanStack Table + toolbar + pagination server-side + Skeleton/Empty/Error), master data Brand/Origin/Kategori (list + dialog CRUD + hapus + 409), produk list (filter type/brand/kategori + search + pagination), form create (pilih tipe 3 kartu → field dinamis per tipe) & edit (tipe terkunci), detail produk + varian biji (tambah dialog) + status toggle (ConfirmDialog) — typecheck/lint/check hijau |
 | 05 | Stok | ✅ selesai — sidebar sub-menu (Biji/Unit/Riwayat), stok biji (tabel per varian + reserved tooltip + stok menipis badge + penyesuaian dialog preview), unit equipment (tabel serial + filter status + input unit baru + tandai defective ConfirmDialog), riwayat stok read-only + perubahan berwarna — typecheck/lint/check hijau |
-| 04 | Katalog & Master Data | ⬜ belum mulai |
-| 05 | Stok | ⬜ belum mulai |
-| 06 | Harga & Promo | ⬜ belum mulai |
+| 06 | Harga & Promo | ✅ selesai — sidebar sub-menu (Harga/Tier/Promo), harga retail (tabel DataTable + dialog set price + InputRupiah), tier grosir (tabel + create/hapus + preview kalkulasi), kode promo (tabel + form create + status badge dengan masa berlaku) — typecheck/lint/check/build hijau |
 | 07 | Pelanggan & Wholesale | ⬜ belum mulai |
 | 08 | Pesanan | ⬜ belum mulai |
 | 09 | Pengiriman | ⬜ belum mulai |
