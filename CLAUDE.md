@@ -1,5 +1,7 @@
 # Roastery — Panduan Proyek
 
+> Ini sumber tunggal status progress proyek. Aturan kerja prosedural (dipakai lintas tool AI — Cursor, OpenCode, dll.) ada di [AGENTS.md](AGENTS.md); isinya merujuk balik ke sini utk progress, jadi update DI SINI saat checklist berubah, jangan di AGENTS.md.
+
 Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin espresso, grinder; pengiriman dikelola sendiri (driver in-house); melayani retail & wholesale.
 
 **Arsitektur:** 1 Service API (**NestJS 11 + PostgreSQL + Drizzle**, di `roastery-service/`) + 3 client TanStack Start (CMS/Admin di `roastery-cms/` 🔄 dikerjakan; Storefront & Driver App belum dibuat). Repo = **pnpm workspace** (lockfile tunggal di root).
