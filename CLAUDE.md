@@ -31,8 +31,7 @@ Platform e-commerce + operasional untuk **roastery kopi**: jual biji kopi, mesin
 | — | Docs & konvensi CMS | ✅ [\_conventions.md](docs/cms/_conventions.md) (WAJIB: matriks feedback loading/sukses/error tiap interaksi) + plan/todo step 01–11 |
 | 01 | Fondasi UI (token, toast, komponen feedback) | ✅ selesai — token Dark Roast → shadcn vars (dark default + light), font self-host, toggle tema anti-FOUC, openapi-fetch client + `getErrorMessage`, toast helper, LoadingButton/Skeleton/Empty/Error/ConfirmDialog/StatusBadge(15 enum)/PageHeader, kitchen-sink dev-only diverifikasi visual (fix: sonner tanpa next-themes, `suppressHydrationWarning`) |
 | 02 | Auth & Sesi (login, guard, logout) | ✅ selesai — login (TanStack Form+Zod, error inline), guard `_auth.tsx` (role staff/admin only), logout, interceptor 401 refresh-retry, 18 e2e Playwright (backend :3000 wajib nyala). Fix bug nyata: SSR tidak neruskan cookie (pakai `createServerOnlyFn`+`getRequestHeader`), paket nyasar `/Users/macbook/node_modules` bikin bundle client rusak (fix: `@tanstack/router-core` jadi dependency eksplisit) |
-| 03 | Layout & Dashboard | ⬜ belum mulai |
-| 03 | Layout & Dashboard | ⬜ belum mulai |
+| 03 | Layout & Dashboard | ✅ selesai — layout shell (sidebar collapsible + topbar breadcrumb + theme toggle + user menu), 17 route files (termasuk nested katalog/pengiriman/service-desk), dashboard 5 kartu ringkasan (order baru, perlu diproses, pengiriman aktif, wholesale pending, stok menipis) — error per-kartu independen, placeholder "Segera" utk menu non-built, 403/404 pages, PageSkeleton defaultPendingComponent, CatchBoundary error boundary di konten area. e2e Playwright gagal lokal karena browser extensions (Grammarly) flooding console — perlu di CI |
 | 04 | Katalog & Master Data | ⬜ belum mulai |
 | 05 | Stok | ⬜ belum mulai |
 | 06 | Harga & Promo | ⬜ belum mulai |

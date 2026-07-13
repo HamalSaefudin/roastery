@@ -13,6 +13,27 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthIndexRouteImport } from './routes/_auth.index'
 import { Route as DevKitchenSinkRouteImport } from './routes/dev.kitchen-sink'
+import { Route as AuthStokRouteImport } from './routes/_auth.stok'
+import { Route as AuthServiceDeskRouteImport } from './routes/_auth.service-desk'
+import { Route as AuthPesananRouteImport } from './routes/_auth.pesanan'
+import { Route as AuthPengirimanRouteImport } from './routes/_auth.pengiriman'
+import { Route as AuthPelangganRouteImport } from './routes/_auth.pelanggan'
+import { Route as AuthKontenRouteImport } from './routes/_auth.konten'
+import { Route as AuthKatalogRouteImport } from './routes/_auth.katalog'
+import { Route as AuthHargaPromoRouteImport } from './routes/_auth.harga-promo'
+import { Route as Auth404RouteImport } from './routes/_auth.404'
+import { Route as Auth403RouteImport } from './routes/_auth.403'
+import { Route as AuthServiceDeskIndexRouteImport } from './routes/_auth.service-desk.index'
+import { Route as AuthPengirimanIndexRouteImport } from './routes/_auth.pengiriman.index'
+import { Route as AuthKatalogIndexRouteImport } from './routes/_auth.katalog.index'
+import { Route as AuthServiceDeskTiketRouteImport } from './routes/_auth.service-desk.tiket'
+import { Route as AuthPengirimanZonaRouteImport } from './routes/_auth.pengiriman.zona'
+import { Route as AuthPengirimanKendaraanRouteImport } from './routes/_auth.pengiriman.kendaraan'
+import { Route as AuthPengirimanDriverRouteImport } from './routes/_auth.pengiriman.driver'
+import { Route as AuthPengirimanCodRouteImport } from './routes/_auth.pengiriman.cod'
+import { Route as AuthKatalogOriginsRouteImport } from './routes/_auth.katalog.origins'
+import { Route as AuthKatalogCategoriesRouteImport } from './routes/_auth.katalog.categories'
+import { Route as AuthKatalogBrandsRouteImport } from './routes/_auth.katalog.brands'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -33,30 +54,266 @@ const DevKitchenSinkRoute = DevKitchenSinkRouteImport.update({
   path: '/dev/kitchen-sink',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthStokRoute = AuthStokRouteImport.update({
+  id: '/stok',
+  path: '/stok',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthServiceDeskRoute = AuthServiceDeskRouteImport.update({
+  id: '/service-desk',
+  path: '/service-desk',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthPesananRoute = AuthPesananRouteImport.update({
+  id: '/pesanan',
+  path: '/pesanan',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthPengirimanRoute = AuthPengirimanRouteImport.update({
+  id: '/pengiriman',
+  path: '/pengiriman',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthPelangganRoute = AuthPelangganRouteImport.update({
+  id: '/pelanggan',
+  path: '/pelanggan',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthKontenRoute = AuthKontenRouteImport.update({
+  id: '/konten',
+  path: '/konten',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthKatalogRoute = AuthKatalogRouteImport.update({
+  id: '/katalog',
+  path: '/katalog',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthHargaPromoRoute = AuthHargaPromoRouteImport.update({
+  id: '/harga-promo',
+  path: '/harga-promo',
+  getParentRoute: () => AuthRoute,
+} as any)
+const Auth404Route = Auth404RouteImport.update({
+  id: '/404',
+  path: '/404',
+  getParentRoute: () => AuthRoute,
+} as any)
+const Auth403Route = Auth403RouteImport.update({
+  id: '/403',
+  path: '/403',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthServiceDeskIndexRoute = AuthServiceDeskIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthServiceDeskRoute,
+} as any)
+const AuthPengirimanIndexRoute = AuthPengirimanIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthPengirimanRoute,
+} as any)
+const AuthKatalogIndexRoute = AuthKatalogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthKatalogRoute,
+} as any)
+const AuthServiceDeskTiketRoute = AuthServiceDeskTiketRouteImport.update({
+  id: '/tiket',
+  path: '/tiket',
+  getParentRoute: () => AuthServiceDeskRoute,
+} as any)
+const AuthPengirimanZonaRoute = AuthPengirimanZonaRouteImport.update({
+  id: '/zona',
+  path: '/zona',
+  getParentRoute: () => AuthPengirimanRoute,
+} as any)
+const AuthPengirimanKendaraanRoute = AuthPengirimanKendaraanRouteImport.update({
+  id: '/kendaraan',
+  path: '/kendaraan',
+  getParentRoute: () => AuthPengirimanRoute,
+} as any)
+const AuthPengirimanDriverRoute = AuthPengirimanDriverRouteImport.update({
+  id: '/driver',
+  path: '/driver',
+  getParentRoute: () => AuthPengirimanRoute,
+} as any)
+const AuthPengirimanCodRoute = AuthPengirimanCodRouteImport.update({
+  id: '/cod',
+  path: '/cod',
+  getParentRoute: () => AuthPengirimanRoute,
+} as any)
+const AuthKatalogOriginsRoute = AuthKatalogOriginsRouteImport.update({
+  id: '/origins',
+  path: '/origins',
+  getParentRoute: () => AuthKatalogRoute,
+} as any)
+const AuthKatalogCategoriesRoute = AuthKatalogCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => AuthKatalogRoute,
+} as any)
+const AuthKatalogBrandsRoute = AuthKatalogBrandsRouteImport.update({
+  id: '/brands',
+  path: '/brands',
+  getParentRoute: () => AuthKatalogRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
   '/login': typeof LoginRoute
+  '/403': typeof Auth403Route
+  '/404': typeof Auth404Route
+  '/harga-promo': typeof AuthHargaPromoRoute
+  '/katalog': typeof AuthKatalogRouteWithChildren
+  '/konten': typeof AuthKontenRoute
+  '/pelanggan': typeof AuthPelangganRoute
+  '/pengiriman': typeof AuthPengirimanRouteWithChildren
+  '/pesanan': typeof AuthPesananRoute
+  '/service-desk': typeof AuthServiceDeskRouteWithChildren
+  '/stok': typeof AuthStokRoute
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
+  '/katalog/brands': typeof AuthKatalogBrandsRoute
+  '/katalog/categories': typeof AuthKatalogCategoriesRoute
+  '/katalog/origins': typeof AuthKatalogOriginsRoute
+  '/pengiriman/cod': typeof AuthPengirimanCodRoute
+  '/pengiriman/driver': typeof AuthPengirimanDriverRoute
+  '/pengiriman/kendaraan': typeof AuthPengirimanKendaraanRoute
+  '/pengiriman/zona': typeof AuthPengirimanZonaRoute
+  '/service-desk/tiket': typeof AuthServiceDeskTiketRoute
+  '/katalog/': typeof AuthKatalogIndexRoute
+  '/pengiriman/': typeof AuthPengirimanIndexRoute
+  '/service-desk/': typeof AuthServiceDeskIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/403': typeof Auth403Route
+  '/404': typeof Auth404Route
+  '/harga-promo': typeof AuthHargaPromoRoute
+  '/konten': typeof AuthKontenRoute
+  '/pelanggan': typeof AuthPelangganRoute
+  '/pesanan': typeof AuthPesananRoute
+  '/stok': typeof AuthStokRoute
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
   '/': typeof AuthIndexRoute
+  '/katalog/brands': typeof AuthKatalogBrandsRoute
+  '/katalog/categories': typeof AuthKatalogCategoriesRoute
+  '/katalog/origins': typeof AuthKatalogOriginsRoute
+  '/pengiriman/cod': typeof AuthPengirimanCodRoute
+  '/pengiriman/driver': typeof AuthPengirimanDriverRoute
+  '/pengiriman/kendaraan': typeof AuthPengirimanKendaraanRoute
+  '/pengiriman/zona': typeof AuthPengirimanZonaRoute
+  '/service-desk/tiket': typeof AuthServiceDeskTiketRoute
+  '/katalog': typeof AuthKatalogIndexRoute
+  '/pengiriman': typeof AuthPengirimanIndexRoute
+  '/service-desk': typeof AuthServiceDeskIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
+  '/_auth/403': typeof Auth403Route
+  '/_auth/404': typeof Auth404Route
+  '/_auth/harga-promo': typeof AuthHargaPromoRoute
+  '/_auth/katalog': typeof AuthKatalogRouteWithChildren
+  '/_auth/konten': typeof AuthKontenRoute
+  '/_auth/pelanggan': typeof AuthPelangganRoute
+  '/_auth/pengiriman': typeof AuthPengirimanRouteWithChildren
+  '/_auth/pesanan': typeof AuthPesananRoute
+  '/_auth/service-desk': typeof AuthServiceDeskRouteWithChildren
+  '/_auth/stok': typeof AuthStokRoute
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
   '/_auth/': typeof AuthIndexRoute
+  '/_auth/katalog/brands': typeof AuthKatalogBrandsRoute
+  '/_auth/katalog/categories': typeof AuthKatalogCategoriesRoute
+  '/_auth/katalog/origins': typeof AuthKatalogOriginsRoute
+  '/_auth/pengiriman/cod': typeof AuthPengirimanCodRoute
+  '/_auth/pengiriman/driver': typeof AuthPengirimanDriverRoute
+  '/_auth/pengiriman/kendaraan': typeof AuthPengirimanKendaraanRoute
+  '/_auth/pengiriman/zona': typeof AuthPengirimanZonaRoute
+  '/_auth/service-desk/tiket': typeof AuthServiceDeskTiketRoute
+  '/_auth/katalog/': typeof AuthKatalogIndexRoute
+  '/_auth/pengiriman/': typeof AuthPengirimanIndexRoute
+  '/_auth/service-desk/': typeof AuthServiceDeskIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/dev/kitchen-sink'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/403'
+    | '/404'
+    | '/harga-promo'
+    | '/katalog'
+    | '/konten'
+    | '/pelanggan'
+    | '/pengiriman'
+    | '/pesanan'
+    | '/service-desk'
+    | '/stok'
+    | '/dev/kitchen-sink'
+    | '/katalog/brands'
+    | '/katalog/categories'
+    | '/katalog/origins'
+    | '/pengiriman/cod'
+    | '/pengiriman/driver'
+    | '/pengiriman/kendaraan'
+    | '/pengiriman/zona'
+    | '/service-desk/tiket'
+    | '/katalog/'
+    | '/pengiriman/'
+    | '/service-desk/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/dev/kitchen-sink' | '/'
-  id: '__root__' | '/_auth' | '/login' | '/dev/kitchen-sink' | '/_auth/'
+  to:
+    | '/login'
+    | '/403'
+    | '/404'
+    | '/harga-promo'
+    | '/konten'
+    | '/pelanggan'
+    | '/pesanan'
+    | '/stok'
+    | '/dev/kitchen-sink'
+    | '/'
+    | '/katalog/brands'
+    | '/katalog/categories'
+    | '/katalog/origins'
+    | '/pengiriman/cod'
+    | '/pengiriman/driver'
+    | '/pengiriman/kendaraan'
+    | '/pengiriman/zona'
+    | '/service-desk/tiket'
+    | '/katalog'
+    | '/pengiriman'
+    | '/service-desk'
+  id:
+    | '__root__'
+    | '/_auth'
+    | '/login'
+    | '/_auth/403'
+    | '/_auth/404'
+    | '/_auth/harga-promo'
+    | '/_auth/katalog'
+    | '/_auth/konten'
+    | '/_auth/pelanggan'
+    | '/_auth/pengiriman'
+    | '/_auth/pesanan'
+    | '/_auth/service-desk'
+    | '/_auth/stok'
+    | '/dev/kitchen-sink'
+    | '/_auth/'
+    | '/_auth/katalog/brands'
+    | '/_auth/katalog/categories'
+    | '/_auth/katalog/origins'
+    | '/_auth/pengiriman/cod'
+    | '/_auth/pengiriman/driver'
+    | '/_auth/pengiriman/kendaraan'
+    | '/_auth/pengiriman/zona'
+    | '/_auth/service-desk/tiket'
+    | '/_auth/katalog/'
+    | '/_auth/pengiriman/'
+    | '/_auth/service-desk/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -95,14 +352,233 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevKitchenSinkRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_auth/stok': {
+      id: '/_auth/stok'
+      path: '/stok'
+      fullPath: '/stok'
+      preLoaderRoute: typeof AuthStokRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/service-desk': {
+      id: '/_auth/service-desk'
+      path: '/service-desk'
+      fullPath: '/service-desk'
+      preLoaderRoute: typeof AuthServiceDeskRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/pesanan': {
+      id: '/_auth/pesanan'
+      path: '/pesanan'
+      fullPath: '/pesanan'
+      preLoaderRoute: typeof AuthPesananRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/pengiriman': {
+      id: '/_auth/pengiriman'
+      path: '/pengiriman'
+      fullPath: '/pengiriman'
+      preLoaderRoute: typeof AuthPengirimanRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/pelanggan': {
+      id: '/_auth/pelanggan'
+      path: '/pelanggan'
+      fullPath: '/pelanggan'
+      preLoaderRoute: typeof AuthPelangganRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/konten': {
+      id: '/_auth/konten'
+      path: '/konten'
+      fullPath: '/konten'
+      preLoaderRoute: typeof AuthKontenRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/katalog': {
+      id: '/_auth/katalog'
+      path: '/katalog'
+      fullPath: '/katalog'
+      preLoaderRoute: typeof AuthKatalogRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/harga-promo': {
+      id: '/_auth/harga-promo'
+      path: '/harga-promo'
+      fullPath: '/harga-promo'
+      preLoaderRoute: typeof AuthHargaPromoRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/404': {
+      id: '/_auth/404'
+      path: '/404'
+      fullPath: '/404'
+      preLoaderRoute: typeof Auth404RouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/403': {
+      id: '/_auth/403'
+      path: '/403'
+      fullPath: '/403'
+      preLoaderRoute: typeof Auth403RouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/service-desk/': {
+      id: '/_auth/service-desk/'
+      path: '/'
+      fullPath: '/service-desk/'
+      preLoaderRoute: typeof AuthServiceDeskIndexRouteImport
+      parentRoute: typeof AuthServiceDeskRoute
+    }
+    '/_auth/pengiriman/': {
+      id: '/_auth/pengiriman/'
+      path: '/'
+      fullPath: '/pengiriman/'
+      preLoaderRoute: typeof AuthPengirimanIndexRouteImport
+      parentRoute: typeof AuthPengirimanRoute
+    }
+    '/_auth/katalog/': {
+      id: '/_auth/katalog/'
+      path: '/'
+      fullPath: '/katalog/'
+      preLoaderRoute: typeof AuthKatalogIndexRouteImport
+      parentRoute: typeof AuthKatalogRoute
+    }
+    '/_auth/service-desk/tiket': {
+      id: '/_auth/service-desk/tiket'
+      path: '/tiket'
+      fullPath: '/service-desk/tiket'
+      preLoaderRoute: typeof AuthServiceDeskTiketRouteImport
+      parentRoute: typeof AuthServiceDeskRoute
+    }
+    '/_auth/pengiriman/zona': {
+      id: '/_auth/pengiriman/zona'
+      path: '/zona'
+      fullPath: '/pengiriman/zona'
+      preLoaderRoute: typeof AuthPengirimanZonaRouteImport
+      parentRoute: typeof AuthPengirimanRoute
+    }
+    '/_auth/pengiriman/kendaraan': {
+      id: '/_auth/pengiriman/kendaraan'
+      path: '/kendaraan'
+      fullPath: '/pengiriman/kendaraan'
+      preLoaderRoute: typeof AuthPengirimanKendaraanRouteImport
+      parentRoute: typeof AuthPengirimanRoute
+    }
+    '/_auth/pengiriman/driver': {
+      id: '/_auth/pengiriman/driver'
+      path: '/driver'
+      fullPath: '/pengiriman/driver'
+      preLoaderRoute: typeof AuthPengirimanDriverRouteImport
+      parentRoute: typeof AuthPengirimanRoute
+    }
+    '/_auth/pengiriman/cod': {
+      id: '/_auth/pengiriman/cod'
+      path: '/cod'
+      fullPath: '/pengiriman/cod'
+      preLoaderRoute: typeof AuthPengirimanCodRouteImport
+      parentRoute: typeof AuthPengirimanRoute
+    }
+    '/_auth/katalog/origins': {
+      id: '/_auth/katalog/origins'
+      path: '/origins'
+      fullPath: '/katalog/origins'
+      preLoaderRoute: typeof AuthKatalogOriginsRouteImport
+      parentRoute: typeof AuthKatalogRoute
+    }
+    '/_auth/katalog/categories': {
+      id: '/_auth/katalog/categories'
+      path: '/categories'
+      fullPath: '/katalog/categories'
+      preLoaderRoute: typeof AuthKatalogCategoriesRouteImport
+      parentRoute: typeof AuthKatalogRoute
+    }
+    '/_auth/katalog/brands': {
+      id: '/_auth/katalog/brands'
+      path: '/brands'
+      fullPath: '/katalog/brands'
+      preLoaderRoute: typeof AuthKatalogBrandsRouteImport
+      parentRoute: typeof AuthKatalogRoute
+    }
   }
 }
 
+interface AuthKatalogRouteChildren {
+  AuthKatalogBrandsRoute: typeof AuthKatalogBrandsRoute
+  AuthKatalogCategoriesRoute: typeof AuthKatalogCategoriesRoute
+  AuthKatalogOriginsRoute: typeof AuthKatalogOriginsRoute
+  AuthKatalogIndexRoute: typeof AuthKatalogIndexRoute
+}
+
+const AuthKatalogRouteChildren: AuthKatalogRouteChildren = {
+  AuthKatalogBrandsRoute: AuthKatalogBrandsRoute,
+  AuthKatalogCategoriesRoute: AuthKatalogCategoriesRoute,
+  AuthKatalogOriginsRoute: AuthKatalogOriginsRoute,
+  AuthKatalogIndexRoute: AuthKatalogIndexRoute,
+}
+
+const AuthKatalogRouteWithChildren = AuthKatalogRoute._addFileChildren(
+  AuthKatalogRouteChildren,
+)
+
+interface AuthPengirimanRouteChildren {
+  AuthPengirimanCodRoute: typeof AuthPengirimanCodRoute
+  AuthPengirimanDriverRoute: typeof AuthPengirimanDriverRoute
+  AuthPengirimanKendaraanRoute: typeof AuthPengirimanKendaraanRoute
+  AuthPengirimanZonaRoute: typeof AuthPengirimanZonaRoute
+  AuthPengirimanIndexRoute: typeof AuthPengirimanIndexRoute
+}
+
+const AuthPengirimanRouteChildren: AuthPengirimanRouteChildren = {
+  AuthPengirimanCodRoute: AuthPengirimanCodRoute,
+  AuthPengirimanDriverRoute: AuthPengirimanDriverRoute,
+  AuthPengirimanKendaraanRoute: AuthPengirimanKendaraanRoute,
+  AuthPengirimanZonaRoute: AuthPengirimanZonaRoute,
+  AuthPengirimanIndexRoute: AuthPengirimanIndexRoute,
+}
+
+const AuthPengirimanRouteWithChildren = AuthPengirimanRoute._addFileChildren(
+  AuthPengirimanRouteChildren,
+)
+
+interface AuthServiceDeskRouteChildren {
+  AuthServiceDeskTiketRoute: typeof AuthServiceDeskTiketRoute
+  AuthServiceDeskIndexRoute: typeof AuthServiceDeskIndexRoute
+}
+
+const AuthServiceDeskRouteChildren: AuthServiceDeskRouteChildren = {
+  AuthServiceDeskTiketRoute: AuthServiceDeskTiketRoute,
+  AuthServiceDeskIndexRoute: AuthServiceDeskIndexRoute,
+}
+
+const AuthServiceDeskRouteWithChildren = AuthServiceDeskRoute._addFileChildren(
+  AuthServiceDeskRouteChildren,
+)
+
 interface AuthRouteChildren {
+  Auth403Route: typeof Auth403Route
+  Auth404Route: typeof Auth404Route
+  AuthHargaPromoRoute: typeof AuthHargaPromoRoute
+  AuthKatalogRoute: typeof AuthKatalogRouteWithChildren
+  AuthKontenRoute: typeof AuthKontenRoute
+  AuthPelangganRoute: typeof AuthPelangganRoute
+  AuthPengirimanRoute: typeof AuthPengirimanRouteWithChildren
+  AuthPesananRoute: typeof AuthPesananRoute
+  AuthServiceDeskRoute: typeof AuthServiceDeskRouteWithChildren
+  AuthStokRoute: typeof AuthStokRoute
   AuthIndexRoute: typeof AuthIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
+  Auth403Route: Auth403Route,
+  Auth404Route: Auth404Route,
+  AuthHargaPromoRoute: AuthHargaPromoRoute,
+  AuthKatalogRoute: AuthKatalogRouteWithChildren,
+  AuthKontenRoute: AuthKontenRoute,
+  AuthPelangganRoute: AuthPelangganRoute,
+  AuthPengirimanRoute: AuthPengirimanRouteWithChildren,
+  AuthPesananRoute: AuthPesananRoute,
+  AuthServiceDeskRoute: AuthServiceDeskRouteWithChildren,
+  AuthStokRoute: AuthStokRoute,
   AuthIndexRoute: AuthIndexRoute,
 }
 
