@@ -23,9 +23,13 @@ import { Route as AuthKatalogRouteImport } from './routes/_auth.katalog'
 import { Route as AuthHargaPromoRouteImport } from './routes/_auth.harga-promo'
 import { Route as Auth404RouteImport } from './routes/_auth.404'
 import { Route as Auth403RouteImport } from './routes/_auth.403'
+import { Route as AuthStokIndexRouteImport } from './routes/_auth.stok.index'
 import { Route as AuthServiceDeskIndexRouteImport } from './routes/_auth.service-desk.index'
 import { Route as AuthPengirimanIndexRouteImport } from './routes/_auth.pengiriman.index'
 import { Route as AuthKatalogIndexRouteImport } from './routes/_auth.katalog.index'
+import { Route as AuthStokUnitRouteImport } from './routes/_auth.stok.unit'
+import { Route as AuthStokRiwayatRouteImport } from './routes/_auth.stok.riwayat'
+import { Route as AuthStokBijiRouteImport } from './routes/_auth.stok.biji'
 import { Route as AuthServiceDeskTiketRouteImport } from './routes/_auth.service-desk.tiket'
 import { Route as AuthPengirimanZonaRouteImport } from './routes/_auth.pengiriman.zona'
 import { Route as AuthPengirimanKendaraanRouteImport } from './routes/_auth.pengiriman.kendaraan'
@@ -107,6 +111,11 @@ const Auth403Route = Auth403RouteImport.update({
   path: '/403',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthStokIndexRoute = AuthStokIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthStokRoute,
+} as any)
 const AuthServiceDeskIndexRoute = AuthServiceDeskIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -121,6 +130,21 @@ const AuthKatalogIndexRoute = AuthKatalogIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthKatalogRoute,
+} as any)
+const AuthStokUnitRoute = AuthStokUnitRouteImport.update({
+  id: '/unit',
+  path: '/unit',
+  getParentRoute: () => AuthStokRoute,
+} as any)
+const AuthStokRiwayatRoute = AuthStokRiwayatRouteImport.update({
+  id: '/riwayat',
+  path: '/riwayat',
+  getParentRoute: () => AuthStokRoute,
+} as any)
+const AuthStokBijiRoute = AuthStokBijiRouteImport.update({
+  id: '/biji',
+  path: '/biji',
+  getParentRoute: () => AuthStokRoute,
 } as any)
 const AuthServiceDeskTiketRoute = AuthServiceDeskTiketRouteImport.update({
   id: '/tiket',
@@ -190,7 +214,7 @@ export interface FileRoutesByFullPath {
   '/pengiriman': typeof AuthPengirimanRouteWithChildren
   '/pesanan': typeof AuthPesananRoute
   '/service-desk': typeof AuthServiceDeskRouteWithChildren
-  '/stok': typeof AuthStokRoute
+  '/stok': typeof AuthStokRouteWithChildren
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
   '/katalog/$slug': typeof AuthKatalogSlugRouteWithChildren
   '/katalog/baru': typeof AuthKatalogBaruRoute
@@ -202,9 +226,13 @@ export interface FileRoutesByFullPath {
   '/pengiriman/kendaraan': typeof AuthPengirimanKendaraanRoute
   '/pengiriman/zona': typeof AuthPengirimanZonaRoute
   '/service-desk/tiket': typeof AuthServiceDeskTiketRoute
+  '/stok/biji': typeof AuthStokBijiRoute
+  '/stok/riwayat': typeof AuthStokRiwayatRoute
+  '/stok/unit': typeof AuthStokUnitRoute
   '/katalog/': typeof AuthKatalogIndexRoute
   '/pengiriman/': typeof AuthPengirimanIndexRoute
   '/service-desk/': typeof AuthServiceDeskIndexRoute
+  '/stok/': typeof AuthStokIndexRoute
   '/katalog/$slug/edit': typeof AuthKatalogSlugEditRoute
 }
 export interface FileRoutesByTo {
@@ -215,7 +243,6 @@ export interface FileRoutesByTo {
   '/konten': typeof AuthKontenRoute
   '/pelanggan': typeof AuthPelangganRoute
   '/pesanan': typeof AuthPesananRoute
-  '/stok': typeof AuthStokRoute
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
   '/': typeof AuthIndexRoute
   '/katalog/$slug': typeof AuthKatalogSlugRouteWithChildren
@@ -228,9 +255,13 @@ export interface FileRoutesByTo {
   '/pengiriman/kendaraan': typeof AuthPengirimanKendaraanRoute
   '/pengiriman/zona': typeof AuthPengirimanZonaRoute
   '/service-desk/tiket': typeof AuthServiceDeskTiketRoute
+  '/stok/biji': typeof AuthStokBijiRoute
+  '/stok/riwayat': typeof AuthStokRiwayatRoute
+  '/stok/unit': typeof AuthStokUnitRoute
   '/katalog': typeof AuthKatalogIndexRoute
   '/pengiriman': typeof AuthPengirimanIndexRoute
   '/service-desk': typeof AuthServiceDeskIndexRoute
+  '/stok': typeof AuthStokIndexRoute
   '/katalog/$slug/edit': typeof AuthKatalogSlugEditRoute
 }
 export interface FileRoutesById {
@@ -246,7 +277,7 @@ export interface FileRoutesById {
   '/_auth/pengiriman': typeof AuthPengirimanRouteWithChildren
   '/_auth/pesanan': typeof AuthPesananRoute
   '/_auth/service-desk': typeof AuthServiceDeskRouteWithChildren
-  '/_auth/stok': typeof AuthStokRoute
+  '/_auth/stok': typeof AuthStokRouteWithChildren
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
   '/_auth/': typeof AuthIndexRoute
   '/_auth/katalog/$slug': typeof AuthKatalogSlugRouteWithChildren
@@ -259,9 +290,13 @@ export interface FileRoutesById {
   '/_auth/pengiriman/kendaraan': typeof AuthPengirimanKendaraanRoute
   '/_auth/pengiriman/zona': typeof AuthPengirimanZonaRoute
   '/_auth/service-desk/tiket': typeof AuthServiceDeskTiketRoute
+  '/_auth/stok/biji': typeof AuthStokBijiRoute
+  '/_auth/stok/riwayat': typeof AuthStokRiwayatRoute
+  '/_auth/stok/unit': typeof AuthStokUnitRoute
   '/_auth/katalog/': typeof AuthKatalogIndexRoute
   '/_auth/pengiriman/': typeof AuthPengirimanIndexRoute
   '/_auth/service-desk/': typeof AuthServiceDeskIndexRoute
+  '/_auth/stok/': typeof AuthStokIndexRoute
   '/_auth/katalog/$slug/edit': typeof AuthKatalogSlugEditRoute
 }
 export interface FileRouteTypes {
@@ -290,9 +325,13 @@ export interface FileRouteTypes {
     | '/pengiriman/kendaraan'
     | '/pengiriman/zona'
     | '/service-desk/tiket'
+    | '/stok/biji'
+    | '/stok/riwayat'
+    | '/stok/unit'
     | '/katalog/'
     | '/pengiriman/'
     | '/service-desk/'
+    | '/stok/'
     | '/katalog/$slug/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -303,7 +342,6 @@ export interface FileRouteTypes {
     | '/konten'
     | '/pelanggan'
     | '/pesanan'
-    | '/stok'
     | '/dev/kitchen-sink'
     | '/'
     | '/katalog/$slug'
@@ -316,9 +354,13 @@ export interface FileRouteTypes {
     | '/pengiriman/kendaraan'
     | '/pengiriman/zona'
     | '/service-desk/tiket'
+    | '/stok/biji'
+    | '/stok/riwayat'
+    | '/stok/unit'
     | '/katalog'
     | '/pengiriman'
     | '/service-desk'
+    | '/stok'
     | '/katalog/$slug/edit'
   id:
     | '__root__'
@@ -346,9 +388,13 @@ export interface FileRouteTypes {
     | '/_auth/pengiriman/kendaraan'
     | '/_auth/pengiriman/zona'
     | '/_auth/service-desk/tiket'
+    | '/_auth/stok/biji'
+    | '/_auth/stok/riwayat'
+    | '/_auth/stok/unit'
     | '/_auth/katalog/'
     | '/_auth/pengiriman/'
     | '/_auth/service-desk/'
+    | '/_auth/stok/'
     | '/_auth/katalog/$slug/edit'
   fileRoutesById: FileRoutesById
 }
@@ -458,6 +504,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Auth403RouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/stok/': {
+      id: '/_auth/stok/'
+      path: '/'
+      fullPath: '/stok/'
+      preLoaderRoute: typeof AuthStokIndexRouteImport
+      parentRoute: typeof AuthStokRoute
+    }
     '/_auth/service-desk/': {
       id: '/_auth/service-desk/'
       path: '/'
@@ -478,6 +531,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/katalog/'
       preLoaderRoute: typeof AuthKatalogIndexRouteImport
       parentRoute: typeof AuthKatalogRoute
+    }
+    '/_auth/stok/unit': {
+      id: '/_auth/stok/unit'
+      path: '/unit'
+      fullPath: '/stok/unit'
+      preLoaderRoute: typeof AuthStokUnitRouteImport
+      parentRoute: typeof AuthStokRoute
+    }
+    '/_auth/stok/riwayat': {
+      id: '/_auth/stok/riwayat'
+      path: '/riwayat'
+      fullPath: '/stok/riwayat'
+      preLoaderRoute: typeof AuthStokRiwayatRouteImport
+      parentRoute: typeof AuthStokRoute
+    }
+    '/_auth/stok/biji': {
+      id: '/_auth/stok/biji'
+      path: '/biji'
+      fullPath: '/stok/biji'
+      preLoaderRoute: typeof AuthStokBijiRouteImport
+      parentRoute: typeof AuthStokRoute
     }
     '/_auth/service-desk/tiket': {
       id: '/_auth/service-desk/tiket'
@@ -627,6 +701,24 @@ const AuthServiceDeskRouteWithChildren = AuthServiceDeskRoute._addFileChildren(
   AuthServiceDeskRouteChildren,
 )
 
+interface AuthStokRouteChildren {
+  AuthStokBijiRoute: typeof AuthStokBijiRoute
+  AuthStokRiwayatRoute: typeof AuthStokRiwayatRoute
+  AuthStokUnitRoute: typeof AuthStokUnitRoute
+  AuthStokIndexRoute: typeof AuthStokIndexRoute
+}
+
+const AuthStokRouteChildren: AuthStokRouteChildren = {
+  AuthStokBijiRoute: AuthStokBijiRoute,
+  AuthStokRiwayatRoute: AuthStokRiwayatRoute,
+  AuthStokUnitRoute: AuthStokUnitRoute,
+  AuthStokIndexRoute: AuthStokIndexRoute,
+}
+
+const AuthStokRouteWithChildren = AuthStokRoute._addFileChildren(
+  AuthStokRouteChildren,
+)
+
 interface AuthRouteChildren {
   Auth403Route: typeof Auth403Route
   Auth404Route: typeof Auth404Route
@@ -637,7 +729,7 @@ interface AuthRouteChildren {
   AuthPengirimanRoute: typeof AuthPengirimanRouteWithChildren
   AuthPesananRoute: typeof AuthPesananRoute
   AuthServiceDeskRoute: typeof AuthServiceDeskRouteWithChildren
-  AuthStokRoute: typeof AuthStokRoute
+  AuthStokRoute: typeof AuthStokRouteWithChildren
   AuthIndexRoute: typeof AuthIndexRoute
 }
 
@@ -651,7 +743,7 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthPengirimanRoute: AuthPengirimanRouteWithChildren,
   AuthPesananRoute: AuthPesananRoute,
   AuthServiceDeskRoute: AuthServiceDeskRouteWithChildren,
-  AuthStokRoute: AuthStokRoute,
+  AuthStokRoute: AuthStokRouteWithChildren,
   AuthIndexRoute: AuthIndexRoute,
 }
 

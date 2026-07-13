@@ -37,7 +37,15 @@ const MENU: MenuItem[] = [
       { label: 'Kategori', path: '/katalog/categories' },
     ],
   },
-  { label: 'Stok', path: '/stok', icon: WarehouseIcon },
+  {
+    label: 'Stok',
+    icon: WarehouseIcon,
+    children: [
+      { label: 'Biji', path: '/stok/biji' },
+      { label: 'Unit', path: '/stok/unit' },
+      { label: 'Riwayat', path: '/stok/riwayat' },
+    ],
+  },
   { label: 'Harga & Promo', path: '/harga-promo', icon: BadgePercentIcon },
   { label: 'Pelanggan', path: '/pelanggan', icon: UsersIcon },
   {
