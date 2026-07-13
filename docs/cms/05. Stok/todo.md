@@ -27,4 +27,5 @@ Aturan: per fase, urut. Detail di [plan.md](./plan.md).
 - [ ] Penyesuaian stok & riwayat — butuh backend running
 - [ ] Loading/sukses/error/empty — butuh backend
 - [x] `pnpm build` + `pnpm lint` + `pnpm check` hijau — ✅
+- [x] E2E Playwright: navigasi sub-menu stok (biji/unit/riwayat) + tabel termuat
 - [ ] Update CLAUDE.md + commit

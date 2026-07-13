@@ -33,4 +33,5 @@ Aturan: per fase, urut. Detail di [plan.md](./plan.md).
 - [ ] Loading: TableSkeleton (first load), indikator refetch (ganti filter), LoadingButton semua form — butuh backend
 - [ ] EmptyState tampil di DB kosong (filter yang tidak match) dengan CTA benar
 - [x] `pnpm build` + `pnpm lint` + `pnpm check` hijau — ✅ semua pass
+- [x] E2E Playwright: navigasi brand/origin/kategori/produk + dialog CRUD + form tambah produk (3 kartu tipe)
 - [ ] Update CLAUDE.md + commit

@@ -29,5 +29,6 @@ Aturan: per fase, urut. Detail di [plan.md](./plan.md).
 - [ ] `GET /pricing/resolve` (curl) mengembalikan harga/tier yang diset dari UI
 - [ ] Promo yang dibuat tervalidasi benar via `promo/validate` (minimal: valid, expired, min belanja kurang)
 - [ ] Loading/sukses/error/empty semua halaman terbukti
-- [ ] `pnpm build` + `pnpm lint` + `pnpm check` hijau
+- [x] `pnpm build` + `pnpm lint` + `pnpm check` hijau — ✅
+- [x] E2E Playwright: harga retail (dialog set + InputRupiah format), tier (dialog tambah), promo (dialog tambah + uppercase)
 - [ ] Update CLAUDE.md + commit
