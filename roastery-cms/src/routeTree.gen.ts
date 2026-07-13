@@ -34,6 +34,9 @@ import { Route as AuthPengirimanCodRouteImport } from './routes/_auth.pengiriman
 import { Route as AuthKatalogOriginsRouteImport } from './routes/_auth.katalog.origins'
 import { Route as AuthKatalogCategoriesRouteImport } from './routes/_auth.katalog.categories'
 import { Route as AuthKatalogBrandsRouteImport } from './routes/_auth.katalog.brands'
+import { Route as AuthKatalogBaruRouteImport } from './routes/_auth.katalog.baru'
+import { Route as AuthKatalogSlugRouteImport } from './routes/_auth.katalog.$slug'
+import { Route as AuthKatalogSlugEditRouteImport } from './routes/_auth.katalog.$slug.edit'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -159,6 +162,21 @@ const AuthKatalogBrandsRoute = AuthKatalogBrandsRouteImport.update({
   path: '/brands',
   getParentRoute: () => AuthKatalogRoute,
 } as any)
+const AuthKatalogBaruRoute = AuthKatalogBaruRouteImport.update({
+  id: '/baru',
+  path: '/baru',
+  getParentRoute: () => AuthKatalogRoute,
+} as any)
+const AuthKatalogSlugRoute = AuthKatalogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => AuthKatalogRoute,
+} as any)
+const AuthKatalogSlugEditRoute = AuthKatalogSlugEditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => AuthKatalogSlugRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
@@ -174,6 +192,8 @@ export interface FileRoutesByFullPath {
   '/service-desk': typeof AuthServiceDeskRouteWithChildren
   '/stok': typeof AuthStokRoute
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
+  '/katalog/$slug': typeof AuthKatalogSlugRouteWithChildren
+  '/katalog/baru': typeof AuthKatalogBaruRoute
   '/katalog/brands': typeof AuthKatalogBrandsRoute
   '/katalog/categories': typeof AuthKatalogCategoriesRoute
   '/katalog/origins': typeof AuthKatalogOriginsRoute
@@ -185,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/katalog/': typeof AuthKatalogIndexRoute
   '/pengiriman/': typeof AuthPengirimanIndexRoute
   '/service-desk/': typeof AuthServiceDeskIndexRoute
+  '/katalog/$slug/edit': typeof AuthKatalogSlugEditRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -197,6 +218,8 @@ export interface FileRoutesByTo {
   '/stok': typeof AuthStokRoute
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
   '/': typeof AuthIndexRoute
+  '/katalog/$slug': typeof AuthKatalogSlugRouteWithChildren
+  '/katalog/baru': typeof AuthKatalogBaruRoute
   '/katalog/brands': typeof AuthKatalogBrandsRoute
   '/katalog/categories': typeof AuthKatalogCategoriesRoute
   '/katalog/origins': typeof AuthKatalogOriginsRoute
@@ -208,6 +231,7 @@ export interface FileRoutesByTo {
   '/katalog': typeof AuthKatalogIndexRoute
   '/pengiriman': typeof AuthPengirimanIndexRoute
   '/service-desk': typeof AuthServiceDeskIndexRoute
+  '/katalog/$slug/edit': typeof AuthKatalogSlugEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -225,6 +249,8 @@ export interface FileRoutesById {
   '/_auth/stok': typeof AuthStokRoute
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
   '/_auth/': typeof AuthIndexRoute
+  '/_auth/katalog/$slug': typeof AuthKatalogSlugRouteWithChildren
+  '/_auth/katalog/baru': typeof AuthKatalogBaruRoute
   '/_auth/katalog/brands': typeof AuthKatalogBrandsRoute
   '/_auth/katalog/categories': typeof AuthKatalogCategoriesRoute
   '/_auth/katalog/origins': typeof AuthKatalogOriginsRoute
@@ -236,6 +262,7 @@ export interface FileRoutesById {
   '/_auth/katalog/': typeof AuthKatalogIndexRoute
   '/_auth/pengiriman/': typeof AuthPengirimanIndexRoute
   '/_auth/service-desk/': typeof AuthServiceDeskIndexRoute
+  '/_auth/katalog/$slug/edit': typeof AuthKatalogSlugEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -253,6 +280,8 @@ export interface FileRouteTypes {
     | '/service-desk'
     | '/stok'
     | '/dev/kitchen-sink'
+    | '/katalog/$slug'
+    | '/katalog/baru'
     | '/katalog/brands'
     | '/katalog/categories'
     | '/katalog/origins'
@@ -264,6 +293,7 @@ export interface FileRouteTypes {
     | '/katalog/'
     | '/pengiriman/'
     | '/service-desk/'
+    | '/katalog/$slug/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -276,6 +306,8 @@ export interface FileRouteTypes {
     | '/stok'
     | '/dev/kitchen-sink'
     | '/'
+    | '/katalog/$slug'
+    | '/katalog/baru'
     | '/katalog/brands'
     | '/katalog/categories'
     | '/katalog/origins'
@@ -287,6 +319,7 @@ export interface FileRouteTypes {
     | '/katalog'
     | '/pengiriman'
     | '/service-desk'
+    | '/katalog/$slug/edit'
   id:
     | '__root__'
     | '/_auth'
@@ -303,6 +336,8 @@ export interface FileRouteTypes {
     | '/_auth/stok'
     | '/dev/kitchen-sink'
     | '/_auth/'
+    | '/_auth/katalog/$slug'
+    | '/_auth/katalog/baru'
     | '/_auth/katalog/brands'
     | '/_auth/katalog/categories'
     | '/_auth/katalog/origins'
@@ -314,6 +349,7 @@ export interface FileRouteTypes {
     | '/_auth/katalog/'
     | '/_auth/pengiriman/'
     | '/_auth/service-desk/'
+    | '/_auth/katalog/$slug/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -499,10 +535,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthKatalogBrandsRouteImport
       parentRoute: typeof AuthKatalogRoute
     }
+    '/_auth/katalog/baru': {
+      id: '/_auth/katalog/baru'
+      path: '/baru'
+      fullPath: '/katalog/baru'
+      preLoaderRoute: typeof AuthKatalogBaruRouteImport
+      parentRoute: typeof AuthKatalogRoute
+    }
+    '/_auth/katalog/$slug': {
+      id: '/_auth/katalog/$slug'
+      path: '/$slug'
+      fullPath: '/katalog/$slug'
+      preLoaderRoute: typeof AuthKatalogSlugRouteImport
+      parentRoute: typeof AuthKatalogRoute
+    }
+    '/_auth/katalog/$slug/edit': {
+      id: '/_auth/katalog/$slug/edit'
+      path: '/edit'
+      fullPath: '/katalog/$slug/edit'
+      preLoaderRoute: typeof AuthKatalogSlugEditRouteImport
+      parentRoute: typeof AuthKatalogSlugRoute
+    }
   }
 }
 
+interface AuthKatalogSlugRouteChildren {
+  AuthKatalogSlugEditRoute: typeof AuthKatalogSlugEditRoute
+}
+
+const AuthKatalogSlugRouteChildren: AuthKatalogSlugRouteChildren = {
+  AuthKatalogSlugEditRoute: AuthKatalogSlugEditRoute,
+}
+
+const AuthKatalogSlugRouteWithChildren = AuthKatalogSlugRoute._addFileChildren(
+  AuthKatalogSlugRouteChildren,
+)
+
 interface AuthKatalogRouteChildren {
+  AuthKatalogSlugRoute: typeof AuthKatalogSlugRouteWithChildren
+  AuthKatalogBaruRoute: typeof AuthKatalogBaruRoute
   AuthKatalogBrandsRoute: typeof AuthKatalogBrandsRoute
   AuthKatalogCategoriesRoute: typeof AuthKatalogCategoriesRoute
   AuthKatalogOriginsRoute: typeof AuthKatalogOriginsRoute
@@ -510,6 +581,8 @@ interface AuthKatalogRouteChildren {
 }
 
 const AuthKatalogRouteChildren: AuthKatalogRouteChildren = {
+  AuthKatalogSlugRoute: AuthKatalogSlugRouteWithChildren,
+  AuthKatalogBaruRoute: AuthKatalogBaruRoute,
   AuthKatalogBrandsRoute: AuthKatalogBrandsRoute,
   AuthKatalogCategoriesRoute: AuthKatalogCategoriesRoute,
   AuthKatalogOriginsRoute: AuthKatalogOriginsRoute,
