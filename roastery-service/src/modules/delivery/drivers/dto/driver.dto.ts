@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -29,4 +30,9 @@ export class UpdateDriverLocationDto {
 
   @IsNumber()
   lng: number;
+}
+
+export class UpdateDriverAvailabilityDto {
+  @IsBoolean()
+  isAvailable: boolean;
 }

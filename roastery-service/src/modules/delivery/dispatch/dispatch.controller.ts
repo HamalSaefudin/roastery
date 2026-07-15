@@ -72,6 +72,12 @@ export class DispatchController {
   }
 
   @Roles('staff', 'admin')
+  @Get('drivers/:driverId/cod-balance')
+  async codBalanceForDriver(@Param('driverId') driverId: string) {
+    return this.dispatchService.codBalanceForDriver(driverId);
+  }
+
+  @Roles('staff', 'admin')
   @Post('cod-settlements')
   async createSettlement(@Body() dto: CreateCodSettlementDto) {
     const settlement = await this.dispatchService.createCodSettlement(dto);

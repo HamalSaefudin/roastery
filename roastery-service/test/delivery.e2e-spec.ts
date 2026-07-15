@@ -276,6 +276,43 @@ describe('Delivery (e2e)', () => {
         .send({ lat: -6.9, lng: 107.6 })
         .expect(204);
     });
+
+    it('GET drivers -> memuat driver dibuat, dgn vehicle + activeJobs', async () => {
+      const res = await request(server())
+        .get('/api/delivery/drivers')
+        .set('Cookie', staffCookies)
+        .expect(200);
+      const found = res.body.data.find(
+        (d: { id: string }) => d.id === driverId,
+      );
+      expect(found).toBeDefined();
+      expect(found.vehicle.id).toBe(vehicleId);
+      expect(found.isAvailable).toBe(true);
+      expect(typeof found.activeJobs).toBe('number');
+    });
+
+    it('PATCH drivers/:id -> toggle isAvailable', async () => {
+      const res = await request(server())
+        .patch(`/api/delivery/drivers/${driverId}`)
+        .set('Cookie', staffCookies)
+        .send({ isAvailable: false })
+        .expect(200);
+      expect(res.body.driver.isAvailable).toBe(false);
+
+      await request(server())
+        .patch(`/api/delivery/drivers/${driverId}`)
+        .set('Cookie', staffCookies)
+        .send({ isAvailable: true })
+        .expect(200);
+    });
+
+    it('PATCH drivers/:id driver tidak ada -> 404', () => {
+      return request(server())
+        .patch('/api/delivery/drivers/00000000-0000-0000-0000-000000000000')
+        .set('Cookie', staffCookies)
+        .send({ isAvailable: false })
+        .expect(404);
+    });
   });
 
   describe('Dispatch & driver job flow (via checkout)', () => {
@@ -523,6 +560,23 @@ describe('Delivery (e2e)', () => {
         .set('Cookie', driverCookies)
         .expect(200);
       expect(res.body.balance).toBeGreaterThan(0);
+    });
+
+    it('GET drivers/:id/cod-balance (staff) -> saldo sama dgn versi driver', async () => {
+      const res = await request(server())
+        .get(`/api/delivery/drivers/${driverId}/cod-balance`)
+        .set('Cookie', staffCookies)
+        .expect(200);
+      expect(res.body.balance).toBeGreaterThan(0);
+    });
+
+    it('GET drivers/:id/cod-balance driver tidak ada -> 404', () => {
+      return request(server())
+        .get(
+          '/api/delivery/drivers/00000000-0000-0000-0000-000000000000/cod-balance',
+        )
+        .set('Cookie', staffCookies)
+        .expect(404);
     });
 
     it('POST cod-settlements -> 201, saldo driver jadi 0', async () => {

@@ -310,6 +310,21 @@ export class DispatchService {
     if (!driver) {
       throw new NotFoundException('Profil driver tidak ditemukan');
     }
+    return this.codBalanceForDriverId(driver.id);
+  }
+
+  /** Dipakai CMS staff (halaman Setoran COD step 09) — preview saldo per driver sebelum bikin settlement. */
+  async codBalanceForDriver(driverId: string) {
+    const driver = await this.db.query.drivers.findFirst({
+      where: eq(drivers.id, driverId),
+    });
+    if (!driver) {
+      throw new NotFoundException('Driver tidak ditemukan');
+    }
+    return this.codBalanceForDriverId(driverId);
+  }
+
+  private async codBalanceForDriverId(driverId: string) {
     const rows = await this.db
       .select({
         deliveryNumber: deliveries.deliveryNumber,
@@ -319,7 +334,7 @@ export class DispatchService {
       .from(deliveries)
       .where(
         and(
-          eq(deliveries.driverId, driver.id),
+          eq(deliveries.driverId, driverId),
           isNotNull(deliveries.codCollectedAt),
           isNull(deliveries.codSettlementId),
         ),

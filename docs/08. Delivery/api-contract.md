@@ -82,10 +82,29 @@ Papan pengiriman.
 **Body:** `{ "lat": -6.9, "lng": 107.6 }`
 **Response `204`**.
 
+## GET /delivery/drivers _(staff/admin, baru)_
+
+> Ditambahkan 2026-07-15 utk CMS step 09 (halaman Driver) — sebelumnya cuma ada `POST` (register), tidak ada cara list semua driver.
+
+**Response `200`:** `{ "data": [ { "id", "name", "phone", "isAvailable", "vehicle": { "id", "plateNumber", "type" } | null, "activeJobs": number } ] }` — `activeJobs` = jumlah delivery berstatus `assigned`/`picked_up`/`en_route` milik driver itu.
+
 ## POST /delivery/drivers _(staff/admin)_
 
 **Body:** `{ "userId": "uuid", "name": "Budi", "phone": "0812xxxx", "vehicleId": "uuid" }`
 **Response `201`:** `{ "driver": { "id", "name", "vehicle": { "id", "plateNumber", "type" } } }`
+
+## PATCH /delivery/drivers/:id _(staff/admin, baru)_
+
+> Ditambahkan 2026-07-15 — toggle ketersediaan driver dari CMS (sebelumnya tidak ada endpoint update sama sekali).
+
+**Body:** `{ "isAvailable": boolean }`
+**Response `200`:** `{ "driver": { "id", "name", "phone", "isAvailable", "vehicle", "activeJobs" } }`. **Error:** `404`.
+
+## GET /delivery/drivers/:driverId/cod-balance _(staff/admin, baru)_
+
+> Ditambahkan 2026-07-15 — versi staff dari `GET /delivery/driver/cod-balance` (yang itu cuma bisa dipanggil driver login sendiri; staff butuh lihat saldo driver MANAPUN sebelum bikin settlement di halaman Setoran COD).
+
+**Response `200`:** sama seperti `GET /delivery/driver/cod-balance` — `{ "balance", "deliveries": [...] }`. **Error:** `404` driver tidak ada.
 
 ---
 
