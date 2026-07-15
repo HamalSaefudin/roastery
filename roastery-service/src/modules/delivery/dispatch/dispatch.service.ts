@@ -410,4 +410,14 @@ export class DispatchService {
       .returning();
     return updated;
   }
+
+  /** Dipakai CMS staff (halaman Setoran COD step 09) — riwayat settlement, opsional per driver. */
+  async listCodSettlements(driverId?: string) {
+    const where = driverId ? eq(codSettlements.driverId, driverId) : undefined;
+    return this.db
+      .select()
+      .from(codSettlements)
+      .where(where)
+      .orderBy(desc(codSettlements.createdAt));
+  }
 }

@@ -106,6 +106,13 @@ Papan pengiriman.
 
 **Response `200`:** sama seperti `GET /delivery/driver/cod-balance` — `{ "balance", "deliveries": [...] }`. **Error:** `404` driver tidak ada.
 
+## GET /delivery/cod-settlements _(staff/admin, baru)_
+
+> Ditambahkan 2026-07-15 — halaman Setoran COD butuh "Riwayat settlement", sebelumnya tidak ada endpoint list sama sekali (cuma create + confirm per-id).
+
+**Query:** `?driverId=uuid` (opsional, filter per driver)
+**Response `200`:** `{ "data": [ { "id", "settlementNumber", "driverId", "amount", "status": "pending|confirmed", "confirmedBy", "confirmedAt", "createdAt" } ] }` — diurut `createdAt` terbaru dulu.
+
 ---
 
 ## Master Kendaraan (`vehicles`)  _(staff/admin)_

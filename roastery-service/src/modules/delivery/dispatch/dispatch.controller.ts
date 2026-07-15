@@ -78,6 +78,13 @@ export class DispatchController {
   }
 
   @Roles('staff', 'admin')
+  @Get('cod-settlements')
+  async listSettlements(@Query('driverId') driverId?: string) {
+    const data = await this.dispatchService.listCodSettlements(driverId);
+    return { data };
+  }
+
+  @Roles('staff', 'admin')
   @Post('cod-settlements')
   async createSettlement(@Body() dto: CreateCodSettlementDto) {
     const settlement = await this.dispatchService.createCodSettlement(dto);

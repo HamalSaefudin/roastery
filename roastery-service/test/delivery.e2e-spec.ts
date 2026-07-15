@@ -600,6 +600,17 @@ describe('Delivery (e2e)', () => {
         .set('Cookie', staffCookies)
         .expect(200);
       expect(confirmRes.body.settlement.status).toBe('confirmed');
+
+      const listRes = await request(server())
+        .get('/api/delivery/cod-settlements')
+        .query({ driverId })
+        .set('Cookie', staffCookies)
+        .expect(200);
+      expect(
+        listRes.body.data.some(
+          (s: { id: string }) => s.id === settleRes.body.settlement.id,
+        ),
+      ).toBe(true);
     });
 
     it('POST cod-settlements tanpa saldo -> 409', () => {

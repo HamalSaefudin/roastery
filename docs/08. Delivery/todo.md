@@ -74,7 +74,7 @@ Modul ini menjangkau 2 fase proyek: **Fase 1 (zones + dispatch)** & **Fase 2 (dr
 
 ### Fix ditemukan integrasi CMS step 09 (2026-07-15)
 
-- [x] **Endpoint yang belum ada, blocking halaman Driver & Setoran COD**: modul Drivers awalnya cuma punya `POST /delivery/drivers` (register) — tidak ada `GET` list sama sekali, dan tidak ada cara toggle `isAvailable`. `GET /delivery/driver/cod-balance` cuma bisa dipanggil driver login sendiri (role `driver`), staff tidak punya cara lihat saldo driver manapun sebelum bikin settlement.
-- [x] Tambah `GET /delivery/drivers` (list + join vehicle + `activeJobs` hitung delivery aktif), `PATCH /delivery/drivers/:id` (toggle `isAvailable`), `GET /delivery/drivers/:driverId/cod-balance` (versi staff, reuse logic `driverCodBalance`).
-- [x] 5 e2e baru ditambahkan (`test/delivery.e2e-spec.ts`): list drivers dgn vehicle+activeJobs, toggle availability + 404, cod-balance by id + 404. Total 31 test, `pnpm test:e2e` 237/237 hijau.
-- [x] `api-contract.md` diupdate dengan 3 endpoint baru.
+- [x] **Endpoint yang belum ada, blocking halaman Driver & Setoran COD**: modul Drivers awalnya cuma punya `POST /delivery/drivers` (register) — tidak ada `GET` list sama sekali, dan tidak ada cara toggle `isAvailable`. `GET /delivery/driver/cod-balance` cuma bisa dipanggil driver login sendiri (role `driver`), staff tidak punya cara lihat saldo driver manapun sebelum bikin settlement. `cod_settlements` juga tidak punya endpoint list sama sekali (cuma create + confirm per-id) — halaman Setoran COD butuh "Riwayat settlement".
+- [x] Tambah `GET /delivery/drivers` (list + join vehicle + `activeJobs` hitung delivery aktif), `PATCH /delivery/drivers/:id` (toggle `isAvailable`), `GET /delivery/drivers/:driverId/cod-balance` (versi staff, reuse logic `driverCodBalance`), `GET /delivery/cod-settlements` (list riwayat, filter opsional `driverId`).
+- [x] 5 e2e baru + 1 assertion tambahan ditulis (`test/delivery.e2e-spec.ts`): list drivers dgn vehicle+activeJobs, toggle availability + 404, cod-balance by id + 404, list settlements. Total 31 test, `pnpm test:e2e` 237/237 hijau.
+- [x] `api-contract.md` diupdate dengan 4 endpoint baru.
