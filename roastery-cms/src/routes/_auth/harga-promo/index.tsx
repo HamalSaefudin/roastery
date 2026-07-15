@@ -37,8 +37,6 @@ function HargaPage() {
   const [editPrice, setEditPrice] = useState<Price | null>(null)
   const [priceValue, setPriceValue] = useState<number | ''>('')
 
-  const prices = data ?? []
-
   function openCreate() {
     setEditPrice(null)
     setPriceValue('')
@@ -111,10 +109,10 @@ function HargaPage() {
 
       <DataTable
         columns={columns}
-        data={prices}
-        total={prices.length}
+        data={data}
+        total={data?.length ?? 0}
         page={1}
-        limit={prices.length || 10}
+        limit={data?.length || 10}
         isLoading={isLoading}
         isError={isError}
         isRefetching={isRefetching}

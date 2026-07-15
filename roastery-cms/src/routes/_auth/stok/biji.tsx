@@ -57,9 +57,12 @@ function StokBijiPage() {
   const [reason, setReason] = useState('adjustment')
   const [lowStockOnly, setLowStockOnly] = useState(false)
 
-  const stocks = data?.beans ?? []
+  // JANGAN fallback ke [] di sini — DataTable butuh `data` tetap undefined
+  // saat query error, supaya cabang ErrorState-nya kepicu, bukan ke-mask
+  // jadi EmptyState (lihat data-table.tsx: `isError && !data`).
+  const stocks = data?.beans
   const filtered = lowStockOnly
-    ? stocks.filter((s) => s.available <= s.lowStockThreshold)
+    ? stocks?.filter((s) => s.available <= s.lowStockThreshold)
     : stocks
 
   function openAdjust(stock: BeanStock) {
@@ -167,9 +170,9 @@ function StokBijiPage() {
       <DataTable
         columns={columns}
         data={filtered}
-        total={filtered.length}
+        total={filtered?.length ?? 0}
         page={1}
-        limit={filtered.length || 10}
+        limit={filtered?.length || 10}
         isLoading={isLoading}
         isError={isError}
         isRefetching={isRefetching}

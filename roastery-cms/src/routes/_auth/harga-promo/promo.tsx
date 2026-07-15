@@ -56,8 +56,6 @@ function PromoPage() {
   const [endsAt, setEndsAt] = useState('')
   const [usageLimit, setUsageLimit] = useState<number | ''>('')
 
-  const promos = data ?? []
-
   function openCreate() {
     setCode('')
     setType('percent')
@@ -205,10 +203,10 @@ function PromoPage() {
 
       <DataTable
         columns={columns}
-        data={promos}
-        total={promos.length}
+        data={data}
+        total={data?.length ?? 0}
         page={1}
-        limit={promos.length || 10}
+        limit={data?.length || 10}
         isLoading={isLoading}
         isError={isError}
         isRefetching={isRefetching}

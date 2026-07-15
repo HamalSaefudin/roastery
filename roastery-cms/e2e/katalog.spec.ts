@@ -97,7 +97,9 @@ test('halaman tambah produk termuat dengan 3 kartu pilihan tipe', async ({
   await login(page)
 
   await navigasiSidebar(page, 'Katalog', 'Produk')
-  await page.getByRole('link', { name: 'Tambah Produk' }).click()
+  // dev DB bisa kosong, saat itu tombol "Tambah Produk" muncul 2x
+  // (PageHeader aksi + EmptyState aksi), pakai .first()
+  await page.getByRole('link', { name: 'Tambah Produk' }).first().click()
   await expect(
     page.getByRole('heading', { name: 'Tambah Produk' }),
   ).toBeVisible()

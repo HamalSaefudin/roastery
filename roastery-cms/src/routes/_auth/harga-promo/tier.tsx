@@ -41,8 +41,6 @@ function TierPage() {
   const [formDiscount, setFormDiscount] = useState('10')
   const [deleteTarget, setDeleteTarget] = useState<WholesaleTier | null>(null)
 
-  const tiers = data ?? []
-
   function openCreate() {
     setFormName('')
     setFormMinQty('10')
@@ -126,10 +124,10 @@ function TierPage() {
 
       <DataTable
         columns={columns}
-        data={tiers}
-        total={tiers.length}
+        data={data}
+        total={data?.length ?? 0}
         page={1}
-        limit={tiers.length || 10}
+        limit={data?.length || 10}
         isLoading={isLoading}
         isError={isError}
         isRefetching={isRefetching}

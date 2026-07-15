@@ -54,8 +54,6 @@ function WholesalePage() {
   )
   const [rejectNote, setRejectNote] = useState('')
 
-  const applications = data ?? []
-
   const columns: ColumnDef<WholesaleApplication>[] = [
     {
       header: 'Nama Usaha',
@@ -140,10 +138,10 @@ function WholesalePage() {
 
       <DataTable
         columns={columns}
-        data={applications}
-        total={applications.length}
+        data={data}
+        total={data?.length ?? 0}
         page={1}
-        limit={applications.length || 10}
+        limit={data?.length || 10}
         isLoading={isLoading}
         isError={isError}
         isRefetching={isRefetching}

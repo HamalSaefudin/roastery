@@ -37,7 +37,6 @@ function PelangganPage() {
     }),
   )
 
-  const customers = data?.data ?? []
   const total = data?.total ?? 0
 
   const columns: ColumnDef<Customer>[] = [
@@ -117,7 +116,7 @@ function PelangganPage() {
 
       <DataTable
         columns={columns}
-        data={customers}
+        data={data?.data}
         total={total}
         page={page}
         limit={limit}

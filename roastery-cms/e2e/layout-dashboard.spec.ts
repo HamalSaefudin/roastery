@@ -34,7 +34,9 @@ test('login -> dashboard dengan sidebar & topbar termuat', async ({ page }) => {
 
   await expect(page.getByText('ROASTERY')).toBeVisible()
   await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Pesanan' })).toBeVisible()
+  // "Pesanan" adalah grup sidebar (<button>, punya sub-menu Daftar/Invoice)
+  // sejak refactor routes jadi directory-based — bukan <Link> langsung.
+  await expect(page.getByRole('button', { name: 'Pesanan' })).toBeVisible()
 })
 
 test('sidebar collapse persist setelah reload', async ({ page }) => {
@@ -61,8 +63,13 @@ test('navigasi sidebar ke placeholder pages', async ({ page }) => {
   await page.getByRole('button', { name: 'Masuk' }).click()
   await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
 
-  await page.getByRole('link', { name: 'Pesanan' }).click()
-  await expect(page.getByRole('heading', { name: 'Pesanan' })).toBeVisible()
+  // Pesanan (step 08) sudah dibangun, bukan placeholder lagi — pakai
+  // Pengiriman (step 09, masih ⬜ belum mulai) sbg contoh placeholder.
+  // Sidebar-nya juga sudah jadi grup (<button>), wajib navigasiSidebar.
+  await navigasiSidebar(page, 'Pengiriman', 'Papan Dispatch')
+  await expect(
+    page.getByRole('heading', { name: 'Papan Dispatch' }),
+  ).toBeVisible()
   await expect(page.getByText('segera tersedia')).toBeVisible()
 
   await page.getByRole('link', { name: 'Konten' }).click()
