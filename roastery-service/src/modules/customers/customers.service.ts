@@ -394,8 +394,18 @@ export class CustomersService {
 
     const [data, totalRows] = await Promise.all([
       this.db
-        .select()
+        .select({
+          id: customerProfiles.id,
+          userId: customerProfiles.userId,
+          code: customerProfiles.code,
+          fullName: customerProfiles.fullName,
+          email: users.email,
+          phone: customerProfiles.phone,
+          customerType: customerProfiles.customerType,
+          createdAt: customerProfiles.createdAt,
+        })
         .from(customerProfiles)
+        .innerJoin(users, eq(users.id, customerProfiles.userId))
         .where(where)
         .orderBy(desc(customerProfiles.createdAt))
         .limit(params.limit)
@@ -407,6 +417,28 @@ export class CustomersService {
     ]);
 
     return { data, total: totalRows[0]?.count ?? 0, page: params.page };
+  }
+
+  /** Dipakai CMS staff (halaman detail pelanggan) — CustomerProfile + email. */
+  async getCustomerById(id: string) {
+    const [row] = await this.db
+      .select({
+        id: customerProfiles.id,
+        userId: customerProfiles.userId,
+        code: customerProfiles.code,
+        fullName: customerProfiles.fullName,
+        email: users.email,
+        phone: customerProfiles.phone,
+        customerType: customerProfiles.customerType,
+        createdAt: customerProfiles.createdAt,
+      })
+      .from(customerProfiles)
+      .innerJoin(users, eq(users.id, customerProfiles.userId))
+      .where(eq(customerProfiles.id, id));
+    if (!row) {
+      throw new NotFoundException('Pelanggan tidak ditemukan');
+    }
+    return row;
   }
 
   async listWholesaleApplications(

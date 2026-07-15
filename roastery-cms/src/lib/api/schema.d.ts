@@ -212,6 +212,22 @@ export interface paths {
         patch: operations["CustomersController_decideWholesaleApplication"];
         trace?: never;
     };
+    "/api/customers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CustomersController_getCustomerById"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/catalog/products": {
         parameters: {
             query?: never;
@@ -1974,6 +1990,25 @@ export interface operations {
                 "application/json": components["schemas"]["DecideWholesaleApplicationDto"];
             };
         };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CustomersController_getCustomerById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             200: {
                 headers: {

@@ -166,4 +166,11 @@ export class CustomersController {
     );
     return { application };
   }
+
+  @Get(':id')
+  @Roles('staff', 'admin')
+  async getCustomerById(@Param('id') id: string) {
+    const customer = await this.customersService.getCustomerById(id);
+    return { customer };
+  }
 }

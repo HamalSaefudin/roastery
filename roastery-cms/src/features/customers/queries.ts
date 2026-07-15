@@ -43,13 +43,11 @@ export function customerDetailQueryOptions(id: string) {
   return queryOptions({
     queryKey: CUSTOMERS_QK.detail(id),
     queryFn: async () => {
-      const { data: raw, response } = await api.GET('/api/customers', {
-        params: { query: { search: id } as never },
+      const { data, response } = await api.GET('/api/customers/{id}', {
+        params: { path: { id } },
       })
-      if (!response.ok) throw new Error('Gagal memuat detail pelanggan')
-      const list: Customer[] = (raw as unknown as { data: Customer[] }).data
-      if (list.length === 0) throw new Error('Pelanggan tidak ditemukan')
-      return list[0]
+      if (!response.ok) throw new Error('Pelanggan tidak ditemukan')
+      return (data as unknown as { customer: Customer }).customer
     },
     staleTime: 30_000,
   })
@@ -91,8 +89,11 @@ export function useApproveWholesaleMutation() {
       }
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: CUSTOMERS_QK.wholesaleList() })
-      qc.invalidateQueries({ queryKey: CUSTOMERS_QK.list() })
+      // prefix key (bukan CUSTOMERS_QK.wholesaleList()/.list() tanpa arg —
+      // itu hasilkan ['customers','wholesale',undefined] yg tidak partial-match
+      // cache asli ['customers','wholesale','pending'], invalidate jadi no-op)
+      qc.invalidateQueries({ queryKey: ['customers', 'wholesale'] })
+      qc.invalidateQueries({ queryKey: ['customers', 'list'] })
       toast.success('Pengajuan wholesale berhasil disetujui')
     },
     onError: (err) => {
@@ -118,8 +119,8 @@ export function useRejectWholesaleMutation() {
       }
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: CUSTOMERS_QK.wholesaleList() })
-      qc.invalidateQueries({ queryKey: CUSTOMERS_QK.list() })
+      qc.invalidateQueries({ queryKey: ['customers', 'wholesale'] })
+      qc.invalidateQueries({ queryKey: ['customers', 'list'] })
       toast.success('Pengajuan wholesale ditolak')
     },
     onError: (err) => {

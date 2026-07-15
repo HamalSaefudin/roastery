@@ -120,8 +120,18 @@ Ajukan jadi wholesale.
 Efek `approve`: `customerType` customer → `wholesale`.
 **Error:** `404`, `409` (sudah diproses).
 
+## GET /customers/:id  _(staff/admin)_
+
+> Ditambahkan 2026-07-15 saat review integrasi CMS step 07 — halaman detail pelanggan (`/pelanggan/$id`) butuh lookup by id, `GET /customers?search=` cuma match `fullName`/`code` jadi tidak bisa dipakai cari by uuid.
+
+**Response `200`:** `{ "customer": CustomerProfile }`. **Error:** `404`.
+
 ---
 
 ## Update Kontrak — 2026-07-09
 
 Objek `CustomerProfile` **TAMBAH field** `"code": "CUS-000123"` (kode customer, unik, human-readable — tampil di CMS & akun customer). Berlaku di semua response yang memuat profil.
+
+## Update Kontrak — 2026-07-15
+
+Objek `CustomerProfile` **TAMBAH field** `"email": string` di response `GET /customers` dan `GET /customers/:id` (join ke `users.email` — field ini TIDAK tersimpan di tabel `customer_profiles` sendiri). Ditemukan saat review integrasi CMS: kolom Email di halaman daftar pelanggan selalu kosong karena field ini belum pernah di-join/dikembalikan backend.
