@@ -302,6 +302,7 @@ describe('Orders (e2e)', () => {
         discount: 0,
         deliveryFee: 12000,
         total: 52000,
+        codAmount: null,
       });
       expect(res.body.order.orderNumber).toMatch(/^ORD-\d{8}-\d{4}$/);
 
@@ -384,6 +385,17 @@ describe('Orders (e2e)', () => {
         })
         .expect(201);
       expect(res.body.order.status).toBe('processing');
+      // paymentType enum cuma prepaid|invoice, TIDAK PERNAH 'cod' — sinyal
+      // COD-nya ada di field codAmount (di-join dari deliveries), dipakai
+      // CMS utk nampilin ikon tunai di halaman Pesanan.
+      expect(res.body.order.paymentType).toBe('prepaid');
+      expect(res.body.order.codAmount).toBe(res.body.order.total);
+
+      const getRes = await request(server())
+        .get(`/api/orders/${res.body.order.id}`)
+        .set('Cookie', custCookies)
+        .expect(200);
+      expect(getRes.body.order.codAmount).toBe(res.body.order.total);
     });
 
     it('checkout dgn promo invalid -> 422', async () => {

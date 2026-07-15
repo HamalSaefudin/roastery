@@ -138,6 +138,15 @@ Zona & ongkir ditentukan otomatis dari `district_code` alamat (`addressId`) — 
 - `addressId` wajib untuk `delivery`, diabaikan untuk `pickup` (ongkir 0).
 - Alamat **luar zona TIDAK ditolak** — order dibuat dengan `shippingMethod: "external"`, ongkir flat (tarif fallback). Kurir & resi diinput staff belakangan.
 - Response COD: `201 { "order": Order }` dengan `order.status = "processing"` langsung (tanpa instruksi bayar — bayar tunai ke driver).
+- **Penting:** `order.paymentType` enum-nya cuma `prepaid` | `invoice` — checkout COD **tidak** mengubah `paymentType` jadi `"cod"` (nilai itu tidak pernah ada). Sinyal COD ada di field `codAmount` (lihat di bawah).
+
+### Objek `Order` — field tambahan (2026-07-15)
+
+```json
+{ "codAmount": 40000 }
+```
+
+`codAmount`: jumlah yang harus ditagih tunai ke pelanggan, di-join dari `deliveries.cod_amount` — `null` kalau bukan order COD (termasuk semua order `pickup`/`prepaid`/`invoice`). Ditambahkan saat integrasi CMS step 09 (Papan Dispatch) — sebelumnya tidak ada cara sama sekali bagi CMS utk tahu status COD sebuah order dari `GET /orders`/`GET /orders/:id` (staff sempat salah asumsi `paymentType === 'cod'`, padahal nilai itu mustahil muncul).
 
 ### PATCH /orders/:id/shipping _(staff/admin — baru)_
 

@@ -33,6 +33,7 @@ import { promoCodes } from '../pricing/pricing.schema';
 import { ZonesService } from '../delivery/zones/zones.service';
 import { PaymentsService } from '../payments/payments.service';
 import { DispatchService } from '../delivery/dispatch/dispatch.service';
+import { deliveries } from '../delivery/dispatch/dispatch.schema';
 import {
   carts,
   cartItems,
@@ -529,15 +530,21 @@ export class OrdersService {
     order: typeof orders.$inferSelect,
     tx: DrizzleDbOrTx = this.db,
   ) {
-    const items = await tx
-      .select()
-      .from(orderItems)
-      .where(eq(orderItems.orderId, order.id));
+    const [items, delivery] = await Promise.all([
+      tx.select().from(orderItems).where(eq(orderItems.orderId, order.id)),
+      tx.query.deliveries.findFirst({
+        where: eq(deliveries.orderId, order.id),
+        columns: { codAmount: true },
+      }),
+    ]);
     return {
       id: order.id,
       orderNumber: order.orderNumber,
       status: order.status,
       paymentType: order.paymentType,
+      // paymentType enum cuma prepaid|invoice — COD tidak direpresentasikan
+      // di sana sama sekali, satu-satunya sinyal COD ada di deliveries.cod_amount.
+      codAmount: delivery?.codAmount ?? null,
       fulfillmentMethod: order.fulfillmentMethod,
       shippingMethod: order.shippingMethod,
       courierName: order.courierName,

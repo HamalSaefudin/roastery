@@ -63,6 +63,13 @@ Aturan: **per fase, urut**. Detail di [plan.md](./plan.md), kontrak di [api-cont
 - [x] 2 e2e baru ditambahkan (`test/orders.e2e-spec.ts`): multi-status dipisah koma → 200 + data benar; status ngaco → 400 (bukan 500). Total 26 test, `pnpm test:e2e` 226/226 hijau (2x run stabil).
 - [x] `api-contract.md` diupdate: `status` didokumentasikan boleh multi-nilai dipisah koma di `GET /orders` & `GET /orders/admin`.
 
+### Fix ditemukan integrasi CMS step 09 (2026-07-15)
+
+- [x] **Bug nyata**: `order.paymentType` enum-nya cuma `prepaid`/`invoice` — checkout COD (`paymentMethod: 'cod'`) TIDAK PERNAH mengubah `paymentType` jadi `'cod'` (nilai itu mustahil ada di DB, dikonfirmasi lewat enum Postgres). CMS step 08/09 sempat salah asumsi `order.paymentType === 'cod'` utk nampilin ikon tunai — kondisi itu selalu `false`, ikon COD tidak pernah muncul (ditemukan pas testing Papan Dispatch step 09, checkout order COD asli lalu cek response).
+- [x] Fix: `assembleOrder()` join ke `deliveries` (by `orderId`) dan tambah field `codAmount` (null kalau bukan COD) — ini satu-satunya sinyal COD yang benar-benar ada.
+- [x] 2 assertion baru ditambahkan ke test checkout online & checkout COD yang sudah ada (`test/orders.e2e-spec.ts`) — cek `codAmount: null` utk online, `codAmount === total` utk COD (dari `POST checkout` maupun `GET /orders/:id` sesudahnya). Total tetap 26 test (assertion ditambah, bukan test baru), `pnpm test:e2e` 237/237 hijau.
+- [x] `api-contract.md` diupdate dengan field `codAmount` baru.
+
 ### Keputusan implementasi tambahan (tidak tertulis eksplisit di plan.md)
 
 - [x] **Kapan `commitBeanStock`/`commitEquipmentUnits` dipanggil**: plan.md hanya sebut `reserve()` (checkout) dan `release()` (cancel), tidak menyebut kapan stok "dipermanenkan" (quantity beneran berkurang). Diputuskan: commit terjadi tepat saat `changeStatus(orderId, 'delivered')` — alasan: tabel transisi status order membuktikan `cancelled` HANYA bisa dicapai dari `created`/`paid` (sebelum `processing`), sedangkan `delivered` adalah status final — jadi tidak ada risiko commit-lalu-cancel (double bug) dengan aturan ini. `changeStatus()` juga yang jadi satu-satunya method untuk semua transisi (dipanggil controller staff, webhook Payments, status update Delivery) — konsisten dgn plan.md poin 4.
