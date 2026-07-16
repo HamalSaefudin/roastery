@@ -48,12 +48,25 @@ export const Route = createFileRoute('/_auth/pesanan/$id')({
   component: DetailPesananPage,
 })
 
-const TRANSISI_VALID: Record<string, string[]> = {
-  paid: ['processing'],
-  created: ['processing'],
-  processing: ['out_for_delivery', 'ready_for_pickup'],
-  ready_for_pickup: ['delivered'],
-  out_for_delivery: ['delivered'],
+// Backend (ORDER_TRANSITIONS) izinkan processing -> out_for_delivery ATAU
+// ready_for_pickup tanpa syarat fulfillmentMethod — tapi tampilkan cuma
+// SATU tombol yang masuk akal sesuai plan.md ("delivery -> Siap kirim;
+// pickup -> Siap diambil"), bukan tawarkan aksi yang salah ke staff.
+function transisiValid(status: string, fulfillmentMethod: string): string[] {
+  switch (status) {
+    case 'paid':
+    case 'created':
+      return ['processing']
+    case 'processing':
+      return fulfillmentMethod === 'pickup'
+        ? ['ready_for_pickup']
+        : ['out_for_delivery']
+    case 'ready_for_pickup':
+    case 'out_for_delivery':
+      return ['delivered']
+    default:
+      return []
+  }
 }
 
 function DetailPesananPage() {
@@ -95,7 +108,7 @@ function DetailPesananPage() {
     )
   }
 
-  const nextStatuses = TRANSISI_VALID[order.status] ?? []
+  const nextStatuses = transisiValid(order.status, order.fulfillmentMethod)
   const isOrderDone = ['delivered', 'cancelled'].includes(order.status)
   // Backend tidak expose riwayat refund per payment (tabel `refunds`
   // terpisah, tidak pernah di-join ke GET /payments/order/:orderId) —
@@ -199,14 +212,16 @@ function DetailPesananPage() {
         </div>
         <div>
           <span className="text-muted-foreground">Pembayaran:</span>{' '}
-          {order.paymentType === 'cod' && (
-            <BanknoteIcon className="inline size-3.5 text-peringatan" />
+          {order.codAmount !== null ? (
+            <span className="inline-flex items-center gap-1 font-medium text-peringatan">
+              <BanknoteIcon className="inline size-3.5" />
+              COD ({formatRupiah(order.codAmount)})
+            </span>
+          ) : order.paymentType === 'prepaid' ? (
+            'Bayar di muka'
+          ) : (
+            'Invoice'
           )}
-          {order.paymentType === 'prepaid'
-            ? 'Bayar di muka'
-            : order.paymentType === 'cod'
-              ? 'COD'
-              : 'Invoice'}
         </div>
         <div>
           <span className="text-muted-foreground">Total:</span>{' '}

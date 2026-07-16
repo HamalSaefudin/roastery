@@ -26,7 +26,10 @@ export interface Order {
   id: string
   orderNumber: string
   status: string
-  paymentType: string
+  // enum backend cuma prepaid|invoice — TIDAK PERNAH 'cod'. Sinyal COD ada
+  // di field codAmount (di bawah), bukan di sini.
+  paymentType: 'prepaid' | 'invoice'
+  codAmount: number | null
   fulfillmentMethod: 'delivery' | 'pickup'
   shippingMethod: 'internal' | 'external' | null
   courierName: string | null

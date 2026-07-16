@@ -1028,6 +1028,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/delivery/drivers/{driverId}/cod-balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["DispatchController_codBalanceForDriver"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/delivery/cod-settlements": {
         parameters: {
             query?: never;
@@ -1035,7 +1051,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["DispatchController_listSettlements"];
         put?: never;
         post: operations["DispatchController_createSettlement"];
         delete?: never;
@@ -1083,13 +1099,29 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["DriversController_list"];
         put?: never;
         post: operations["DriversController_register"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/delivery/drivers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["DriversController_updateAvailability"];
         trace?: never;
     };
     "/api/delivery/driver/location": {
@@ -1591,6 +1623,9 @@ export interface components {
             phone: string;
             /** Format: uuid */
             vehicleId?: string;
+        };
+        UpdateDriverAvailabilityDto: {
+            isAvailable: Record<string, never>;
         };
         UpdateDriverLocationDto: {
             lat: number;
@@ -3324,6 +3359,44 @@ export interface operations {
             };
         };
     };
+    DispatchController_codBalanceForDriver: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                driverId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DispatchController_listSettlements: {
+        parameters: {
+            query?: {
+                driverId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     DispatchController_createSettlement: {
         parameters: {
             query?: never;
@@ -3383,6 +3456,23 @@ export interface operations {
             };
         };
     };
+    DriversController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     DriversController_register: {
         parameters: {
             query?: never;
@@ -3397,6 +3487,29 @@ export interface operations {
         };
         responses: {
             201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DriversController_updateAvailability: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateDriverAvailabilityDto"];
+            };
+        };
+        responses: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };

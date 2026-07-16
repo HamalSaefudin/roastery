@@ -58,18 +58,21 @@ function PesananPage() {
     {
       header: 'Pembayaran',
       accessorKey: 'paymentType',
-      cell: ({ getValue }) => {
-        const tipe = getValue() as string
+      cell: ({ row }) => {
+        const { paymentType, codAmount } = row.original
+        // codAmount != null adalah SATU-SATUNYA sinyal COD — paymentType
+        // enum-nya cuma prepaid|invoice, tidak pernah 'cod'.
+        if (codAmount !== null) {
+          return (
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-peringatan">
+              <BanknoteIcon className="size-3.5" />
+              COD
+            </span>
+          )
+        }
         return (
-          <span className="inline-flex items-center gap-1 text-xs">
-            {tipe === 'cod' && (
-              <BanknoteIcon className="size-3.5 text-peringatan" />
-            )}
-            {tipe === 'prepaid'
-              ? 'Bayar di muka'
-              : tipe === 'cod'
-                ? 'COD'
-                : 'Invoice'}
+          <span className="text-xs">
+            {paymentType === 'prepaid' ? 'Bayar di muka' : 'Invoice'}
           </span>
         )
       },

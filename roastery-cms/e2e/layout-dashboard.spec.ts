@@ -63,13 +63,12 @@ test('navigasi sidebar ke placeholder pages', async ({ page }) => {
   await page.getByRole('button', { name: 'Masuk' }).click()
   await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
 
-  // Pesanan (step 08) sudah dibangun, bukan placeholder lagi — pakai
-  // Pengiriman (step 09, masih ⬜ belum mulai) sbg contoh placeholder.
-  // Sidebar-nya juga sudah jadi grup (<button>), wajib navigasiSidebar.
-  await navigasiSidebar(page, 'Pengiriman', 'Papan Dispatch')
-  await expect(
-    page.getByRole('heading', { name: 'Papan Dispatch' }),
-  ).toBeVisible()
+  // Pesanan (step 08) & Pengiriman (step 09) sudah dibangun, bukan
+  // placeholder lagi — pakai Service Desk (step 10, masih ⬜ belum mulai)
+  // sbg contoh placeholder. Sidebar-nya juga grup (<button>), wajib
+  // navigasiSidebar.
+  await navigasiSidebar(page, 'Service Desk', 'Garansi')
+  await expect(page.getByRole('heading', { name: 'Garansi' })).toBeVisible()
   await expect(page.getByText('segera tersedia')).toBeVisible()
 
   await page.getByRole('link', { name: 'Konten' }).click()

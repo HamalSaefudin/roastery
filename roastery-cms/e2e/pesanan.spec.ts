@@ -78,7 +78,7 @@ test('halaman Invoice termuat, tampilkan error krn GET /payments/invoices belum 
   // ke status error, lebih lama dari default assertion timeout 5s.
   // "Gagal memuat data" muncul 2x (judul + deskripsi default ErrorState),
   // pakai tombol "Coba lagi" yang unik utk memastikan ErrorState-nya render.
-  await expect(
-    page.getByRole('button', { name: 'Coba lagi' }),
-  ).toBeVisible({ timeout: 10_000 })
+  await expect(page.getByRole('button', { name: 'Coba lagi' })).toBeVisible({
+    timeout: 10_000,
+  })
 })
