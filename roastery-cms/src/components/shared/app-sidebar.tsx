@@ -26,7 +26,14 @@ interface MenuItem {
 
 const MENU: MenuItem[] = [
   { label: 'Dashboard', path: '/', icon: LayoutDashboardIcon },
-  { label: 'Pesanan', path: '/pesanan', icon: ShoppingCartIcon },
+  {
+    label: 'Pesanan',
+    icon: ShoppingCartIcon,
+    children: [
+      { label: 'Daftar', path: '/pesanan' },
+      { label: 'Invoice', path: '/pesanan/invoice' },
+    ],
+  },
   {
     label: 'Katalog',
     icon: PackageIcon,

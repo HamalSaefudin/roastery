@@ -25,6 +25,7 @@ import { Route as Auth404RouteImport } from './routes/_auth/404'
 import { Route as Auth403RouteImport } from './routes/_auth/403'
 import { Route as AuthStokIndexRouteImport } from './routes/_auth/stok/index'
 import { Route as AuthServiceDeskIndexRouteImport } from './routes/_auth/service-desk/index'
+import { Route as AuthPesananIndexRouteImport } from './routes/_auth/pesanan/index'
 import { Route as AuthPengirimanIndexRouteImport } from './routes/_auth/pengiriman/index'
 import { Route as AuthPelangganIndexRouteImport } from './routes/_auth/pelanggan/index'
 import { Route as AuthKatalogIndexRouteImport } from './routes/_auth/katalog/index'
@@ -33,6 +34,8 @@ import { Route as AuthStokUnitRouteImport } from './routes/_auth/stok/unit'
 import { Route as AuthStokRiwayatRouteImport } from './routes/_auth/stok/riwayat'
 import { Route as AuthStokBijiRouteImport } from './routes/_auth/stok/biji'
 import { Route as AuthServiceDeskTiketRouteImport } from './routes/_auth/service-desk/tiket'
+import { Route as AuthPesananInvoiceRouteImport } from './routes/_auth/pesanan/invoice'
+import { Route as AuthPesananIdRouteImport } from './routes/_auth/pesanan/$id'
 import { Route as AuthPengirimanZonaRouteImport } from './routes/_auth/pengiriman/zona'
 import { Route as AuthPengirimanKendaraanRouteImport } from './routes/_auth/pengiriman/kendaraan'
 import { Route as AuthPengirimanDriverRouteImport } from './routes/_auth/pengiriman/driver'
@@ -127,6 +130,11 @@ const AuthServiceDeskIndexRoute = AuthServiceDeskIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthServiceDeskRoute,
 } as any)
+const AuthPesananIndexRoute = AuthPesananIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthPesananRoute,
+} as any)
 const AuthPengirimanIndexRoute = AuthPengirimanIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -166,6 +174,16 @@ const AuthServiceDeskTiketRoute = AuthServiceDeskTiketRouteImport.update({
   id: '/tiket',
   path: '/tiket',
   getParentRoute: () => AuthServiceDeskRoute,
+} as any)
+const AuthPesananInvoiceRoute = AuthPesananInvoiceRouteImport.update({
+  id: '/invoice',
+  path: '/invoice',
+  getParentRoute: () => AuthPesananRoute,
+} as any)
+const AuthPesananIdRoute = AuthPesananIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthPesananRoute,
 } as any)
 const AuthPengirimanZonaRoute = AuthPengirimanZonaRouteImport.update({
   id: '/zona',
@@ -248,7 +266,7 @@ export interface FileRoutesByFullPath {
   '/konten': typeof AuthKontenRoute
   '/pelanggan': typeof AuthPelangganRouteWithChildren
   '/pengiriman': typeof AuthPengirimanRouteWithChildren
-  '/pesanan': typeof AuthPesananRoute
+  '/pesanan': typeof AuthPesananRouteWithChildren
   '/service-desk': typeof AuthServiceDeskRouteWithChildren
   '/stok': typeof AuthStokRouteWithChildren
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
@@ -265,6 +283,8 @@ export interface FileRoutesByFullPath {
   '/pengiriman/driver': typeof AuthPengirimanDriverRoute
   '/pengiriman/kendaraan': typeof AuthPengirimanKendaraanRoute
   '/pengiriman/zona': typeof AuthPengirimanZonaRoute
+  '/pesanan/$id': typeof AuthPesananIdRoute
+  '/pesanan/invoice': typeof AuthPesananInvoiceRoute
   '/service-desk/tiket': typeof AuthServiceDeskTiketRoute
   '/stok/biji': typeof AuthStokBijiRoute
   '/stok/riwayat': typeof AuthStokRiwayatRoute
@@ -273,6 +293,7 @@ export interface FileRoutesByFullPath {
   '/katalog/': typeof AuthKatalogIndexRoute
   '/pelanggan/': typeof AuthPelangganIndexRoute
   '/pengiriman/': typeof AuthPengirimanIndexRoute
+  '/pesanan/': typeof AuthPesananIndexRoute
   '/service-desk/': typeof AuthServiceDeskIndexRoute
   '/stok/': typeof AuthStokIndexRoute
   '/katalog/$slug/edit': typeof AuthKatalogSlugEditRoute
@@ -282,7 +303,6 @@ export interface FileRoutesByTo {
   '/403': typeof Auth403Route
   '/404': typeof Auth404Route
   '/konten': typeof AuthKontenRoute
-  '/pesanan': typeof AuthPesananRoute
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
   '/': typeof AuthIndexRoute
   '/harga-promo/promo': typeof AuthHargaPromoPromoRoute
@@ -298,6 +318,8 @@ export interface FileRoutesByTo {
   '/pengiriman/driver': typeof AuthPengirimanDriverRoute
   '/pengiriman/kendaraan': typeof AuthPengirimanKendaraanRoute
   '/pengiriman/zona': typeof AuthPengirimanZonaRoute
+  '/pesanan/$id': typeof AuthPesananIdRoute
+  '/pesanan/invoice': typeof AuthPesananInvoiceRoute
   '/service-desk/tiket': typeof AuthServiceDeskTiketRoute
   '/stok/biji': typeof AuthStokBijiRoute
   '/stok/riwayat': typeof AuthStokRiwayatRoute
@@ -306,6 +328,7 @@ export interface FileRoutesByTo {
   '/katalog': typeof AuthKatalogIndexRoute
   '/pelanggan': typeof AuthPelangganIndexRoute
   '/pengiriman': typeof AuthPengirimanIndexRoute
+  '/pesanan': typeof AuthPesananIndexRoute
   '/service-desk': typeof AuthServiceDeskIndexRoute
   '/stok': typeof AuthStokIndexRoute
   '/katalog/$slug/edit': typeof AuthKatalogSlugEditRoute
@@ -321,7 +344,7 @@ export interface FileRoutesById {
   '/_auth/konten': typeof AuthKontenRoute
   '/_auth/pelanggan': typeof AuthPelangganRouteWithChildren
   '/_auth/pengiriman': typeof AuthPengirimanRouteWithChildren
-  '/_auth/pesanan': typeof AuthPesananRoute
+  '/_auth/pesanan': typeof AuthPesananRouteWithChildren
   '/_auth/service-desk': typeof AuthServiceDeskRouteWithChildren
   '/_auth/stok': typeof AuthStokRouteWithChildren
   '/dev/kitchen-sink': typeof DevKitchenSinkRoute
@@ -339,6 +362,8 @@ export interface FileRoutesById {
   '/_auth/pengiriman/driver': typeof AuthPengirimanDriverRoute
   '/_auth/pengiriman/kendaraan': typeof AuthPengirimanKendaraanRoute
   '/_auth/pengiriman/zona': typeof AuthPengirimanZonaRoute
+  '/_auth/pesanan/$id': typeof AuthPesananIdRoute
+  '/_auth/pesanan/invoice': typeof AuthPesananInvoiceRoute
   '/_auth/service-desk/tiket': typeof AuthServiceDeskTiketRoute
   '/_auth/stok/biji': typeof AuthStokBijiRoute
   '/_auth/stok/riwayat': typeof AuthStokRiwayatRoute
@@ -347,6 +372,7 @@ export interface FileRoutesById {
   '/_auth/katalog/': typeof AuthKatalogIndexRoute
   '/_auth/pelanggan/': typeof AuthPelangganIndexRoute
   '/_auth/pengiriman/': typeof AuthPengirimanIndexRoute
+  '/_auth/pesanan/': typeof AuthPesananIndexRoute
   '/_auth/service-desk/': typeof AuthServiceDeskIndexRoute
   '/_auth/stok/': typeof AuthStokIndexRoute
   '/_auth/katalog/$slug/edit': typeof AuthKatalogSlugEditRoute
@@ -380,6 +406,8 @@ export interface FileRouteTypes {
     | '/pengiriman/driver'
     | '/pengiriman/kendaraan'
     | '/pengiriman/zona'
+    | '/pesanan/$id'
+    | '/pesanan/invoice'
     | '/service-desk/tiket'
     | '/stok/biji'
     | '/stok/riwayat'
@@ -388,6 +416,7 @@ export interface FileRouteTypes {
     | '/katalog/'
     | '/pelanggan/'
     | '/pengiriman/'
+    | '/pesanan/'
     | '/service-desk/'
     | '/stok/'
     | '/katalog/$slug/edit'
@@ -397,7 +426,6 @@ export interface FileRouteTypes {
     | '/403'
     | '/404'
     | '/konten'
-    | '/pesanan'
     | '/dev/kitchen-sink'
     | '/'
     | '/harga-promo/promo'
@@ -413,6 +441,8 @@ export interface FileRouteTypes {
     | '/pengiriman/driver'
     | '/pengiriman/kendaraan'
     | '/pengiriman/zona'
+    | '/pesanan/$id'
+    | '/pesanan/invoice'
     | '/service-desk/tiket'
     | '/stok/biji'
     | '/stok/riwayat'
@@ -421,6 +451,7 @@ export interface FileRouteTypes {
     | '/katalog'
     | '/pelanggan'
     | '/pengiriman'
+    | '/pesanan'
     | '/service-desk'
     | '/stok'
     | '/katalog/$slug/edit'
@@ -453,6 +484,8 @@ export interface FileRouteTypes {
     | '/_auth/pengiriman/driver'
     | '/_auth/pengiriman/kendaraan'
     | '/_auth/pengiriman/zona'
+    | '/_auth/pesanan/$id'
+    | '/_auth/pesanan/invoice'
     | '/_auth/service-desk/tiket'
     | '/_auth/stok/biji'
     | '/_auth/stok/riwayat'
@@ -461,6 +494,7 @@ export interface FileRouteTypes {
     | '/_auth/katalog/'
     | '/_auth/pelanggan/'
     | '/_auth/pengiriman/'
+    | '/_auth/pesanan/'
     | '/_auth/service-desk/'
     | '/_auth/stok/'
     | '/_auth/katalog/$slug/edit'
@@ -586,6 +620,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthServiceDeskIndexRouteImport
       parentRoute: typeof AuthServiceDeskRoute
     }
+    '/_auth/pesanan/': {
+      id: '/_auth/pesanan/'
+      path: '/'
+      fullPath: '/pesanan/'
+      preLoaderRoute: typeof AuthPesananIndexRouteImport
+      parentRoute: typeof AuthPesananRoute
+    }
     '/_auth/pengiriman/': {
       id: '/_auth/pengiriman/'
       path: '/'
@@ -641,6 +682,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/service-desk/tiket'
       preLoaderRoute: typeof AuthServiceDeskTiketRouteImport
       parentRoute: typeof AuthServiceDeskRoute
+    }
+    '/_auth/pesanan/invoice': {
+      id: '/_auth/pesanan/invoice'
+      path: '/invoice'
+      fullPath: '/pesanan/invoice'
+      preLoaderRoute: typeof AuthPesananInvoiceRouteImport
+      parentRoute: typeof AuthPesananRoute
+    }
+    '/_auth/pesanan/$id': {
+      id: '/_auth/pesanan/$id'
+      path: '/$id'
+      fullPath: '/pesanan/$id'
+      preLoaderRoute: typeof AuthPesananIdRouteImport
+      parentRoute: typeof AuthPesananRoute
     }
     '/_auth/pengiriman/zona': {
       id: '/_auth/pengiriman/zona'
@@ -829,6 +884,22 @@ const AuthPengirimanRouteWithChildren = AuthPengirimanRoute._addFileChildren(
   AuthPengirimanRouteChildren,
 )
 
+interface AuthPesananRouteChildren {
+  AuthPesananIdRoute: typeof AuthPesananIdRoute
+  AuthPesananInvoiceRoute: typeof AuthPesananInvoiceRoute
+  AuthPesananIndexRoute: typeof AuthPesananIndexRoute
+}
+
+const AuthPesananRouteChildren: AuthPesananRouteChildren = {
+  AuthPesananIdRoute: AuthPesananIdRoute,
+  AuthPesananInvoiceRoute: AuthPesananInvoiceRoute,
+  AuthPesananIndexRoute: AuthPesananIndexRoute,
+}
+
+const AuthPesananRouteWithChildren = AuthPesananRoute._addFileChildren(
+  AuthPesananRouteChildren,
+)
+
 interface AuthServiceDeskRouteChildren {
   AuthServiceDeskTiketRoute: typeof AuthServiceDeskTiketRoute
   AuthServiceDeskIndexRoute: typeof AuthServiceDeskIndexRoute
@@ -869,7 +940,7 @@ interface AuthRouteChildren {
   AuthKontenRoute: typeof AuthKontenRoute
   AuthPelangganRoute: typeof AuthPelangganRouteWithChildren
   AuthPengirimanRoute: typeof AuthPengirimanRouteWithChildren
-  AuthPesananRoute: typeof AuthPesananRoute
+  AuthPesananRoute: typeof AuthPesananRouteWithChildren
   AuthServiceDeskRoute: typeof AuthServiceDeskRouteWithChildren
   AuthStokRoute: typeof AuthStokRouteWithChildren
   AuthIndexRoute: typeof AuthIndexRoute
@@ -883,7 +954,7 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthKontenRoute: AuthKontenRoute,
   AuthPelangganRoute: AuthPelangganRouteWithChildren,
   AuthPengirimanRoute: AuthPengirimanRouteWithChildren,
-  AuthPesananRoute: AuthPesananRoute,
+  AuthPesananRoute: AuthPesananRouteWithChildren,
   AuthServiceDeskRoute: AuthServiceDeskRouteWithChildren,
   AuthStokRoute: AuthStokRouteWithChildren,
   AuthIndexRoute: AuthIndexRoute,
